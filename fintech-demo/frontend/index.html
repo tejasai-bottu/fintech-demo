@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthFlow AI — Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+
+    <!-- ===================== TOP TOOLBAR ===================== -->
+    <header class="toolbar">
+        <div class="toolbar-left">
+            <div class="brand">
+                <div class="brand-icon">W</div>
+                <span class="brand-name">WealthFlow <span class="brand-sub">AI</span></span>
+            </div>
+            <nav class="toolbar-nav">
+                <a href="index.html" class="nav-link active">Dashboard</a>
+                <a href="settings.html" class="nav-link">Profile Settings</a>
+            </nav>
+        </div>
+        <div class="toolbar-right">
+            <div class="toolbar-meta">
+                <span class="meta-label">Last sync</span>
+                <span class="meta-value" id="last-sync">--</span>
+            </div>
+            <div class="status-dot" id="status-dot" title="System Status"></div>
+            <div class="user-chip">
+                <div class="user-avatar" id="user-avatar">D</div>
+                <span id="user-name">Loading...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===================== PAGE BODY ===================== -->
+    <main class="dashboard-container" id="dashboard-main">
+
+        <!-- Loading State -->
+        <div id="loading-overlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Fetching financial data...</p>
+        </div>
+
+        <!-- ===================== KPI ROW ===================== -->
+        <section class="kpi-row" id="kpi-row">
+            <!-- Populated by dashboard.js -->
+        </section>
+
+        <!-- ===================== ALERT STRIP ===================== -->
+        <div id="alert-strip" class="alert-strip" style="display:none;"></div>
+
+        <!-- ===================== ANALYTICS GRID ===================== -->
+        <section class="analytics-grid">
+
+            <!-- LEFT COLUMN -->
+            <div class="analytics-col analytics-col-left">
+
+                <!-- EMI Breakdown Bar Chart -->
+                <div class="chart-card" id="card-emi">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">EMI Breakdown</p>
+                            <p class="chart-card-subtitle">Monthly debt payments</p>
+                        </div>
+                        <div class="chart-card-badge" id="emi-total-badge">—</div>
+                    </div>
+                    <div class="chart-body" id="chart-emi-bar" style="height:220px;"></div>
+                </div>
+
+                <!-- Cashflow Distribution -->
+                <div class="chart-card" id="card-cashflow">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">Cash Flow Distribution</p>
+                            <p class="chart-card-subtitle">% of net income</p>
+                        </div>
+                    </div>
+                    <div class="cashflow-bars" id="cashflow-bars">
+                        <!-- Populated by dashboard.js -->
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- CENTER COLUMN — Treemap -->
+            <div class="analytics-col analytics-col-center">
+                <div class="chart-card chart-card-tall">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">Expense Allocation</p>
+                            <p class="chart-card-subtitle">Monthly spending by category</p>
+                        </div>
+                        <div class="legend-group" id="treemap-legend"></div>
+                    </div>
+                    <div id="chart-treemap" style="height:420px;"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="analytics-col analytics-col-right">
+
+                <!-- Goals Donut -->
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">Savings Goals</p>
+                            <p class="chart-card-subtitle">Progress overview</p>
+                        </div>
+                    </div>
+                    <div id="chart-goals-donut" style="height:180px;"></div>
+                    <div class="goal-list" id="goal-list">
+                        <!-- Populated by dashboard.js -->
+                    </div>
+                </div>
+
+                <!-- Health Score Gauge -->
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">Financial Health</p>
+                            <p class="chart-card-subtitle">Composite score</p>
+                        </div>
+                    </div>
+                    <div id="chart-health-gauge" style="height:180px;"></div>
+                    <div class="health-indicators" id="health-indicators">
+                        <!-- Populated by dashboard.js -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ===================== DATA TABLE ===================== -->
+        <section class="data-table-section">
+            <div class="table-header">
+                <div>
+                    <p class="table-title">Debt Portfolio</p>
+                    <p class="table-subtitle">All active liabilities</p>
+                </div>
+                <a href="settings.html" class="table-action-btn">Manage Portfolio →</a>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table" id="debt-table">
+                    <thead>
+                        <tr>
+                            <th>Debt Name</th>
+                            <th>Type</th>
+                            <th>Outstanding</th>
+                            <th>Monthly EMI</th>
+                            <th>Rate</th>
+                            <th>Remaining</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="debt-table-body">
+                        <!-- Populated by dashboard.js -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Scripts in ORDER -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/dashboard.js"></script>
+
+</body>
+</html>

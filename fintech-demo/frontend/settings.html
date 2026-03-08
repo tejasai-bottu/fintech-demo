@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Profile Settings - WealthFlow AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Link CSS files -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Navigation (same as dashboard) -->
+    <nav style="background:white; border-bottom:1px solid #e8eaed;" class="sticky top-0 z-50">
+        <div style="max-width:1400px; margin:0 auto; padding:14px 24px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:20px;">💎</span>
+                <h1 style="font-size:16px; font-weight:700; color:#1f4e79; margin:0;">WealthFlow AI</h1>
+            </div>
+            <div style="display:flex; align-items:center; gap:20px; font-size:14px;">
+                <a href="index.html" style="color:#555; font-weight:500;">🏠 Dashboard</a>
+                <span style="color:#888;" id="user-name">Demo User</span>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <main style="max-width:1400px; margin:0 auto; padding:24px;">
+        
+        <h1 style="font-size:20px; font-weight:700; color:#1f4e79; margin-bottom:20px; 
+                   padding-bottom:16px; border-bottom:2px solid #e8eaed;">
+            Financial Profile Settings
+        </h1>
+        
+        <!-- Tab Navigation -->
+        <div style="display:flex; gap:4px; background:white; border:1px solid #e8eaed; 
+                    border-radius:6px; padding:6px; margin-bottom:24px; width:fit-content;">
+            <button onclick="settingsManager.switchTab('income')"
+                    id="settings-tab-income"
+                    class="settings-tab active">
+                💰 Income & Tax
+            </button>
+            <button onclick="settingsManager.switchTab('debts')"
+                    id="settings-tab-debts"
+                    class="settings-tab">
+                💳 Debt Portfolio
+            </button>
+            <button onclick="settingsManager.switchTab('goals')"
+                    id="settings-tab-goals"
+                    class="settings-tab">
+                🎯 Savings Goals
+            </button>
+            <button onclick="settingsManager.switchTab('expenses')"
+                    id="settings-tab-expenses"
+                    class="settings-tab">
+                📊 Expenses
+            </button>
+            <button onclick="settingsManager.switchTab('overview')"
+                    id="settings-tab-overview"
+                    class="settings-tab">
+                📈 Overview
+            </button>
+        </div>
+        
+        <!-- Tab Content Containers -->
+        <div id="settings-content-income" class="settings-content">
+            <!-- Populated by settings.js -->
+        </div>
+        
+        <div id="settings-content-debts" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+        
+        <div id="settings-content-goals" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+        
+        <div id="settings-content-expenses" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+        
+        <div id="settings-content-overview" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+        
+    </main>
+    
+    <!-- Modals Container -->
+    <div id="modals-container"></div>
+    
+    <!-- Load Scripts in ORDER -->
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/settings.js"></script>
+    
+</body>
+</html>
