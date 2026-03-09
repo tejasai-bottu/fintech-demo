@@ -249,6 +249,26 @@ const Utils = {
     },
     
     /**
+     * Disable a button for N milliseconds after click to prevent double-submit.
+     * Usage: onClick="Utils.preventDouble(this, () => yourFunction())"
+     */
+    preventDouble(button, callback, delayMs = 3000) {
+        if (button.disabled) return;
+        button.disabled = true;
+        const originalText = button.textContent;
+        button.textContent = 'Processing...';
+
+        try {
+            callback();
+        } finally {
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+            }, delayMs);
+        }
+    },
+
+    /**
      * Debounce function
      */
     debounce(func, delay = CONFIG.UI.DEBOUNCE_DELAY) {

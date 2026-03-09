@@ -11,23 +11,44 @@ class API {
     }
     
     /**
-     * Generic fetch wrapper with error handling
+     * Generic fetch wrapper with error handling and JWT support
      */
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
         
+        // Get stored token
+        const token = localStorage.getItem('wealthflow_token');
+        
         const defaultOptions = {
             headers: {
                 'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             },
             ...options
         };
         
+        // Merge headers if options has them
+        if (options.headers) {
+            defaultOptions.headers = { ...defaultOptions.headers, ...options.headers };
+        }
+        
         try {
             const response = await fetch(url, defaultOptions);
             
+            // Redirect to login if unauthorized
+            if (response.status === 401) {
+                localStorage.removeItem('wealthflow_token');
+                localStorage.removeItem('wealthflow_user');
+                // Only redirect if not already on login/register pages
+                if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+            
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
             }
             
             return await response.json();
@@ -37,6 +58,38 @@ class API {
         }
     }
     
+    // ========== AUTH ENDPOINTS ==========
+
+    async register(data) {
+        return this.request('/api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async login(email, password) {
+        const result = await this.request('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        if (result && result.access_token) {
+            localStorage.setItem('wealthflow_token', result.access_token);
+            localStorage.setItem('wealthflow_user', JSON.stringify(result.user));
+        }
+        return result;
+    }
+
+    logout() {
+        localStorage.removeItem('wealthflow_token');
+        localStorage.removeItem('wealthflow_user');
+        window.location.href = 'login.html';
+    }
+
+    getCurrentUser() {
+        const stored = localStorage.getItem('wealthflow_user');
+        return stored ? JSON.parse(stored) : null;
+    }
+
     // ========== INCOME ENDPOINTS ==========
     
     async getIncomeProfile() {
@@ -167,6 +220,101 @@ class API {
     
     async getFinancialOverview() {
         return this.request('/api/profile/financial-overview');
+    }
+
+    // ========== BILLS ENDPOINTS ==========
+
+    async getBills() {
+        return this.request('/api/bills/list');
+    }
+
+    async createBill(data) {
+        return this.request('/api/bills/create', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async payBill(billId, data) {
+        return this.request(`/api/bills/${billId}/pay`, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async getBillHistory(billId) {
+        return this.request(`/api/bills/${billId}/history`);
+    }
+
+    async deleteBill(billId) {
+        return this.request(`/api/bills/${billId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // ========== CALENDAR ENDPOINTS ==========
+
+    async getCalendarEvents() {
+        return this.request('/api/calendar/events');
+    }
+
+    // ========== FORECASTING ENDPOINTS ==========
+
+    async getForecast(scenario = 'normal') {
+        return this.request(`/api/profile/forecast?scenario=${scenario}`);
+    }
+
+    async getNetWorthHistory(days = 30) {
+        return this.request(`/api/profile/net-worth-history?days=${days}`);
+    }
+
+    async simulateScenario(data) {
+        return this.request('/api/profile/scenario/simulate', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    // ========== TRANSACTION ENDPOINTS ==========
+
+    async createTransaction(data) {
+        return this.request('/api/transactions/create', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async listTransactions(month = null, year = null, categoryId = null) {
+        let url = '/api/transactions/list';
+        const params = [];
+        if (month) params.push(`month=${month}`);
+        if (year) params.push(`year=${year}`);
+        if (categoryId) params.push(`category_id=${categoryId}`);
+        if (params.length) url += '?' + params.join('&');
+        return this.request(url);
+    }
+
+    async getMonthlySummary(month = null, year = null) {
+        let url = '/api/transactions/monthly-summary';
+        const params = [];
+        if (month) params.push(`month=${month}`);
+        if (year) params.push(`year=${year}`);
+        if (params.length) url += '?' + params.join('&');
+        return this.request(url);
+    }
+
+    // ========== NOTIFICATION ENDPOINTS ==========
+
+    async getNotifications() {
+        return this.request('/api/notifications/');
+    }
+
+    async markNotificationRead(id) {
+        return this.request(`/api/notifications/read/${id}`, { method: 'POST' });
+    }
+
+    async markAllNotificationsRead() {
+        return this.request('/api/notifications/read-all', { method: 'POST' });
     }
 }
 

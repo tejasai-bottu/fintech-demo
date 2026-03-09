@@ -3,14 +3,22 @@
  * WealthFlow AI
  *
  * Renders: KPI Row, Alert Strip, EMI Bar Chart, Cashflow Bars,
- *          Expense Treemap, Goals Donut, Health Gauge, Debt Table
+ *          Expense Treemap, Goals Donut, Health Gauge, Debt Table,
+ *          Upcoming Payments, Net Worth Trend
  *
  * Backend calls (via api.js):
  *   GET /api/dashboard/
  *   GET /api/profile/savings-goals
  *   GET /api/profile/expense-categories
  *   GET /api/profile/debts
+ *   GET /api/calendar/events
+ *   GET /api/profile/net-worth-history
  */
+
+// Auth guard — redirect to login if no token
+if (!localStorage.getItem('wealthflow_token')) {
+    window.location.href = 'login.html';
+}
 
 class Dashboard {
 
@@ -31,12 +39,14 @@ class Dashboard {
 
             this.renderKPIs();
             this.renderAlertStrip();
+            this.renderUpcomingPayments();
             this.renderCashflowBars();
             this.renderEMIBarChart();
             this.renderExpenseTreemap();
             this.renderGoalsDonut();
             this.renderHealthGauge();
             this.renderHealthIndicators();
+            this.renderNetWorthChart();
             this.renderDebtTable();
             this.updateToolbar();
 
@@ -55,17 +65,19 @@ class Dashboard {
     // ─────────────────────────────────────────────
 
     async loadAllData() {
-        const [dashboard, goals, expenses, debts] = await Promise.all([
+        const [dashboard, goals, expenses, debts, calendar] = await Promise.all([
             api.getDashboard(),
             api.getSavingsGoals(),
             api.getExpenseCategories(),
-            api.getDebts()
+            api.getDebts(),
+            api.getCalendarEvents()
         ]);
 
         this.data = dashboard;
         this.data.goals    = goals;
         this.data.expenses = expenses;
         this.data.debts    = debts;
+        this.data.calendar = calendar;
 
         // Recalculate with real settings data
         this._recalculate();
@@ -226,6 +238,62 @@ class Dashboard {
                 ${a.text}
             </div>
         `).join('');
+    }
+
+    // ─────────────────────────────────────────────
+    // UPCOMING PAYMENTS
+    // ─────────────────────────────────────────────
+
+    renderUpcomingPayments() {
+        const container = document.getElementById('upcoming-payments');
+        if (!container || !this.data.calendar) return;
+        
+        const next7 = this.data.calendar.summary.next_7_days || [];
+        const overdue = this.data.calendar.overdue || [];
+        
+        if (next7.length === 0 && overdue.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        const allItems = [...overdue, ...next7].slice(0, 6);
+        
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div style="background:white; border-radius:8px; border:1px solid #e5e7eb; 
+                        padding:16px 20px; box-shadow:0 1px 3px rgba(0,0,0,0.07); margin-bottom: 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <p style="font-size:13px; font-weight:600; color:#111928;">Upcoming Payments</p>
+                    <a href="settings.html" style="font-size:12px; color:#1a56db;">View All →</a>
+                </div>
+                <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px;">
+                    ${allItems.map(item => {
+                        const isOverdue = item.status === 'overdue';
+                        const date = new Date(item.date);
+                        return `
+                            <div style="min-width:160px; padding:12px; border-radius:6px; 
+                                        border:1px solid ${isOverdue ? '#fca5a5' : '#e5e7eb'}; 
+                                        background:${isOverdue ? '#fef2f2' : '#f9fafb'}; flex-shrink:0;">
+                                <p style="font-size:10px; font-weight:600; text-transform:uppercase; 
+                                          color:${isOverdue ? '#c81e1e' : '#6b7280'}; letter-spacing:0.4px;">
+                                    ${isOverdue ? '⚠ OVERDUE' : item.type.replace('_', ' ').toUpperCase()}
+                                </p>
+                                <p style="font-size:12px; font-weight:600; color:#111928; margin:4px 0;">
+                                    ${item.title}
+                                </p>
+                                <p style="font-size:13px; font-weight:700; color:${isOverdue ? '#c81e1e' : '#1a56db'}; 
+                                          font-family:'IBM Plex Mono',monospace;">
+                                    ₹${Math.round(item.amount || 0).toLocaleString('en-IN')}
+                                </p>
+                                <p style="font-size:10px; color:#9ca3af; margin-top:3px;">
+                                    ${date.toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
+                                </p>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
     }
 
     // ─────────────────────────────────────────────
@@ -582,6 +650,77 @@ class Dashboard {
     }
 
     // ─────────────────────────────────────────────
+    // NET WORTH TREND
+    // ─────────────────────────────────────────────
+
+    async renderNetWorthChart() {
+        const el = document.getElementById('chart-networth');
+        if (!el || typeof echarts === 'undefined') return;
+
+        if (this.charts.networth) { this.charts.networth.dispose(); }
+
+        try {
+            const data = await api.getNetWorthHistory(30);
+            const badge = document.getElementById('nw-change-badge');
+
+            if (badge && data.change !== undefined) {
+                const sign = data.change >= 0 ? '+' : '';
+                badge.textContent = `${sign}${this._fmt(data.change)}`;
+                badge.style.color = data.change >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
+            }
+
+            const dates = data.snapshots.map(s => s.date);
+            const values = data.snapshots.map(s => s.net_worth);
+
+            this.charts.networth = echarts.init(el);
+            this.charts.networth.setOption({
+                animation: true,
+                grid: { top: 8, right: 8, bottom: 24, left: 4, containLabel: true },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: (params) => `${params[0].name}<br/>Net Worth: <strong>${this._fmt(params[0].value)}</strong>`,
+                    backgroundColor: '#1f2937',
+                    textStyle: { color: '#f9fafb', fontSize: 11 }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { fontSize: 9, color: '#9ca3af' },
+                    axisLine: { show: false },
+                    axisTick: { show: false }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        fontSize: 9,
+                        color: '#9ca3af',
+                        formatter: v => v >= 100000 ? `₹${(v/100000).toFixed(0)}L` : `₹${(v/1000).toFixed(0)}K`
+                    },
+                    splitLine: { lineStyle: { color: '#f3f4f6' } }
+                },
+                series: [{
+                    type: 'line',
+                    data: values,
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: data.trend === 'up' ? '#0e9f6e' : '#c81e1e', width: 2 },
+                    areaStyle: {
+                        color: {
+                            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: data.trend === 'up' ? 'rgba(14,159,110,0.2)' : 'rgba(200,30,30,0.2)' },
+                                { offset: 1, color: 'rgba(255,255,255,0)' }
+                            ]
+                        }
+                    }
+                }]
+            });
+        } catch (e) {
+            el.innerHTML = '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:11px;">No history yet</div>';
+        }
+    }
+
+    // ─────────────────────────────────────────────
     // DEBT TABLE
     // ─────────────────────────────────────────────
 
@@ -705,5 +844,69 @@ class Dashboard {
     }
 }
 
+// ── Notification System ─────────────────────────────────────────────────────
+
+async function loadNotifications() {
+    try {
+        const data = await api.getNotifications();
+        const badge = document.getElementById('notif-badge');
+        const list  = document.getElementById('notif-list');
+
+        if (data.unread_count > 0) {
+            badge.textContent = data.unread_count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (!data.notifications.length) {
+            list.innerHTML = '<p style="padding:20px; color:#9ca3af; font-size:12px; text-align:center;">No notifications</p>';
+            return;
+        }
+
+        list.innerHTML = data.notifications.map(n => {
+            const timeAgo = _timeAgo(n.created_at);
+            const cls = `notif-item ${n.is_read ? '' : 'unread'} ${n.severity}`;
+            return `
+                <div class="${cls}" onclick="markRead(${n.id})">
+                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-message">${n.message}</div>
+                    <div class="notif-time">${timeAgo}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error('Failed to load notifications:', e);
+    }
+}
+
+function toggleNotifPanel() {
+    const panel = document.getElementById('notif-panel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+async function markRead(id) {
+    await api.markNotificationRead(id);
+    loadNotifications();
+}
+
+async function markAllRead() {
+    await api.markAllNotificationsRead();
+    loadNotifications();
+}
+
+function _timeAgo(isoString) {
+    const diff = Date.now() - new Date(isoString).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1440) return `${Math.floor(mins/60)}h ago`;
+    return `${Math.floor(mins/1440)}d ago`;
+}
+
 // Boot
-document.addEventListener('DOMContentLoaded', () => { new Dashboard(); });
+document.addEventListener('DOMContentLoaded', () => { 
+    new Dashboard(); 
+    loadNotifications();
+    // Refresh notifications every 5 minutes
+    setInterval(loadNotifications, 5 * 60 * 1000);
+});

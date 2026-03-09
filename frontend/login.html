@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WealthFlow AI — Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        body { background: #0d1f35; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        .login-card { background: white; border-radius: 12px; padding: 40px; width: 100%; max-width: 420px; box-shadow: 0 25px 50px rgba(0,0,0,0.4); }
+        .input-field { width: 100%; padding: 10px 14px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s; }
+        .input-field:focus { border-color: #1a56db; box-shadow: 0 0 0 3px rgba(26,86,219,0.1); }
+        .btn-primary { width: 100%; padding: 11px; background: #1a56db; color: white; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+        .btn-primary:hover { background: #1740a8; }
+        .tab-btn { flex: 1; padding: 8px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; border-radius: 4px; transition: all 0.15s; background: transparent; color: #6b7280; }
+        .tab-btn.active { background: #1a56db; color: white; }
+        .error-msg { background: #fef2f2; border: 1px solid #fca5a5; color: #c81e1e; padding: 10px 14px; border-radius: 6px; font-size: 13px; display: none; }
+        .success-msg { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; padding: 10px 14px; border-radius: 6px; font-size: 13px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <!-- Brand -->
+        <div style="text-align:center; margin-bottom:28px;">
+            <div style="width:44px; height:44px; background:#1a56db; color:white; font-weight:700; font-size:20px; border-radius:8px; display:flex; align-items:center; justify-content:center; margin:0 auto 12px;">W</div>
+            <h1 style="font-size:20px; font-weight:700; color:#111928;">WealthFlow <span style="color:#1a56db;">AI</span></h1>
+            <p style="font-size:13px; color:#6b7280; margin-top:4px;">Your intelligent financial advisor</p>
+        </div>
+
+        <!-- Tabs -->
+        <div style="display:flex; gap:4px; background:#f3f4f6; border-radius:6px; padding:4px; margin-bottom:24px;">
+            <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+            <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Register</button>
+        </div>
+
+        <!-- Messages -->
+        <div class="error-msg" id="error-msg"></div>
+        <div class="success-msg" id="success-msg"></div>
+
+        <!-- LOGIN FORM -->
+        <div id="form-login">
+            <div style="margin-bottom:16px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Email</label>
+                <input type="email" id="login-email" class="input-field" placeholder="you@example.com">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Password</label>
+                <input type="password" id="login-password" class="input-field" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" onclick="doLogin()" id="login-btn">Sign In</button>
+            <p style="text-align:center; font-size:12px; color:#9ca3af; margin-top:16px;">
+                No account? <a href="#" onclick="switchTab('register')" style="color:#1a56db;">Register here</a>
+            </p>
+        </div>
+
+        <!-- REGISTER FORM -->
+        <div id="form-register" style="display:none;">
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Full Name</label>
+                <input type="text" id="reg-name" class="input-field" placeholder="John Doe">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Email</label>
+                <input type="email" id="reg-email" class="input-field" placeholder="you@example.com">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Password</label>
+                <input type="password" id="reg-password" class="input-field" placeholder="Min 6 characters">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Monthly Salary (₹)</label>
+                <input type="number" id="reg-salary" class="input-field" placeholder="50000">
+            </div>
+            <div style="margin-bottom:24px;">
+                <label style="display:block; font-size:13px; font-weight:600; color:#374151; margin-bottom:6px;">Risk Tolerance</label>
+                <select id="reg-risk" class="input-field">
+                    <option value="low">Low — Safe investments</option>
+                    <option value="medium" selected>Medium — Balanced</option>
+                    <option value="high">High — Aggressive growth</option>
+                </select>
+            </div>
+            <button class="btn-primary" onclick="doRegister()" id="register-btn">Create Account</button>
+            <p style="text-align:center; font-size:12px; color:#9ca3af; margin-top:16px;">
+                Already have an account? <a href="#" onclick="switchTab('login')" style="color:#1a56db;">Sign in</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script>
+        // If already logged in, go to dashboard
+        if (localStorage.getItem('wealthflow_token')) {
+            window.location.href = 'index.html';
+        }
+
+        function switchTab(tab) {
+            document.getElementById('form-login').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('form-register').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('tab-login').className = 'tab-btn' + (tab === 'login' ? ' active' : '');
+            document.getElementById('tab-register').className = 'tab-btn' + (tab === 'register' ? ' active' : '');
+            hideMessages();
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('error-msg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('success-msg').style.display = 'none';
+        }
+
+        function showSuccess(msg) {
+            const el = document.getElementById('success-msg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            document.getElementById('error-msg').style.display = 'none';
+        }
+
+        function hideMessages() {
+            document.getElementById('error-msg').style.display = 'none';
+            document.getElementById('success-msg').style.display = 'none';
+        }
+
+        async function doLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            const btn = document.getElementById('login-btn');
+
+            if (!email || !password) { showError('Please enter email and password'); return; }
+
+            btn.textContent = 'Signing in...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${CONFIG.API.BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await res.json();
+                if (!res.ok) { showError(data.detail || 'Login failed'); return; }
+
+                localStorage.setItem('wealthflow_token', data.access_token);
+                localStorage.setItem('wealthflow_user', JSON.stringify(data.user));
+                showSuccess('Login successful! Redirecting...');
+                setTimeout(() => window.location.href = 'index.html', 800);
+
+            } catch (e) {
+                showError('Cannot connect to server. Is the backend running?');
+            } finally {
+                btn.textContent = 'Sign In';
+                btn.disabled = false;
+            }
+        }
+
+        async function doRegister() {
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const salary = parseFloat(document.getElementById('reg-salary').value) || 0;
+            const risk = document.getElementById('reg-risk').value;
+            const btn = document.getElementById('register-btn');
+
+            if (!name || !email || !password) { showError('Please fill all required fields'); return; }
+            if (password.length < 6) { showError('Password must be at least 6 characters'); return; }
+
+            btn.textContent = 'Creating account...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch(`${CONFIG.API.BASE_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, full_name: name, gross_monthly_salary: salary, risk_tolerance: risk })
+                });
+
+                const data = await res.json();
+                if (!res.ok) { showError(data.detail || 'Registration failed'); return; }
+
+                localStorage.setItem('wealthflow_token', data.access_token);
+                localStorage.setItem('wealthflow_user', JSON.stringify(data.user));
+                showSuccess('Account created! Redirecting...');
+                setTimeout(() => window.location.href = 'index.html', 800);
+
+            } catch (e) {
+                showError('Cannot connect to server. Is the backend running?');
+            } finally {
+                btn.textContent = 'Create Account';
+                btn.disabled = false;
+            }
+        }
+
+        // Allow Enter key to submit
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const activeForm = document.getElementById('form-login').style.display !== 'none' ? 'login' : 'register';
+                activeForm === 'login' ? doLogin() : doRegister();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -196,3 +196,71 @@ def calculate_expense_ratios(expenses_by_category: Dict[str, float], net_income:
         "by_category": expense_ratios,
         "warnings": warnings
     }
+
+def generate_smart_recommendations(user, debts, goals, expenses) -> List[dict]:
+    """
+    Generate smart financial recommendations based on user's profile.
+    """
+    recommendations = []
+    
+    net_income = user.net_monthly_income or 0
+    total_emi = sum(d.monthly_emi for d in debts)
+    total_expenses = sum(e.monthly_amount for e in expenses)
+    total_savings_needed = sum(g.monthly_contribution_needed for g in goals)
+    
+    # DTI check
+    if net_income > 0:
+        dti = (total_emi / net_income) * 100
+        if dti > 50:
+            recommendations.append({
+                "type": "debt",
+                "priority": "high",
+                "message": f"Your DTI ratio is {dti:.0f}% — critically high.",
+                "action": "Consider consolidating loans or increasing income to reduce debt burden."
+            })
+        elif dti > 40:
+            recommendations.append({
+                "type": "debt",
+                "priority": "medium",
+                "message": f"Your DTI ratio is {dti:.0f}% — above safe threshold.",
+                "action": "Avoid taking new loans and focus on debt repayment."
+            })
+    
+    # Savings check
+    available = net_income - total_expenses - total_emi
+    if available < 0:
+        recommendations.append({
+            "type": "budget",
+            "priority": "high",
+            "message": "Your expenses exceed your income — you're in a deficit.",
+            "action": "Review non-essential expenses immediately."
+        })
+    elif available < net_income * 0.1:
+        recommendations.append({
+            "type": "savings",
+            "priority": "medium",
+            "message": "Less than 10% of income is available after commitments.",
+            "action": "Try to reduce variable expenses to build a savings buffer."
+        })
+    
+    # Emergency fund check
+    emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
+    if not emergency_goal:
+        recommendations.append({
+            "type": "emergency_fund",
+            "priority": "high",
+            "message": "No emergency fund goal found.",
+            "action": f"Set up an emergency fund of at least ₹{total_expenses * 3:,.0f} (3 months expenses)."
+        })
+    
+    # Investment check
+    if net_income > 0 and total_emi / net_income < 0.4 and available > 0:
+        if not any(g.goal_type.value == "long_term" for g in goals):
+            recommendations.append({
+                "type": "investment",
+                "priority": "low",
+                "message": "No long-term investment goal detected.",
+                "action": "Consider SIPs or index funds for long-term wealth building."
+            })
+    
+    return recommendations

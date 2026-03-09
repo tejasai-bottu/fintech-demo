@@ -51,6 +51,11 @@
                     class="settings-tab">
                 💳 Debt Portfolio
             </button>
+            <button onclick="settingsManager.switchTab('bills')"
+                    id="settings-tab-bills"
+                    class="settings-tab">
+                💸 Bills & Cards
+            </button>
             <button onclick="settingsManager.switchTab('goals')"
                     id="settings-tab-goals"
                     class="settings-tab">
@@ -74,6 +79,10 @@
         </div>
         
         <div id="settings-content-debts" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+
+        <div id="settings-content-bills" class="settings-content hidden">
             <!-- Populated by settings.js -->
         </div>
         

@@ -10,8 +10,7 @@ from datetime import datetime, timedelta
 API_URL = "http://localhost:8000"
 
 def print_section(title):
-    print("
-" + "="*60)
+    print("\n" + "="*60)
     print(f"  {title}")
     print("="*60)
 
@@ -133,15 +132,13 @@ def test_financial_overview():
     if response.status_code == 200:
         result = response.json()
         
-        print("
-📊 Financial Summary:")
+        print("\n📊 Financial Summary:")
         print(f"  Net Income: ₹{result['income']['net_monthly']:,.0f}")
         print(f"  Total Expenses: ₹{result['commitments']['total_expenses']:,.0f}")
         print(f"  Total EMI: ₹{result['commitments']['total_emi']:,.0f}")
         print(f"  Available: ₹{result['savings']['available_monthly']:,.0f}")
         
-        print("
-🏥 Health Indicators:")
+        print("\n🏥 Health Indicators:")
         dti = result['health_indicators']['dti_ratio']
         print(f"  DTI Ratio: {dti['ratio']}% ({dti['status']})")
         
@@ -154,15 +151,12 @@ def test_financial_overview():
         print(f"  Feasibility: {'✅ Feasible' if feas['feasible'] else '❌ Not Feasible'}")
         
         if result['recommendations']:
-            print("
-💡 Recommendations:")
+            print("\n💡 Recommendations:")
             for rec in result['recommendations']:
                 print(f"  • [{rec['priority'].upper()}] {rec['message']}")
 
 def run_all_tests():
-    print("
-🚀 Starting Complete API Test Suite
-")
+    print("\n🚀 Starting Complete API Test Suite\n")
     
     try:
         # Test health endpoint first
@@ -171,8 +165,7 @@ def run_all_tests():
             print("❌ API is not running! Please start the server first.")
             return
         
-        print("✅ API is running
-")
+        print("✅ API is running\n")
         
         # Run all tests
         test_income_profile()
@@ -181,11 +174,9 @@ def run_all_tests():
         test_expense_categories()
         test_financial_overview()
         
-        print("
-" + "="*60)
+        print("\n" + "="*60)
         print("  ✅ ALL TESTS COMPLETED")
-        print("="*60 + "
-")
+        print("="*60 + "\n")
         
     except Exception as e:
         print(f"

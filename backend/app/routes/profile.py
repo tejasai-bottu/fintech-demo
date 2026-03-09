@@ -1,23 +1,45 @@
-from fastapi import APIRouter, Depends, HTTPException
+# backend/app/routes/profile.py
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from ..database import get_db
-from ..models import User, AdditionalIncome, Debt, SavingsGoal, ExpenseCategory, IncomeType, DebtType, Priority, GoalType
-from ..utils.tax_calculator import calculate_indian_income_tax, calculate_pf_deduction
-from ..utils.financial_health import *
+from ..models import (
+    User, AdditionalIncome, Debt, SavingsGoal, ExpenseCategory, 
+    IncomeType, Priority, GoalType, Investment, NetWorthSnapshot,
+    FinancialEvent, EventType, DebtType
+)
+from ..utils.financial_health import (
+    calculate_dti_ratio, 
+    calculate_emergency_fund_status,
+    validate_financial_feasibility,
+    calculate_expense_ratios,
+    generate_smart_recommendations
+)
+from ..utils.tax_calculator import calculate_tax_india
+from ..utils.forecasting_engine import forecast_net_worth
+from .auth import get_current_user
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
+limiter = Limiter(key_func=get_remote_address)
 
-# ========== PYDANTIC MODELS ==========
+# ─── Pydantic Models ────────────────────────────────────────────────────────
 
-class IncomeProfileUpdate(BaseModel):
+class AdditionalIncomeSchema(BaseModel):
+    source_name: str
+    monthly_amount: float
+    is_recurring: bool = True
+
+class IncomeUpdate(BaseModel):
     gross_monthly_salary: float
     income_type: str
     state: str
-    additional_incomes: Optional[List[dict]] = []
+    additional_incomes: List[AdditionalIncomeSchema] = []
 
 class DebtCreate(BaseModel):
     debt_type: str
@@ -33,7 +55,7 @@ class DebtCreate(BaseModel):
 class SavingsGoalCreate(BaseModel):
     goal_name: str
     target_amount: float
-    current_saved: float
+    current_saved: float = 0
     target_date: str
     priority: str
     goal_type: str
@@ -41,444 +63,416 @@ class SavingsGoalCreate(BaseModel):
 class ExpenseCategoryCreate(BaseModel):
     category_name: str
     monthly_amount: float
-    is_essential: bool
-    is_fixed: bool
+    is_essential: bool = True
+    is_fixed: bool = True
 
-# ========== INCOME ENDPOINTS ==========
+class ScenarioInput(BaseModel):
+    extra_monthly_savings: float = 0       # Additional savings per month
+    salary_change_percent: float = 0       # e.g., 10 for +10%, -5 for -5%
+    debt_prepayment: float = 0             # One-time extra principal payment
+    months: int = 24
 
-@router.put("/income")
-async def update_income_profile(
-    data: IncomeProfileUpdate,
-    db: Session = Depends(get_db)
-):
-    """
-    Update user income and calculate tax
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Update basic income
-    user.gross_monthly_salary = data.gross_monthly_salary
-    user.gross_annual_salary = data.gross_monthly_salary * 12
-    user.income_type = IncomeType(data.income_type)
-    user.state = data.state
-    
-    # Calculate tax
-    tax_info = calculate_indian_income_tax(user.gross_annual_salary, data.state)
-    user.tax_amount = tax_info["monthly_tax"]
-    
-    # Calculate PF
-    user.pf_amount = calculate_pf_deduction(data.gross_monthly_salary)
-    
-    # Calculate net income
-    user.net_monthly_income = (
-        data.gross_monthly_salary 
-        - user.tax_amount 
-        - user.pf_amount 
-        - (user.other_deductions or 0)
-    )
-    
-    # Handle additional incomes
-    # First, delete existing
-    db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).delete()
-    
-    # Add new ones
-    total_additional = 0
-    for add_income in data.additional_incomes:
-        new_income = AdditionalIncome(
-            user_id=user.id,
-            source_name=add_income["source_name"],
-            monthly_amount=add_income["monthly_amount"],
-            is_recurring=add_income.get("is_recurring", True)
-        )
-        db.add(new_income)
-        total_additional += add_income["monthly_amount"]
-    
-    # Add additional income to net
-    user.net_monthly_income += total_additional
-    
-    db.commit()
-    db.refresh(user)
-    
-    return {
-        "message": "Income profile updated successfully",
-        "income_breakdown": {
-            "gross_monthly": user.gross_monthly_salary,
-            "gross_annual": user.gross_annual_salary,
-            "tax_monthly": user.tax_amount,
-            "pf_monthly": user.pf_amount,
-            "additional_income": total_additional,
-            "net_monthly": user.net_monthly_income
-        },
-        "tax_details": tax_info
-    }
+# ─── Income Routes ──────────────────────────────────────────────────────────
 
 @router.get("/income")
-async def get_income_profile(db: Session = Depends(get_db)):
-    """
-    Get complete income profile
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    additional_incomes = db.query(AdditionalIncome).filter(
-        AdditionalIncome.user_id == user.id
-    ).all()
+async def get_income_profile(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    additional = db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).all()
     
     return {
         "gross_monthly_salary": user.gross_monthly_salary,
-        "gross_annual_salary": user.gross_annual_salary,
-        "income_type": user.income_type,
+        "net_monthly_income": user.net_monthly_income,
+        "income_type": user.income_type.value if user.income_type else None,
         "state": user.state,
         "tax_amount": user.tax_amount,
         "pf_amount": user.pf_amount,
-        "other_deductions": user.other_deductions,
-        "net_monthly_income": user.net_monthly_income,
         "additional_incomes": [
             {
-                "id": inc.id,
                 "source_name": inc.source_name,
                 "monthly_amount": inc.monthly_amount,
                 "is_recurring": inc.is_recurring
-            } for inc in additional_incomes
+            } for inc in additional
         ]
     }
 
-# ========== DEBT ENDPOINTS ==========
+@router.put("/income")
+async def update_income_profile(
+    data: IncomeUpdate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    # Validate income is realistic
+    if data.gross_monthly_salary > 10_000_000:  # ₹1 Crore/month
+        raise HTTPException(status_code=400, detail="Salary value seems unrealistically high")
 
-@router.post("/debts")
-async def create_debt(data: DebtCreate, db: Session = Depends(get_db)):
-    """
-    Add new debt to portfolio
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Create debt
-    new_debt = Debt(
-        user_id=user.id,
-        debt_type=DebtType(data.debt_type),
-        debt_name=data.debt_name,
-        total_principal=data.total_principal,
-        outstanding_principal=data.outstanding_principal,
-        interest_rate=data.interest_rate,
-        tenure_months=data.tenure_months,
-        remaining_months=data.remaining_months,
-        monthly_emi=data.monthly_emi,
-        start_date=datetime.fromisoformat(data.start_date),
-        is_active=True
-    )
-    
-    db.add(new_debt)
-    db.commit()
-    db.refresh(new_debt)
-    
-    # Recalculate DTI ratio
-    all_debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    
-    total_emi = sum(debt.monthly_emi for debt in all_debts)
-    dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
-    
-    return {
-        "message": "Debt added successfully",
-        "debt": {
-            "id": new_debt.id,
-            "debt_name": new_debt.debt_name,
-            "debt_type": new_debt.debt_type,
-            "monthly_emi": new_debt.monthly_emi,
-            "outstanding_principal": new_debt.outstanding_principal
-        },
-        "portfolio_summary": {
-            "total_debts": len(all_debts),
-            "total_emi": round(total_emi, 2),
-            "dti_ratio": dti_info
+    if data.gross_monthly_salary < 1000:
+        raise HTTPException(status_code=400, detail="Salary must be at least ₹1,000/month")
+
+    try:
+        # Calculate Tax (India)
+        tax_result = calculate_tax_india(data.gross_monthly_salary * 12, data.state)
+        
+        # Update User
+        user.gross_monthly_salary = data.gross_monthly_salary
+        user.gross_annual_salary = data.gross_monthly_salary * 12
+        user.income_type = IncomeType(data.income_type)
+        user.state = data.state
+        user.tax_amount = tax_result["monthly_tax"]
+        user.pf_amount = tax_result["monthly_pf"]
+        user.net_monthly_income = tax_result["monthly_net_take_home"]
+        
+        # Update Additional Incomes (Delete and Replace)
+        db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).delete()
+        for inc in data.additional_incomes:
+            new_inc = AdditionalIncome(
+                user_id=user.id,
+                source_name=inc.source_name,
+                monthly_amount=inc.monthly_amount,
+                is_recurring=inc.is_recurring
+            )
+            db.add(new_inc)
+            user.net_monthly_income += inc.monthly_amount
+            
+        db.commit()
+        db.refresh(user)
+        
+        return {
+            "message": "Income profile updated",
+            "income_breakdown": {
+                "gross_monthly": user.gross_monthly_salary,
+                "tax_monthly": user.tax_amount,
+                "pf_monthly": user.pf_amount,
+                "net_monthly": user.net_monthly_income
+            }
         }
-    }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update income: {str(e)}")
+
+# ─── Debt Routes ────────────────────────────────────────────────────────────
 
 @router.get("/debts")
-async def get_all_debts(db: Session = Depends(get_db)):
-    """
-    Get all user debts with portfolio summary
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def get_debts(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    
-    total_emi = sum(debt.monthly_emi for debt in debts)
-    total_outstanding = sum(debt.outstanding_principal for debt in debts)
-    
+    total_emi = sum(d.monthly_emi for d in debts)
     dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
     
     return {
         "debts": [
             {
-                "id": debt.id,
-                "debt_name": debt.debt_name,
-                "debt_type": debt.debt_type,
-                "total_principal": debt.total_principal,
-                "outstanding_principal": debt.outstanding_principal,
-                "interest_rate": debt.interest_rate,
-                "monthly_emi": debt.monthly_emi,
-                "remaining_months": debt.remaining_months,
-                "start_date": debt.start_date.isoformat() if debt.start_date else None,
-                "progress_percentage": round(
-                    ((debt.total_principal - debt.outstanding_principal) / debt.total_principal) * 100, 2
-                ) if debt.total_principal > 0 else 0
-            } for debt in debts
+                "id": d.id,
+                "debt_type": d.debt_type.value,
+                "debt_name": d.debt_name,
+                "outstanding_principal": d.outstanding_principal,
+                "interest_rate": d.interest_rate,
+                "remaining_months": d.remaining_months,
+                "monthly_emi": d.monthly_emi,
+                "progress_percentage": round((1 - d.outstanding_principal/d.total_principal) * 100, 1) if d.total_principal > 0 else 0
+            } for d in debts
         ],
         "summary": {
             "total_debts": len(debts),
             "total_emi": round(total_emi, 2),
-            "total_outstanding": round(total_outstanding, 2),
             "dti_ratio": dti_info
         }
     }
 
-@router.delete("/debts/{debt_id}")
-async def delete_debt(debt_id: int, db: Session = Depends(get_db)):
-    """
-    Delete/mark debt as completed
-    """
-    debt = db.query(Debt).filter(Debt.id == debt_id).first()
+@router.post("/debts")
+async def create_debt(
+    data: DebtCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
     
+    # Validate EMI vs income
+    if user.net_monthly_income and data.monthly_emi > user.net_monthly_income:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Monthly EMI (₹{data.monthly_emi:,.0f}) cannot exceed net income "
+                   f"(₹{user.net_monthly_income:,.0f})"
+        )
+
+    # Validate outstanding <= principal
+    if data.outstanding_principal > data.total_principal:
+        raise HTTPException(
+            status_code=400,
+            detail="Outstanding principal cannot exceed total principal"
+        )
+
+    # Check total DTI after adding this debt
+    existing_debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    current_total_emi = sum(d.monthly_emi for d in existing_debts)
+    new_total_emi = current_total_emi + data.monthly_emi
+
+    dti_warning = None
+    if user.net_monthly_income and (new_total_emi / user.net_monthly_income) > 0.80:
+        dti_warning = f"Total DTI will reach {(new_total_emi/user.net_monthly_income*100):.0f}% — very high"
+
+    try:
+        new_debt = Debt(
+            user_id=user.id,
+            debt_type=DebtType(data.debt_type),
+            debt_name=data.debt_name,
+            total_principal=data.total_principal,
+            outstanding_principal=data.outstanding_principal,
+            interest_rate=data.interest_rate,
+            tenure_months=data.tenure_months,
+            remaining_months=data.remaining_months,
+            monthly_emi=data.monthly_emi,
+            start_date=datetime.fromisoformat(data.start_date),
+            expected_end_date=datetime.utcnow() + timedelta(days=data.remaining_months * 30)
+        )
+        db.add(new_debt)
+        
+        # Log event
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.DEBT_ADDED,
+            description=f"New debt added: {data.debt_name} — EMI ₹{data.monthly_emi:,.0f}",
+            amount=data.total_principal,
+            reference_type="debt"
+        )
+        db.add(event)
+        
+        db.commit()
+        db.refresh(new_debt)
+        
+        return {
+            "message": "Debt added successfully",
+            "debt": {"id": new_debt.id, "debt_name": new_debt.debt_name},
+            "portfolio_summary": (await get_debts(db, user)),
+            "warning": dti_warning
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to add debt: {str(e)}")
+
+@router.delete("/debts/{debt_id}")
+async def delete_debt(
+    debt_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    debt = db.query(Debt).filter(Debt.id == debt_id, Debt.user_id == current_user.id).first()
     if not debt:
         raise HTTPException(status_code=404, detail="Debt not found")
-    
-    debt.is_active = False
-    debt.completed_at = datetime.utcnow()
-    
+    db.delete(debt)
     db.commit()
-    
-    return {"message": "Debt marked as completed"}
+    return {"message": "Debt deleted"}
 
-# ========== SAVINGS GOALS ENDPOINTS ==========
-
-@router.post("/savings-goals")
-async def create_savings_goal(data: SavingsGoalCreate, db: Session = Depends(get_db)):
-    """
-    Create new savings goal with feasibility check
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Calculate monthly contribution needed
-    target_date = datetime.fromisoformat(data.target_date)
-    months_to_goal = max(1, (target_date.year - datetime.now().year) * 12 + (target_date.month - datetime.now().month))
-    
-    monthly_needed = (data.target_amount - data.current_saved) / months_to_goal
-    
-    # Create goal
-    new_goal = SavingsGoal(
-        user_id=user.id,
-        goal_name=data.goal_name,
-        target_amount=data.target_amount,
-        current_saved=data.current_saved,
-        target_date=target_date,
-        priority=Priority(data.priority),
-        goal_type=GoalType(data.goal_type),
-        monthly_contribution_needed=monthly_needed
-    )
-    
-    db.add(new_goal)
-    db.commit()
-    db.refresh(new_goal)
-    
-    # Check feasibility
-    all_goals = db.query(SavingsGoal).filter(
-        SavingsGoal.user_id == user.id,
-        SavingsGoal.is_achieved == False
-    ).all()
-    
-    total_savings_needed = sum(goal.monthly_contribution_needed for goal in all_goals)
-    
-    # Get current commitments
-    active_debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    total_emi = sum(debt.monthly_emi for debt in active_debts)
-    
-    expense_categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    total_expenses = sum(exp.monthly_amount for exp in expense_categories)
-    
-    feasibility = validate_financial_feasibility(
-        user.net_monthly_income,
-        total_expenses,
-        total_emi,
-        total_savings_needed
-    )
-    
-    return {
-        "message": "Savings goal created",
-        "goal": {
-            "id": new_goal.id,
-            "goal_name": new_goal.goal_name,
-            "target_amount": new_goal.target_amount,
-            "monthly_contribution_needed": round(monthly_needed, 2),
-            "months_to_goal": months_to_goal
-        },
-        "feasibility_check": feasibility
-    }
+# ─── Savings Goals Routes ───────────────────────────────────────────────────
 
 @router.get("/savings-goals")
-async def get_savings_goals(db: Session = Depends(get_db)):
-    """
-    Get all savings goals with progress
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def get_savings_goals(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    goals = db.query(SavingsGoal).filter(SavingsGoal.user_id == user.id).all()
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    goals = db.query(SavingsGoal).filter(
-        SavingsGoal.user_id == user.id,
-        SavingsGoal.is_achieved == False
-    ).all()
-    
-    total_monthly_needed = sum(goal.monthly_contribution_needed for goal in goals)
+    total_needed = sum(g.monthly_contribution_needed for g in goals)
     
     return {
         "goals": [
             {
-                "id": goal.id,
-                "goal_name": goal.goal_name,
-                "target_amount": goal.target_amount,
-                "current_saved": goal.current_saved,
-                "progress_percentage": round((goal.current_saved / goal.target_amount) * 100, 2) if goal.target_amount > 0 else 0,
-                "monthly_contribution_needed": goal.monthly_contribution_needed,
-                "target_date": goal.target_date.isoformat() if goal.target_date else None,
-                "priority": goal.priority,
-                "goal_type": goal.goal_type
-            } for goal in goals
+                "id": g.id,
+                "goal_name": g.goal_name,
+                "target_amount": g.target_amount,
+                "current_saved": g.current_saved,
+                "target_date": g.target_date.isoformat(),
+                "priority": g.priority.value,
+                "goal_type": g.goal_type.value,
+                "monthly_contribution_needed": round(g.monthly_contribution_needed, 2),
+                "progress_percentage": round((g.current_saved / g.target_amount) * 100, 1) if g.target_amount > 0 else 0
+            } for g in goals
         ],
         "summary": {
             "total_goals": len(goals),
-            "total_monthly_contribution_needed": round(total_monthly_needed, 2)
+            "total_monthly_contribution_needed": round(total_needed, 2)
         }
     }
 
-# ========== EXPENSES ENDPOINTS ==========
+@router.post("/savings-goals")
+async def create_savings_goal(
+    data: SavingsGoalCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    # Logic to calculate monthly needed
+    target_date = datetime.fromisoformat(data.target_date)
+    months_left = (target_date - datetime.utcnow()).days / 30
+    if months_left <= 0: months_left = 1
+    
+    monthly_needed = (data.target_amount - data.current_saved) / months_left
+    if monthly_needed < 0: monthly_needed = 0
+    
+    # Validate target is achievable given cashflow
+    from ..utils.financial_engine import calculate_cashflow
+    cashflow = calculate_cashflow(user, db)
+    available = cashflow["cashflow"]
+
+    feasibility_warning = None
+    if monthly_needed > available * 2:  # Warn if contribution > 2x available cashflow
+        feasibility_warning = (
+            f"Monthly contribution needed (₹{monthly_needed:,.0f}) is very high "
+            f"compared to available cashflow (₹{available:,.0f})"
+        )
+
+    try:
+        new_goal = SavingsGoal(
+            user_id=user.id,
+            goal_name=data.goal_name,
+            target_amount=data.target_amount,
+            current_saved=data.current_saved,
+            target_date=target_date,
+            priority=Priority(data.priority),
+            goal_type=GoalType(data.goal_type),
+            monthly_contribution_needed=monthly_needed
+        )
+        db.add(new_goal)
+        
+        # Log event
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.GOAL_CREATED,
+            description=f"Savings goal created: {data.goal_name} — target ₹{data.target_amount:,.0f}",
+            amount=data.target_amount,
+            reference_type="goal"
+        )
+        db.add(event)
+        
+        db.commit()
+        db.refresh(new_goal)
+        
+        # Check feasibility
+        feasibility = validate_financial_feasibility(
+            user.net_monthly_income, 
+            0, 
+            0, 
+            monthly_needed
+        )
+        
+        return {
+            "message": "Goal created successfully",
+            "goal": {
+                "id": new_goal.id,
+                "goal_name": new_goal.goal_name,
+                "monthly_contribution_needed": round(monthly_needed, 2)
+            },
+            "feasibility_check": feasibility,
+            "warning": feasibility_warning
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create goal: {str(e)}")
+
+@router.delete("/savings-goals/{goal_id}")
+async def delete_savings_goal(
+    goal_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    goal = db.query(SavingsGoal).filter(SavingsGoal.id == goal_id, SavingsGoal.user_id == current_user.id).first()
+    if not goal:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    db.delete(goal)
+    db.commit()
+    return {"message": "Goal deleted"}
+
+# ─── Expense Categories Routes ──────────────────────────────────────────────
+
+@router.get("/expense-categories")
+async def get_expense_categories(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    categories = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    
+    total_expenses = sum(c.monthly_amount for c in categories)
+    essential_expenses = sum(c.monthly_amount for c in categories if c.is_essential)
+    
+    expenses_dict = {c.category_name: c.monthly_amount for c in categories}
+    analysis = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
+    
+    return {
+        "categories": [
+            {
+                "id": c.id,
+                "category_name": c.category_name,
+                "monthly_amount": c.monthly_amount,
+                "is_essential": c.is_essential,
+                "is_fixed": c.is_fixed,
+                "percentage_of_income": round((c.monthly_amount / user.net_monthly_income) * 100, 1) if user.net_monthly_income > 0 else 0
+            } for c in categories
+        ],
+        "summary": {
+            "total_expenses": round(total_expenses, 2),
+            "essential_expenses": round(essential_expenses, 2),
+            "non_essential_expenses": round(total_expenses - essential_expenses, 2),
+            "expense_ratio": round((total_expenses / user.net_monthly_income) * 100, 1) if user.net_monthly_income > 0 else 0
+        },
+        "analysis": analysis
+    }
 
 @router.post("/expense-categories")
-async def create_expense_category(data: ExpenseCategoryCreate, db: Session = Depends(get_db)):
-    """
-    Add expense category
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def create_expense_category(
+    data: ExpenseCategoryCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    new_category = ExpenseCategory(
+    new_cat = ExpenseCategory(
         user_id=user.id,
         category_name=data.category_name,
         monthly_amount=data.monthly_amount,
         is_essential=data.is_essential,
         is_fixed=data.is_fixed
     )
-    
-    db.add(new_category)
+    db.add(new_cat)
     db.commit()
-    db.refresh(new_category)
+    db.refresh(new_cat)
     
-    # Calculate expense ratios
-    all_categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    
-    expenses_dict = {cat.category_name: cat.monthly_amount for cat in all_categories}
-    ratios = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
-    
-    return {
-        "message": "Expense category added",
-        "category": {
-            "id": new_category.id,
-            "category_name": new_category.category_name,
-            "monthly_amount": new_category.monthly_amount
-        },
-        "expense_analysis": ratios
-    }
+    return {"message": "Expense category added", "category_id": new_cat.id}
 
-@router.get("/expense-categories")
-async def get_expense_categories(db: Session = Depends(get_db)):
-    """
-    Get all expense categories with analysis
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    
-    total_expenses = sum(cat.monthly_amount for cat in categories)
-    essential_expenses = sum(cat.monthly_amount for cat in categories if cat.is_essential)
-    non_essential = total_expenses - essential_expenses
-    
-    expenses_dict = {cat.category_name: cat.monthly_amount for cat in categories}
-    ratios = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
-    
-    return {
-        "categories": [
-            {
-                "id": cat.id,
-                "category_name": cat.category_name,
-                "monthly_amount": cat.monthly_amount,
-                "is_essential": cat.is_essential,
-                "is_fixed": cat.is_fixed,
-                "percentage_of_income": round((cat.monthly_amount / user.net_monthly_income) * 100, 2) if user.net_monthly_income > 0 else 0
-            } for cat in categories
-        ],
-        "summary": {
-            "total_expenses": round(total_expenses, 2),
-            "essential_expenses": round(essential_expenses, 2),
-            "non_essential_expenses": round(non_essential, 2),
-            "expense_ratio": round((total_expenses / user.net_monthly_income) * 100, 2) if user.net_monthly_income > 0 else 0
-        },
-        "analysis": ratios
-    }
+@router.delete("/expense-categories/{category_id}")
+async def delete_expense_category(
+    category_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    category = db.query(ExpenseCategory).filter(ExpenseCategory.id == category_id, ExpenseCategory.user_id == current_user.id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted"}
 
-# ========== FINANCIAL OVERVIEW ==========
+# ─── Financial Overview ─────────────────────────────────────────────────────
 
 @router.get("/financial-overview")
-async def get_financial_overview(db: Session = Depends(get_db)):
+async def get_financial_overview(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
     Complete financial health dashboard
     """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = current_user
     
     # Get all data
     debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
@@ -497,7 +491,6 @@ async def get_financial_overview(db: Session = Depends(get_db)):
     dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
     
     # Emergency Fund Status
-    # Assume first goal named "Emergency Fund" or create default check
     emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
     emergency_saved = emergency_goal.current_saved if emergency_goal else 0
     emergency_status = calculate_emergency_fund_status(emergency_saved, total_expenses)
@@ -546,46 +539,175 @@ async def get_financial_overview(db: Session = Depends(get_db)):
         "recommendations": generate_smart_recommendations(user, debts, goals, expenses)
     }
 
-def generate_smart_recommendations(user, debts, goals, expenses):
+# ─── Forecasting and Scenarios ──────────────────────────────────────────────
+
+@router.get("/forecast")
+@limiter.limit("60/minute")
+async def get_financial_forecast(
+    request: Request,
+    scenario: str = "normal", 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    expenses = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    investments = db.query(Investment).filter(Investment.user_id == user.id).all()
+    
+    total_emi = sum(d.monthly_emi for d in debts)
+    total_expenses = sum(e.monthly_amount for e in expenses)
+    total_investments = sum(i.amount for i in investments)
+    total_debt = sum(d.outstanding_principal for d in debts)
+    
+    projections = forecast_net_worth(
+        net_income=user.net_monthly_income or 0,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=total_investments,
+        total_debt=total_debt,
+        months=24,
+        scenario=scenario
+    )
+    
+    return {
+        "scenario": scenario,
+        "projections": projections,
+        "summary": {
+            "current_net_worth": round(total_investments - total_debt, 2),
+            "projected_net_worth_12m": projections[11]["net_worth"] if len(projections) > 11 else 0,
+            "projected_net_worth_24m": projections[23]["net_worth"] if len(projections) > 23 else 0
+        }
+    }
+
+@router.get("/net-worth-history")
+async def get_net_worth_history(
+    days: int = 30, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
-    Generate personalized recommendations
+    Returns net worth snapshots for the past N days.
+    Used for the net worth trend chart.
     """
-    recommendations = []
-    
-    total_emi = sum(debt.monthly_emi for debt in debts)
-    total_expenses = sum(exp.monthly_amount for exp in expenses)
-    total_debt_outstanding = sum(debt.outstanding_principal for debt in debts)
-    
-    dti = (total_emi / user.net_monthly_income) * 100 if user.net_monthly_income > 0 else 0
-    
-    # DTI-based recommendations
-    if dti > 40:
-        recommendations.append({
-            "type": "debt",
-            "priority": "high",
-            "message": f"DTI at {dti:.1f}% - Focus on debt reduction",
-            "action": "Consider debt consolidation or extra payments to high-interest loans"
-        })
-    
-    # Expense-based recommendations
-    for exp in expenses:
-        ratio = (exp.monthly_amount / user.net_monthly_income) * 100 if user.net_monthly_income > 0 else 0
-        if exp.category_name.lower() == "housing" and ratio > 40:
-            recommendations.append({
-                "type": "expense",
-                "priority": "medium",
-                "message": f"Housing costs at {ratio:.1f}% of income",
-                "action": "Consider relocating or finding roommate to reduce rent"
-            })
-    
-    # Emergency fund recommendation
-    emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
-    if not emergency_goal or (emergency_goal and emergency_goal.current_saved < total_expenses * 3):
-        recommendations.append({
-            "type": "savings",
-            "priority": "high",
-            "message": "Emergency fund insufficient",
-            "action": f"Build {total_expenses * 3:,.0f} emergency fund (3 months expenses) before aggressive investing"
-        })
-    
-    return recommendations
+    user = current_user
+
+    since = datetime.utcnow() - timedelta(days=days)
+    snapshots = db.query(NetWorthSnapshot).filter(
+        NetWorthSnapshot.user_id == user.id,
+        NetWorthSnapshot.snapshot_date >= since
+    ).order_by(NetWorthSnapshot.snapshot_date.asc()).all()
+
+    if not snapshots:
+        # Return current calculated value as single data point
+        from ..utils.financial_engine import calculate_net_worth
+        nw = calculate_net_worth(user, db)
+        return {
+            "snapshots": [{
+                "date": datetime.utcnow().strftime("%d %b"),
+                "net_worth": nw["net_worth"],
+                "assets": nw["assets"]["total"],
+                "liabilities": nw["liabilities"]["total"]
+            }],
+            "days_of_data": 1,
+            "trend": "insufficient_data"
+        }
+
+    result = [
+        {
+            "date": s.snapshot_date.strftime("%d %b"),
+            "net_worth": round(s.net_worth, 2),
+            "assets": round(s.total_assets, 2),
+            "liabilities": round(s.total_liabilities, 2)
+        }
+        for s in snapshots
+    ]
+
+    # Calculate trend
+    first_nw = snapshots[0].net_worth
+    last_nw = snapshots[-1].net_worth
+    change = last_nw - first_nw
+    trend = "up" if change > 0 else "down" if change < 0 else "flat"
+
+    return {
+        "snapshots": result,
+        "days_of_data": len(snapshots),
+        "trend": trend,
+        "change": round(change, 2),
+        "change_pct": round((change / abs(first_nw) * 100), 2) if first_nw != 0 else 0
+    }
+
+@router.post("/scenario/simulate")
+@limiter.limit("30/minute")
+async def simulate_scenario(
+    request: Request,
+    data: ScenarioInput, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Run 'what-if' scenarios:
+    - What if I got a 20% salary hike?
+    - What if I paid extra ₹5000/month toward debt?
+    - What if I added ₹3000/month to savings?
+    """
+    user = current_user
+
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    expenses = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    investments = db.query(Investment).filter(Investment.user_id == user.id).all()
+
+    total_emi = sum(d.monthly_emi for d in debts)
+    total_expenses = sum(e.monthly_amount for e in expenses)
+    total_investments = sum(i.amount for i in investments)
+    total_debt = sum(d.outstanding_principal for d in debts)
+
+    # Apply scenario modifiers
+    modified_income = user.net_monthly_income or 0
+    if data.salary_change_percent != 0:
+        modified_income *= (1 + data.salary_change_percent / 100)
+
+    modified_investments = total_investments
+    modified_debt = max(0, total_debt - data.debt_prepayment)
+
+    # Run base scenario (current state)
+    base_projections = forecast_net_worth(
+        net_income=user.net_monthly_income or 0,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=total_investments,
+        total_debt=total_debt,
+        months=data.months,
+        scenario="normal"
+    )
+
+    # Run modified scenario
+    modified_projections = forecast_net_worth(
+        net_income=modified_income,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=modified_investments + data.extra_monthly_savings,
+        total_debt=modified_debt,
+        months=data.months,
+        scenario="normal"
+    )
+
+    base_final = base_projections[-1]["net_worth"] if base_projections else 0
+    modified_final = modified_projections[-1]["net_worth"] if modified_projections else 0
+    improvement = modified_final - base_final
+
+    return {
+        "scenario_inputs": data.dict(),
+        "base_scenario": {
+            "label": "Current Path",
+            "projections": base_projections,
+            "final_net_worth": round(base_final, 2)
+        },
+        "modified_scenario": {
+            "label": "With Changes",
+            "projections": modified_projections,
+            "final_net_worth": round(modified_final, 2)
+        },
+        "improvement": round(improvement, 2),
+        "improvement_pct": round((improvement / abs(base_final) * 100), 2) if base_final != 0 else 0
+    }

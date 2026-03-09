@@ -56,3 +56,16 @@ def calculate_pf_deduction(gross_monthly: float) -> float:
     basic_salary = gross_monthly * 0.5
     pf = basic_salary * 0.12
     return round(pf, 2)
+
+def calculate_tax_india(annual_income: float, state: str = None) -> dict:
+    """Alias that matches what profile.py expects"""
+    tax = calculate_indian_income_tax(annual_income, state)
+    pf = calculate_pf_deduction(annual_income / 12)
+    net = (annual_income / 12) - tax["monthly_tax"] - pf
+    return {
+        "monthly_tax": tax["monthly_tax"],
+        "monthly_pf": pf,
+        "monthly_net_take_home": round(net, 2),
+        "annual_tax": tax["annual_tax"],
+        "effective_rate": tax["effective_rate"]
+    }

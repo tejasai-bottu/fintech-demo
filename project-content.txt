@@ -1,5 +1,5 @@
 ﻿===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\.dockerignore
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\.dockerignore
 ===============================
 **/__pycache__
 **/.pytest_cache
@@ -14,7 +14,93 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\.dockerignore
 **/*.log
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\docker-compose.yml
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\alembic.ini
+===============================
+# A generic, single database configuration.
+
+[alembic]
+# path to migration scripts
+script_location = alembic
+
+# template used to generate migration files
+# file_template = %%(rev)s_%%(slug)s
+
+# sys.path path, will be prepended to sys.path if present.
+# defaults to the current working directory.
+prepend_sys_path = .
+
+# timezone to use when rendering the date within the migration file
+# leave blank for local time
+# timezone =
+
+# max length of characters to apply to the "slug" field
+# truncate_slug = 40
+
+# set to 'true' to run the environment during
+# the 'revision' command, regardless of autogenerate
+# revision_environment = false
+
+# set to 'true' to allow .pyc files to be created
+# with logging configuration
+# sourceless = false
+
+# version location specification; This defaults
+# to alembic/versions.  When using multiple version
+# directories, severity should be configured via the
+# version_locations option.
+# version_locations = %(here)s/bar:%(here)s/bat:alembic/versions
+
+# the propagation of "version_locations" is
+# controlled; use "true" to propagate configurations.
+# recursive_version_locations = false
+
+# the output encoding used when writing to the stdout
+# output_encoding = utf-8
+
+# sqlalchemy.url = postgresql://user:pass@localhost/dbname
+
+
+[post_write_hooks]
+# post_write_hooks allows scripts to be run after generating a revision file
+# see https://alembic.sqlalchemy.org/en/latest/api/config.html#alembic.config.Config.set_main_option
+# for details
+
+[loggers]
+keys = root,sqlalchemy,alembic
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = WARN
+handlers = console
+qualname =
+
+[logger_sqlalchemy]
+level = WARN
+handlers =
+qualname = sqlalchemy.engine
+
+[logger_alembic]
+level = INFO
+handlers =
+qualname = alembic
+
+[handler_console]
+class = StreamHandler
+args = (sys.stdout,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(levelname)-5.5s [%(name)s] %(message)s
+datefmt = %H:%M:%S
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\docker-compose.yml
 ===============================
 services:
   db:
@@ -71,193 +157,7 @@ volumes:
   postgres_data:
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\PROJECT_COMPLETE.txt
-===============================
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║  ✅ AI FINANCIAL ADVISORY SYSTEM - PROJECT COMPLETE! ✅      ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
-
-📦 PROJECT STATUS: 100% COMPLETE AND READY TO RUN
-
-═══════════════════════════════════════════════════════════════
-
-📁 FILES CREATED:
-
-Backend (Python/FastAPI):
-  ✓ backend/Dockerfile
-  ✓ backend/requirements.txt
-  ✓ backend/app/__init__.py
-  ✓ backend/app/main.py
-  ✓ backend/app/models.py
-  ✓ backend/app/database.py
-  ✓ backend/app/ai_engine.py
-  ✓ backend/app/routes/auth.py
-  ✓ backend/app/routes/investment.py
-  ✓ backend/app/routes/debt.py
-  ✓ backend/app/routes/expense.py
-  ✓ backend/app/routes/dashboard.py
-  ✓ backend/app/utils/financial_calculations.py
-
-Frontend (HTML/JS/CSS):
-  ✓ frontend/Dockerfile
-  ✓ frontend/nginx.conf
-  ✓ frontend/index.html
-  ✓ frontend/login.html
-  ✓ frontend/register.html
-  ✓ frontend/dashboard.html
-  ✓ frontend/investment.html
-  ✓ frontend/debt.html
-  ✓ frontend/expense.html
-
-Configuration:
-  ✓ docker-compose.yml
-  ✓ .env
-  ✓ .dockerignore
-
-Documentation:
-  ✓ README.md (Complete guide)
-  ✓ QUICKSTART.md (Quick setup)
-  ✓ PROJECT_COMPLETE.txt (This file)
-
-═══════════════════════════════════════════════════════════════
-
-🚀 HOW TO RUN (3 SIMPLE STEPS):
-
-1. Start Docker Desktop (make sure it's running)
-
-2. Open terminal in project directory and run:
-   docker-compose up --build
-
-3. Open browser and go to:
-   http://localhost
-
-═══════════════════════════════════════════════════════════════
-
-🎯 WHAT TO DEMO:
-
-1. Landing Page (http://localhost)
-   - Professional fintech UI
-   - Clear value proposition
-
-2. Registration
-   - Email: demo@example.com
-   - Password: demo123
-   - Income: 50000
-   - Risk: Medium
-
-3. Dashboard
-   - Financial overview
-   - Market insights
-   - Real-time calculations
-
-4. Investment Module
-   - Amount: ₹100,000
-   - Duration: 5 years
-   - Type: Mutual Funds
-   - Risk: Medium
-   - Shows AI prediction with chart
-
-5. Debt Manager
-   - Loan: ₹500,000
-   - Rate: 10.5%
-   - Tenure: 60 months
-   - Shows EMI and schedule
-
-6. Expense Analyzer
-   - Add multiple expenses
-   - Get AI insights
-   - See breakdown chart
-
-═══════════════════════════════════════════════════════════════
-
-📊 FEATURES INCLUDED:
-
-✅ User authentication (register/login)
-✅ AI-powered investment predictions
-✅ Real financial calculations (EMI, FV, ROI)
-✅ Debt management with amortization
-✅ Expense analysis with insights
-✅ Interactive dashboards
-✅ Beautiful charts (Chart.js)
-✅ Responsive design (Tailwind CSS)
-✅ RESTful API (FastAPI)
-✅ PostgreSQL database
-✅ Docker containerization
-✅ Production-ready architecture
-
-═══════════════════════════════════════════════════════════════
-
-🔧 TROUBLESHOOTING:
-
-Port 80 in use?
-  - Change in docker-compose.yml: "8080:80"
-  - Access at http://localhost:8080
-
-Build failed?
-  - Run: docker-compose down -v
-  - Run: docker system prune -a
-  - Rebuild: docker-compose up --build
-
-Can't connect?
-  - Check Docker is running
-  - Check ports are available
-  - View logs: docker-compose logs
-
-═══════════════════════════════════════════════════════════════
-
-📚 DOCUMENTATION:
-
-For complete documentation, see:
-  - README.md (Full guide with everything)
-  - QUICKSTART.md (5-minute setup)
-  - API Docs: http://localhost:8000/docs
-
-═══════════════════════════════════════════════════════════════
-
-🎓 TECHNICAL HIGHLIGHTS TO MENTION:
-
-✓ Microservices architecture with Docker
-✓ Containerized deployment (production-ready)
-✓ RESTful API design
-✓ Rule-based AI engine (can be replaced with real ML)
-✓ Real financial formulas (EMI, compound interest)
-✓ Responsive frontend design
-✓ PostgreSQL for data persistence
-✓ JWT-based authentication
-✓ CORS-enabled API
-✓ Professional UI/UX
-
-═══════════════════════════════════════════════════════════════
-
-💡 DEMO TIPS:
-
-1. Start with the landing page to show professionalism
-2. Register a new account live during demo
-3. Show the dashboard first for overview
-4. Demonstrate investment prediction with different risk levels
-5. Show EMI calculator with real calculations
-6. Add multiple expenses and show AI insights
-7. Mention the Docker containerization
-8. Highlight the API documentation
-9. Explain the scalable architecture
-10. Emphasize real formulas vs fake numbers
-
-═══════════════════════════════════════════════════════════════
-
-🎉 YOU'RE ALL SET!
-
-Your complete AI Financial Advisory System is ready for demo.
-All files are in place, Docker configuration is complete, and
-the system is production-ready.
-
-Good luck with your presentation! 🚀
-
-═══════════════════════════════════════════════════════════════
-
-===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\README.md
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\README.md
 ===============================
 # 🚀 AI-Powered Financial Advisory System
 
@@ -1016,7 +916,109 @@ You're ready to demo! 🚀
 **Built with ❤️ for learning and demonstration purposes**
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\Dockerfile
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\alembic\env.py
+===============================
+# alembic/env.py
+
+import os
+from logging.config import fileConfig
+from sqlalchemy import engine_from_config, pool
+from alembic import context
+
+# Import your models so Alembic can detect them
+import sys
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from app.models import Base
+
+# Alembic Config object
+config = context.config
+
+# Set up logging from alembic.ini
+if config.config_file_name is not None:
+    fileConfig(config.config_file_name)
+
+# Point Alembic at your models' metadata
+target_metadata = Base.metadata
+
+# Read DATABASE_URL from environment
+def get_url():
+    return os.getenv(
+        "DATABASE_URL",
+        "postgresql://fintech_user:securePassword123@db:5432/fintech_db"
+    )
+
+
+def run_migrations_offline() -> None:
+    """Run migrations without a live DB connection."""
+    url = get_url()
+    context.configure(
+        url=url,
+        target_metadata=target_metadata,
+        literal_binds=True,
+        dialect_opts={"paramstyle": "named"},
+    )
+    with context.begin_transaction():
+        context.run_migrations()
+
+
+def run_migrations_online() -> None:
+    """Run migrations against a live DB connection."""
+    configuration = config.get_section(config.config_ini_section, {})
+    configuration["sqlalchemy.url"] = get_url()
+
+    connectable = engine_from_config(
+        configuration,
+        prefix="sqlalchemy.",
+        poolclass=pool.NullPool,
+    )
+
+    with connectable.connect() as connection:
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_type=True,
+            compare_server_default=True
+        )
+        with context.begin_transaction():
+            context.run_migrations()
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\alembic\script.py.mako
+===============================
+"""${message}
+
+Revision ID: ${up_revision}
+Revises: ${down_revision}
+Create Date: ${create_date}
+
+"""
+from alembic import op
+import sqlalchemy as sa
+${imports if imports else ""}
+
+# revision identifiers, used by Alembic.
+revision = ${repr(up_revision)}
+down_revision = ${repr(down_revision)}
+branch_labels = ${repr(branch_labels)}
+depends_on = ${repr(depends_on)}
+
+
+def upgrade() -> None:
+    ${upgrades if upgrades else "pass"}
+
+
+def downgrade() -> None:
+    ${downgrades if downgrades else "pass"}
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\Dockerfile
 ===============================
 FROM python:3.11-slim
 
@@ -1034,10 +1036,10 @@ COPY ./app ./app
 
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"]
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\requirements.txt
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\requirements.txt
 ===============================
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -1050,12 +1052,15 @@ cryptography==41.0.7
 bcrypt==4.0.1
 passlib==1.7.4
 python-multipart==0.0.6
-pandas==2.1.3
-numpy==1.26.2
 python-dotenv==1.0.0
+apscheduler==3.10.4
+python-dateutil==2.8.2
+yfinance==0.2.36
+alembic==1.13.1
+slowapi==0.1.9
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\test_api.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\test_api.py
 ===============================
 """
 Complete API Testing Script
@@ -1255,10 +1260,11 @@ if __name__ == "__main__":
     run_all_tests()
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\ai_engine.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\ai_engine.py
 ===============================
 import random
-import numpy as np
+from typing import List, Dict
+from datetime import datetime
 
 class AIFinancialEngine:
     """Simulated AI engine using rule-based logic"""
@@ -1267,105 +1273,97 @@ class AIFinancialEngine:
     def predict_investment_return(risk_level: str, amount: float, years: int) -> dict:
         base_rates = {
             "low": (0.05, 0.08),
-            "medium": (0.09, 0.13),
-            "high": (0.12, 0.18)
+            "medium": (0.08, 0.15),
+            "high": (0.12, 0.25)
         }
         
-        min_rate, max_rate = base_rates.get(risk_level, (0.06, 0.10))
-        predicted_rate = random.uniform(min_rate, max_rate)
-        future_value = amount * ((1 + predicted_rate) ** years)
-        total_return = future_value - amount
+        min_rate, max_rate = base_rates.get(risk_level.lower(), (0.05, 0.12))
+        expected_rate = (min_rate + max_rate) / 2
         
-        risk_score = {
-            "low": random.uniform(15, 30),
-            "medium": random.uniform(35, 60),
-            "high": random.uniform(65, 85)
-        }.get(risk_level, 50)
-        
-        monthly_projections = []
-        for month in range(1, years * 12 + 1):
-            month_value = amount * ((1 + predicted_rate) ** (month / 12))
-            monthly_projections.append({"month": month, "value": round(month_value, 2)})
-        
+        projections = []
+        current_amount = amount
+        for year in range(1, years + 1):
+            # Add some variability
+            yearly_return = current_amount * expected_rate * (1 + random.uniform(-0.05, 0.05))
+            current_amount += yearly_return
+            projections.append({
+                "year": year,
+                "value": round(current_amount, 2),
+                "growth": round(yearly_return, 2)
+            })
+            
         return {
-            "predicted_rate": round(predicted_rate * 100, 2),
-            "future_value": round(future_value, 2),
-            "total_return": round(total_return, 2),
-            "risk_score": round(risk_score, 2),
-            "monthly_projections": monthly_projections
-        }
-    
-    @staticmethod
-    def generate_investment_recommendation(income: float, risk_tolerance: str, current_investments: float) -> dict:
-        recommended_investment = income * random.uniform(0.20, 0.30)
-        
-        allocations = {
-            "low": {"bonds": 65, "mutual_funds": 25, "stocks": 10},
-            "medium": {"bonds": 35, "mutual_funds": 45, "stocks": 20},
-            "high": {"bonds": 15, "mutual_funds": 35, "stocks": 50}
-        }
-        
-        allocation = allocations.get(risk_tolerance, allocations["medium"])
-        
-        return {
-            "recommended_monthly_investment": round(recommended_investment, 2),
-            "asset_allocation": allocation,
-            "reasoning": f"Based on your {risk_tolerance} risk profile",
-            "expected_annual_return": round(random.uniform(8, 15), 2)
-        }
-    
-    @staticmethod
-    def analyze_expenses(expenses: list) -> dict:
-        if not expenses:
-            return {"total_expenses": 0, "breakdown": {}, "insights": [], "savings_potential": 0}
-        
-        breakdown = {}
-        total = 0
-        for expense in expenses:
-            category = expense.get("category", "other")
-            amount = expense.get("amount", 0)
-            breakdown[category] = breakdown.get(category, 0) + amount
-            total += amount
-        
-        breakdown_percent = {k: (v/total)*100 for k, v in breakdown.items()}
-        
-        insights = []
-        for category, percent in breakdown_percent.items():
-            if category == "rent" and percent > 40:
-                insights.append({"type": "warning", "message": f"Housing costs are high at {percent:.1f}%"})
-            elif category == "entertainment" and percent > 15:
-                insights.append({"type": "tip", "message": f"Entertainment spending is {percent:.1f}%"})
-        
-        return {
-            "total_expenses": round(total, 2),
-            "breakdown": {k: round(v, 2) for k, v in breakdown.items()},
-            "breakdown_percent": {k: round(v, 2) for k, v in breakdown_percent.items()},
-            "insights": insights,
-            "savings_potential": round(total * 0.15, 2)
-        }
-    
-    @staticmethod
-    def get_market_insights() -> dict:
-        return {
-            "indices": {
-                "NIFTY": round(random.uniform(19500, 20500), 2),
-                "SENSEX": round(random.uniform(64500, 66500), 2),
-                "GOLD": round(random.uniform(60000, 62000), 2)
-            },
-            "trends": {
-                "equity_market": random.choice(["bullish", "neutral", "bearish"]),
-                "interest_rates": random.choice(["rising", "stable", "falling"]),
-                "inflation": round(random.uniform(5.5, 6.5), 2)
-            },
-            "recommendations": [
-                "Diversify portfolio across asset classes",
-                "Consider SIP for long-term wealth creation",
-                "Maintain emergency fund of 6 months expenses"
-            ]
+            "projections": projections,
+            "total_value": round(current_amount, 2),
+            "total_profit": round(current_amount - amount, 2),
+            "annual_yield": f"{expected_rate*100:.1f}%"
         }
 
+    @staticmethod
+    def generate_investment_recommendation(income: float, risk_tolerance: str, total_investments: float) -> dict:
+        monthly_investable = income * 0.2  # Recommend 20%
+        
+        assets = []
+        if risk_tolerance.lower() == "low":
+            assets = [
+                {"type": "Fixed Deposits", "allocation": "50%", "expected_return": "7%"},
+                {"type": "Debt Mutual Funds", "allocation": "30%", "expected_return": "8%"},
+                {"type": "Gold", "allocation": "20%", "expected_return": "10%"}
+            ]
+        elif risk_tolerance.lower() == "medium":
+            assets = [
+                {"type": "Index Funds", "allocation": "40%", "expected_return": "12%"},
+                {"type": "Blue-chip Stocks", "allocation": "30%", "expected_return": "15%"},
+                {"type": "Debt Funds", "allocation": "20%", "expected_return": "8%"},
+                {"type": "Gold", "allocation": "10%", "expected_return": "10%"}
+            ]
+        else: # High risk
+            assets = [
+                {"type": "Mid-cap Stocks", "allocation": "40%", "expected_return": "20%"},
+                {"type": "Small-cap Stocks", "allocation": "30%", "expected_return": "25%"},
+                {"type": "Index Funds", "allocation": "20%", "expected_return": "12%"},
+                {"type": "Crypto", "allocation": "10%", "expected_return": "Variable"}
+            ]
+            
+        return {
+            "risk_profile": risk_tolerance,
+            "recommended_monthly": round(monthly_investable, 2),
+            "asset_allocation": assets,
+            "summary": f"Based on your {risk_tolerance} risk profile and monthly income of ₹{income:,.0f}, we recommend investing ₹{monthly_investable:,.0f} per month."
+        }
+
+    @staticmethod
+    def get_market_insights() -> dict:
+        try:
+            import yfinance as yf
+            nifty = yf.Ticker("^NSEI")
+            sensex = yf.Ticker("^BSESN")
+            gold = yf.Ticker("GC=F")
+            
+            # Using fast_info or history
+            nifty_price = round(nifty.fast_info["lastPrice"], 2)
+            sensex_price = round(sensex.fast_info["lastPrice"], 2)
+            gold_price = round(gold.fast_info["lastPrice"] * 83, 2)  # Convert USD to INR
+            
+            return {
+                "indices": {
+                    "NIFTY": nifty_price,
+                    "SENSEX": sensex_price,
+                    "GOLD": gold_price
+                },
+                "data_source": "live",
+                "last_updated": datetime.utcnow().isoformat()
+            }
+        except Exception:
+            # Fallback to cached/static values if API fails
+            return {
+                "indices": {"NIFTY": 22500, "SENSEX": 74000, "GOLD": 62000},
+                "data_source": "fallback",
+                "last_updated": datetime.utcnow().isoformat()
+            }
+
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\database.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\database.py
 ===============================
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -1384,39 +1382,36 @@ def get_db():
         db.close()
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\main.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\main.py
 ===============================
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
+import threading
+import time
+
 from .database import engine
 from .models import Base, User, IncomeType
-from .routes import auth, investment, debt, expense, dashboard, profile
+from .routes import auth, investment, debt, dashboard, profile, bills, calendar, transactions, notifications
+from .scheduler import (
+    start_scheduler, check_overdue_bills, generate_notifications, 
+    daily_networth_snapshot, generate_bill_cycles
+)
 
-Base.metadata.create_all(bind=engine)
-
-# Create demo user if doesn't exist
-from .database import SessionLocal
-
-db = SessionLocal()
-demo_user = db.query(User).filter(User.email == "demo@user.com").first()
-if not demo_user:
-    demo_user = User(
-        email="demo@user.com",
-        hashed_password="not-needed",
-        full_name="Demo User",
-            gross_monthly_salary=75000.0,
-            net_monthly_income=75000.0,  # ADD THIS LINE
-            income_type=IncomeType.SALARIED,        risk_tolerance="medium"
-        )
-    db.add(demo_user)
-    db.commit()
-db.close()
+# Create the limiter
+limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(
     title="AI Financial Advisory API",
     description="Intelligent financial planning system",
     version="1.0.0"
 )
+
+# Attach limiter to app
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -1429,9 +1424,31 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(investment.router)
 app.include_router(debt.router)
-app.include_router(expense.router)
 app.include_router(dashboard.router)
 app.include_router(profile.router)
+app.include_router(bills.router)
+app.include_router(calendar.router)
+app.include_router(transactions.router)
+app.include_router(notifications.router)
+
+@app.on_event("startup")
+async def startup_event():
+    scheduler = start_scheduler()
+
+    # Run time-sensitive jobs immediately on startup too
+    def run_startup_jobs():
+        time.sleep(5)  # Wait 5 seconds for DB to be fully ready
+        try:
+            check_overdue_bills()
+            generate_bill_cycles()
+            generate_notifications()
+            daily_networth_snapshot()
+            print("[Startup] Initial jobs completed")
+        except Exception as e:
+            print(f"[Startup] Error running initial jobs: {e}")
+
+    thread = threading.Thread(target=run_startup_jobs, daemon=True)
+    thread.start()
 
 @app.get("/")
 async def root():
@@ -1442,9 +1459,9 @@ async def health_check():
     return {"status": "healthy"}
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\models.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\models.py
 ===============================
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, Boolean, Enum as SQLEnum, CheckConstraint, Index
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -1475,6 +1492,59 @@ class Priority(enum.Enum):
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
+
+class BillType(enum.Enum):
+    CREDIT_CARD = "credit_card"
+    ELECTRICITY = "electricity"
+    INTERNET = "internet"
+    MOBILE = "mobile"
+    INSURANCE = "insurance"
+    SUBSCRIPTION = "subscription"
+    OTHER = "other"
+
+class BillStatus(enum.Enum):
+    PENDING = "pending"
+    PAID = "paid"
+    OVERDUE = "overdue"
+    PARTIALLY_PAID = "partially_paid"
+
+class BillCycleStatus(enum.Enum):
+    OPEN = "open"
+    PARTIALLY_PAID = "partially_paid"
+    PAID = "paid"
+    OVERDUE = "overdue"
+
+class PaymentMethod(enum.Enum):
+    UPI = "upi"
+    NET_BANKING = "net_banking"
+    CREDIT_CARD = "credit_card"
+    DEBIT_CARD = "debit_card"
+    CASH = "cash"
+    AUTO_DEBIT = "auto_debit"
+
+class EventType(enum.Enum):
+    PAYMENT_MADE = "payment_made"
+    PAYMENT_MISSED = "payment_missed"
+    LATE_FEE_ADDED = "late_fee_added"
+    INTEREST_APPLIED = "interest_applied"
+    INCOME_RECEIVED = "income_received"
+    BILL_CREATED = "bill_created"
+    DEBT_ADDED = "debt_added"
+    GOAL_CREATED = "goal_created"
+    GOAL_ACHIEVED = "goal_achieved"
+    EXPENSE_ADDED = "expense_added"
+    DTI_CHANGED = "dti_changed"
+
+class CalendarEventStatus(enum.Enum):
+    UPCOMING = "upcoming"
+    DUE_TODAY = "due_today"
+    COMPLETED = "completed"
+    OVERDUE = "overdue"
+
+class NotificationSeverity(enum.Enum):
+    INFO = "info"
+    WARNING = "warning"
+    CRITICAL = "critical"
 
 class User(Base):
     __tablename__ = "users"
@@ -1510,8 +1580,13 @@ class User(Base):
     debts = relationship("Debt", back_populates="user", cascade="all, delete-orphan")
     savings_goals = relationship("SavingsGoal", back_populates="user", cascade="all, delete-orphan")
     expense_categories = relationship("ExpenseCategory", back_populates="user", cascade="all, delete-orphan")
-    expenses = relationship("Expense", back_populates="user", cascade="all, delete-orphan")
     investments = relationship("Investment", back_populates="user", cascade="all, delete-orphan")
+    bills = relationship("Bill", back_populates="user", cascade="all, delete-orphan")
+    financial_events = relationship("FinancialEvent", back_populates="user", cascade="all, delete-orphan")
+    calendar_events = relationship("CalendarEvent", back_populates="user", cascade="all, delete-orphan")
+    expense_transactions = relationship("ExpenseTransaction", back_populates="user", cascade="all, delete-orphan")
+    notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
+    net_worth_snapshots = relationship("NetWorthSnapshot", back_populates="user", cascade="all, delete-orphan")
 
 class AdditionalIncome(Base):
     __tablename__ = "additional_incomes"
@@ -1588,18 +1663,8 @@ class ExpenseCategory(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     
     user = relationship("User", back_populates="expense_categories")
+    transactions = relationship("ExpenseTransaction", back_populates="category")
 
-class Expense(Base):
-    __tablename__ = "expenses"
-
-    id = Column(Integer, primary_key=True, index=True)
-    amount = Column(Float, nullable=False)
-    category = Column(String, nullable=False)
-    user_id = Column(Integer, ForeignKey("users.id"))
-
-    user = relationship("User", back_populates="expenses")
-
-# Keep existing Investment and Expense models as they are
 class Investment(Base):
     __tablename__ = "investments"
     
@@ -1614,66 +1679,1082 @@ class Investment(Base):
     
     user = relationship("User", back_populates="investments")
 
+class Bill(Base):
+    __tablename__ = "bills"
+    __table_args__ = (
+        CheckConstraint("total_amount_due >= 0", name="chk_bill_amount_non_negative"),
+        CheckConstraint("interest_rate >= 0", name="chk_bill_rate_non_negative"),
+        CheckConstraint("late_fee >= 0", name="chk_bill_late_fee_non_negative"),
+    )
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    bill_name = Column(String)                      # "HDFC Credit Card", "Airtel Broadband"
+    bill_type = Column(SQLEnum(BillType))
+    
+    # Amounts
+    total_amount_due = Column(Float)                # Full amount this cycle
+    minimum_due = Column(Float, default=0)          # Minimum payment required
+    outstanding_balance = Column(Float, default=0)  # For credit cards — running balance
+    credit_limit = Column(Float, default=0)         # For credit cards only
+    
+    # Dates
+    billing_cycle_day = Column(Integer)             # Day of month bill generates (e.g., 1)
+    due_date_day = Column(Integer)                  # Day of month payment due (e.g., 15)
+    next_due_date = Column(DateTime)                # Absolute next due date
+    
+    # Interest & Penalties
+    interest_rate = Column(Float, default=0)        # Annual % (credit cards: 36-42%)
+    late_fee = Column(Float, default=0)             # Fixed late fee amount
+    
+    # Status
+    status = Column(SQLEnum(BillStatus), default=BillStatus.PENDING)
+    is_active = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    # Relationships
+    user = relationship("User", back_populates="bills")
+    payments = relationship("BillPayment", back_populates="bill", cascade="all, delete-orphan")
+    cycles = relationship("BillCycle", back_populates="bill", cascade="all, delete-orphan")
+
+class BillCycle(Base):
+    __tablename__ = "bill_cycles"
+
+    id = Column(Integer, primary_key=True, index=True)
+    bill_id = Column(Integer, ForeignKey("bills.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    cycle_start = Column(DateTime)
+    cycle_end = Column(DateTime)
+    due_date = Column(DateTime)
+
+    amount_due = Column(Float)
+    minimum_due = Column(Float, default=0)
+    paid_amount = Column(Float, default=0)
+
+    status = Column(SQLEnum(BillCycleStatus), default=BillCycleStatus.OPEN)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    bill = relationship("Bill", back_populates="cycles")
+
+class BillPayment(Base):
+    __tablename__ = "bill_payments"
+    __table_args__ = (
+        CheckConstraint("amount_paid > 0", name="chk_payment_amount_positive"),
+        Index("idx_payments_bill", "bill_id"),
+    )
+    
+    id = Column(Integer, primary_key=True, index=True)
+    bill_id = Column(Integer, ForeignKey("bills.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    amount_paid = Column(Float)
+    payment_date = Column(DateTime)
+    due_date_at_payment = Column(DateTime)          # What the due date was when paid
+    
+    was_late = Column(Boolean, default=False)       # Was this payment after due date?
+    days_late = Column(Integer, default=0)          # How many days late
+    late_fee_charged = Column(Float, default=0)     # Late fee that was charged
+    interest_charged = Column(Float, default=0)     # Interest charged
+    
+    payment_method = Column(SQLEnum(PaymentMethod), nullable=True)
+    notes = Column(String, nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    bill = relationship("Bill", back_populates="payments")
+
+class FinancialEvent(Base):
+    __tablename__ = "financial_events"
+    __table_args__ = (
+        Index("idx_events_user_date", "user_id", "created_at"),
+    )
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    event_type = Column(SQLEnum(EventType))
+    description = Column(String)                    # Human readable: "Late fee of ₹500 on HDFC Card"
+    amount = Column(Float, nullable=True)           # The monetary impact
+    
+    reference_type = Column(String, nullable=True)  # "bill", "debt", "goal"
+    reference_id = Column(Integer, nullable=True)   # ID in that table
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="financial_events")
+
+class CalendarEvent(Base):
+    __tablename__ = "financial_calendar"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    
+    event_type = Column(String)                     # "emi_payment", "bill_due", "goal_deadline", "investment_maturity"
+    event_title = Column(String)                    # "HDFC Home Loan EMI", "Credit Card Due"
+    event_date = Column(DateTime)
+    amount = Column(Float, nullable=True)
+    
+    reference_type = Column(String, nullable=True)
+    reference_id = Column(Integer, nullable=True)
+    
+    is_recurring = Column(Boolean, default=True)
+    recurrence_day = Column(Integer, nullable=True) # Day of month for monthly recurring
+    
+    status = Column(SQLEnum(CalendarEventStatus), default=CalendarEventStatus.UPCOMING)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="calendar_events")
+
+class ExpenseTransaction(Base):
+    __tablename__ = "expense_transactions"
+    __table_args__ = (
+        CheckConstraint("amount > 0", name="chk_transaction_amount_positive"),
+        Index("idx_transactions_user_date", "user_id", "transaction_date"),
+    )
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    category_id = Column(Integer, ForeignKey("expense_categories.id"), nullable=True)
+    
+    description = Column(String)                    # "Zomato dinner", "Metro card recharge"
+    amount = Column(Float)
+    transaction_date = Column(DateTime)
+    
+    # Link to bill if this transaction paid a bill
+    bill_id = Column(Integer, ForeignKey("bills.id"), nullable=True)
+    
+    created_at = Column(DateTime, default=datetime.utcnow)
+    
+    user = relationship("User", back_populates="expense_transactions")
+    category = relationship("ExpenseCategory", back_populates="transactions")
+
+class Notification(Base):
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    title = Column(String)
+    message = Column(String)
+    severity = Column(SQLEnum(NotificationSeverity), default=NotificationSeverity.INFO)
+
+    # Link to what caused this notification
+    reference_type = Column(String, nullable=True)   # "bill", "goal", "debt"
+    reference_id = Column(Integer, nullable=True)
+
+    is_read = Column(Boolean, default=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="notifications")
+
+class NetWorthSnapshot(Base):
+    __tablename__ = "net_worth_snapshots"
+    __table_args__ = (
+        Index("idx_snapshot_user_date", "user_id", "snapshot_date"),
+    )
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+
+    total_assets = Column(Float)
+    total_liabilities = Column(Float)
+    net_worth = Column(Float)
+
+    investments = Column(Float)
+    savings = Column(Float)
+    total_debt = Column(Float)
+    credit_outstanding = Column(Float)
+
+    snapshot_date = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="net_worth_snapshots")
+
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\__init__.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\scheduler.py
+===============================
+# backend/app/scheduler.py
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
+from sqlalchemy import func, extract
+from datetime import datetime, date
+import calendar
+
+from .database import SessionLocal
+from .models import (
+    Bill, BillStatus, FinancialEvent, EventType, 
+    BillCycle, BillCycleStatus, Notification, NotificationSeverity,
+    User, SavingsGoal, Debt, NetWorthSnapshot
+)
+from .utils.payment_engine import check_payment_status
+from .utils.financial_engine import calculate_net_worth
+
+def check_overdue_bills():
+    """Daily job: Mark overdue bills and apply late fees."""
+    db = SessionLocal()
+    try:
+        today = datetime.utcnow()
+        pending_bills = db.query(Bill).filter(
+            Bill.status == BillStatus.PENDING,
+            Bill.is_active == True
+        ).all()
+        
+        for bill in pending_bills:
+            if bill.next_due_date and bill.next_due_date < today:
+                # Mark as overdue
+                bill.status = BillStatus.OVERDUE
+                
+                # Log event
+                event = FinancialEvent(
+                    user_id=bill.user_id,
+                    event_type=EventType.PAYMENT_MISSED,
+                    description=f"Payment overdue for {bill.bill_name} — due {bill.next_due_date.strftime('%d %b')}",
+                    amount=bill.total_amount_due,
+                    reference_type="bill",
+                    reference_id=bill.id
+                )
+                db.add(event)
+                
+                # Apply late fee as separate event if applicable
+                if bill.late_fee > 0:
+                    fee_event = FinancialEvent(
+                        user_id=bill.user_id,
+                        event_type=EventType.LATE_FEE_ADDED,
+                        description=f"Late fee of ₹{bill.late_fee:,.0f} applied to {bill.bill_name}",
+                        amount=bill.late_fee,
+                        reference_type="bill",
+                        reference_id=bill.id
+                    )
+                    db.add(fee_event)
+        
+        db.commit()
+        print(f"[Scheduler] Checked {len(pending_bills)} bills at {today}")
+    
+    except Exception as e:
+        print(f"[Scheduler] Error in check_overdue_bills: {e}")
+    finally:
+        db.close()
+
+def generate_bill_cycles():
+    """
+    Daily job: Check if today matches a bill's billing_cycle_day.
+    If so, create a new BillCycle record for this month.
+    """
+    db = SessionLocal()
+    try:
+        today = datetime.utcnow()
+        current_day = today.day
+
+        # Find bills whose billing cycle starts today
+        bills = db.query(Bill).filter(
+            Bill.billing_cycle_day == current_day,
+            Bill.is_active == True
+        ).all()
+
+        for bill in bills:
+            # Check if cycle already exists for this month
+            existing = db.query(BillCycle).filter(
+                BillCycle.bill_id == bill.id,
+                extract('month', BillCycle.cycle_start) == today.month,
+                extract('year', BillCycle.cycle_start) == today.year
+            ).first()
+
+            if existing:
+                continue  # Already generated this month
+
+            # Calculate cycle end (last day of month)
+            last_day = calendar.monthrange(today.year, today.month)[1]
+            cycle_end = today.replace(day=last_day, hour=23, minute=59, second=59)
+
+            # Calculate due date (due_date_day of NEXT month)
+            if today.month == 12:
+                due_month, due_year = 1, today.year + 1
+            else:
+                due_month, due_year = today.month + 1, today.year
+
+            try:
+                due_date = today.replace(
+                    year=due_year,
+                    month=due_month,
+                    day=bill.due_date_day,
+                    hour=23, minute=59, second=59
+                )
+            except ValueError:
+                last_due_day = calendar.monthrange(due_year, due_month)[1]
+                due_date = today.replace(
+                    year=due_year, month=due_month,
+                    day=last_due_day, hour=23, minute=59, second=59
+                )
+
+            # Minimum due = 5% of outstanding balance
+            min_due = max(200, bill.outstanding_balance * 0.05)
+
+            cycle = BillCycle(
+                bill_id=bill.id,
+                user_id=bill.user_id,
+                cycle_start=today.replace(hour=0, minute=0, second=0),
+                cycle_end=cycle_end,
+                due_date=due_date,
+                amount_due=bill.outstanding_balance,
+                minimum_due=round(min_due, 2),
+                paid_amount=0,
+                status=BillCycleStatus.OPEN
+            )
+            db.add(cycle)
+
+        db.commit()
+        print(f"[Scheduler] Bill cycles generated for {len(bills)} bills on day {current_day}")
+
+    except Exception as e:
+        print(f"[Scheduler] Error in generate_bill_cycles: {e}")
+    finally:
+        db.close()
+
+def generate_notifications():
+    """
+    Daily job: Check all financial conditions and create notifications.
+    """
+    db = SessionLocal()
+    try:
+        today = datetime.utcnow()
+        today_date = today.date()
+
+        users = db.query(User).all()
+
+        for user in users:
+            existing_today = db.query(Notification).filter(
+                Notification.user_id == user.id,
+                func.date(Notification.created_at) == today_date
+            ).all()
+            existing_refs = {(n.reference_type, n.reference_id) for n in existing_today}
+
+            # ── Check 1: Bills due within 3 days ──────────────────────────
+            bills = db.query(Bill).filter(
+                Bill.user_id == user.id,
+                Bill.is_active == True,
+                Bill.status == BillStatus.PENDING
+            ).all()
+
+            for bill in bills:
+                if not bill.next_due_date:
+                    continue
+                days_until = (bill.next_due_date.date() - today_date).days
+
+                if 0 <= days_until <= 3 and ("bill", bill.id) not in existing_refs:
+                    severity = NotificationSeverity.CRITICAL if days_until == 0 else NotificationSeverity.WARNING
+                    title = f"Bill Due {'Today' if days_until == 0 else f'in {days_until} day(s)'}"
+                    message = f"{bill.bill_name}: ₹{bill.total_amount_due:,.0f} due on {bill.next_due_date.strftime('%d %b')}"
+                    db.add(Notification(
+                        user_id=user.id, title=title, message=message,
+                        severity=severity, reference_type="bill", reference_id=bill.id
+                    ))
+
+            # ── Check 2: Overdue bills ─────────────────────────────────────
+            overdue_bills = db.query(Bill).filter(
+                Bill.user_id == user.id,
+                Bill.is_active == True,
+                Bill.status == BillStatus.OVERDUE
+            ).all()
+
+            for bill in overdue_bills:
+                if ("bill_overdue", bill.id) not in existing_refs:
+                    days_late = (today_date - bill.next_due_date.date()).days if bill.next_due_date else 0
+                    db.add(Notification(
+                        user_id=user.id,
+                        title="Payment Overdue",
+                        message=f"{bill.bill_name} is {days_late} day(s) overdue. "
+                                f"Late fee: ₹{bill.late_fee:,.0f}",
+                        severity=NotificationSeverity.CRITICAL,
+                        reference_type="bill_overdue",
+                        reference_id=bill.id
+                    ))
+
+            # ── Check 3: Goal deadlines within 7 days ─────────────────────
+            goals = db.query(SavingsGoal).filter(
+                SavingsGoal.user_id == user.id,
+                SavingsGoal.is_achieved == False
+            ).all()
+
+            for goal in goals:
+                if not goal.target_date:
+                    continue
+                days_to_goal = (goal.target_date.date() - today_date).days
+                if 0 <= days_to_goal <= 7 and ("goal", goal.id) not in existing_refs:
+                    progress = (goal.current_saved / goal.target_amount * 100) if goal.target_amount > 0 else 0
+                    db.add(Notification(
+                        user_id=user.id,
+                        title="Goal Deadline Approaching",
+                        message=f"'{goal.goal_name}' deadline in {days_to_goal} day(s). "
+                                f"Progress: {progress:.0f}% of ₹{goal.target_amount:,.0f}",
+                        severity=NotificationSeverity.WARNING,
+                        reference_type="goal", reference_id=goal.id
+                    ))
+
+        db.commit()
+        print(f"[Scheduler] Notifications generated at {today}")
+
+    except Exception as e:
+        print(f"[Scheduler] Error in generate_notifications: {e}")
+    finally:
+        db.close()
+
+def daily_networth_snapshot():
+    """
+    Daily job: Take a snapshot of user's net worth.
+    """
+    db = SessionLocal()
+    try:
+        today = datetime.utcnow().date()
+        users = db.query(User).all()
+
+        for user in users:
+            existing = db.query(NetWorthSnapshot).filter(
+                NetWorthSnapshot.user_id == user.id,
+                func.date(NetWorthSnapshot.snapshot_date) == today
+            ).first()
+
+            nw = calculate_net_worth(user, db)
+            if existing:
+                existing.total_assets = nw["assets"]["total"]
+                existing.total_liabilities = nw["liabilities"]["total"]
+                existing.net_worth = nw["net_worth"]
+                existing.investments = nw["assets"]["investments"]
+                existing.savings = nw["assets"]["savings"]
+                existing.total_debt = nw["liabilities"]["loans"]
+                existing.credit_outstanding = nw["liabilities"]["credit_cards"]
+            else:
+                snapshot = NetWorthSnapshot(
+                    user_id=user.id,
+                    total_assets=nw["assets"]["total"],
+                    total_liabilities=nw["liabilities"]["total"],
+                    net_worth=nw["net_worth"],
+                    investments=nw["assets"]["investments"],
+                    savings=nw["assets"]["savings"],
+                    total_debt=nw["liabilities"]["loans"],
+                    credit_outstanding=nw["liabilities"]["credit_cards"]
+                )
+                db.add(snapshot)
+
+        db.commit()
+        print(f"[Scheduler] Net worth snapshots saved for {len(users)} users")
+
+    except Exception as e:
+        print(f"[Scheduler] Error in daily_networth_snapshot: {e}")
+    finally:
+        db.close()
+
+def start_scheduler():
+    """
+    Start the background scheduler with cron-based timing.
+    """
+    scheduler = BackgroundScheduler(
+        job_defaults={
+            'coalesce': True,
+            'misfire_grace_time': 3600
+        }
+    )
+
+    midnight = CronTrigger(hour=0, minute=0, second=0)
+
+    scheduler.add_job(check_overdue_bills, trigger=midnight, id='check_overdue_bills', replace_existing=True)
+    scheduler.add_job(generate_bill_cycles, trigger=midnight, id='generate_bill_cycles', replace_existing=True)
+    scheduler.add_job(generate_notifications, trigger=midnight, id='generate_notifications', replace_existing=True)
+    scheduler.add_job(daily_networth_snapshot, trigger=midnight, id='daily_networth_snapshot', replace_existing=True)
+
+    scheduler.start()
+    print("[Scheduler] Started — all jobs scheduled at midnight UTC")
+    return scheduler
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\__init__.py
 ===============================
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\auth.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\auth.py
 ===============================
-from fastapi import APIRouter
+# backend/app/routes/auth.py
+
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
+from datetime import datetime, timedelta
+from typing import Optional
+from jose import JWTError, jwt
+from passlib.context import CryptContext
+import os
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+from ..database import get_db
+from ..models import User, IncomeType
 
 router = APIRouter(prefix="/api/auth", tags=["authentication"])
+limiter = Limiter(key_func=get_remote_address)
 
-class DemoUser(BaseModel):
+# ── Config ────────────────────────────────────────────────────────────────────
+SECRET_KEY = os.getenv("SECRET_KEY", "change-this-in-production-minimum-32-chars")
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
+
+
+# ── Pydantic Models ────────────────────────────────────────────────────────────
+class UserRegister(BaseModel):
     email: EmailStr
-    name: str
-    monthly_income: float
-    risk_tolerance: str
+    password: str
+    full_name: str
+    gross_monthly_salary: float = 0
+    risk_tolerance: str = "medium"
 
-@router.get("/demo-user", response_model=DemoUser)
-async def get_demo_user():
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+    user: dict
+
+
+# ── Helpers ────────────────────────────────────────────────────────────────────
+def hash_password(password: str) -> str:
+    return pwd_context.hash(password)
+
+
+def verify_password(plain: str, hashed: str) -> bool:
+    return pwd_context.verify(plain, hashed)
+
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
+    to_encode = data.copy()
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+    """Dependency: decode JWT and return the User object."""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid or expired token",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+
+    user = db.query(User).filter(User.email == email).first()
+    if user is None:
+        raise credentials_exception
+    return user
+
+
+# ── Routes ──────────────────────────────────────────────────────────────────────
+@router.post("/register", response_model=Token)
+@limiter.limit("10/hour")
+async def register(request: Request, data: UserRegister, db: Session = Depends(get_db)):
+    """Register a new user."""
+    # Check if email already exists
+    existing = db.query(User).filter(User.email == data.email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+
+    # Validate password strength
+    if len(data.password) < 6:
+        raise HTTPException(status_code=400, detail="Password must be at least 6 characters")
+
+    user = User(
+        email=data.email,
+        hashed_password=hash_password(data.password),
+        full_name=data.full_name,
+        gross_monthly_salary=data.gross_monthly_salary,
+        net_monthly_income=data.gross_monthly_salary * 0.75,  # Rough estimate until tax calculated
+        income_type=IncomeType.SALARIED,
+        risk_tolerance=data.risk_tolerance
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+
+    token = create_access_token(data={"sub": user.email})
+
     return {
-        "email": "demo@user.com",
-        "name": "Demo User",
-        "monthly_income": 75000,
-        "risk_tolerance": "medium"
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "email": user.email,
+            "full_name": user.full_name,
+            "risk_tolerance": user.risk_tolerance
+        }
+    }
+
+
+@router.post("/login", response_model=Token)
+@limiter.limit("20/minute")
+async def login(request: Request, data: UserLogin, db: Session = Depends(get_db)):
+    """Login and receive JWT token."""
+    user = db.query(User).filter(User.email == data.email).first()
+
+    if not user or not verify_password(data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password"
+        )
+
+    token = create_access_token(data={"sub": user.email})
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user": {
+            "email": user.email,
+            "full_name": user.full_name,
+            "risk_tolerance": user.risk_tolerance
+        }
+    }
+
+
+@router.get("/me")
+async def get_me(current_user: User = Depends(get_current_user)):
+    """Get current authenticated user info."""
+    return {
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "risk_tolerance": current_user.risk_tolerance,
+        "net_monthly_income": current_user.net_monthly_income
     }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\dashboard.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\bills.py
+===============================
+# backend/app/routes/bills.py
+
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from sqlalchemy import extract
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime, timedelta
+
+from ..database import get_db
+from ..models import (
+    Bill, BillPayment, BillType, BillStatus, PaymentMethod, 
+    FinancialEvent, EventType, User, BillCycle, BillCycleStatus
+)
+from ..utils.payment_engine import check_payment_status, calculate_next_due_date, process_payment
+from .auth import get_current_user
+
+router = APIRouter(prefix="/api/bills", tags=["bills"])
+
+class BillCreate(BaseModel):
+    bill_name: str
+    bill_type: str
+    total_amount_due: float
+    minimum_due: float = 0
+    outstanding_balance: float = 0
+    credit_limit: float = 0
+    billing_cycle_day: int
+    due_date_day: int
+    interest_rate: float = 0
+    late_fee: float = 0
+
+class PaymentCreate(BaseModel):
+    amount_paid: float
+    payment_method: Optional[str] = None
+    notes: Optional[str] = None
+
+@router.post("/create")
+async def create_bill(
+    data: BillCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    next_due = calculate_next_due_date(data.due_date_day)
+    
+    bill = Bill(
+        user_id=user.id,
+        bill_name=data.bill_name,
+        bill_type=BillType(data.bill_type),
+        total_amount_due=data.total_amount_due,
+        minimum_due=data.minimum_due,
+        outstanding_balance=data.outstanding_balance,
+        credit_limit=data.credit_limit,
+        billing_cycle_day=data.billing_cycle_day,
+        due_date_day=data.due_date_day,
+        next_due_date=next_due,
+        interest_rate=data.interest_rate,
+        late_fee=data.late_fee
+    )
+    db.add(bill)
+    
+    # Create financial event
+    event = FinancialEvent(
+        user_id=user.id,
+        event_type=EventType.BILL_CREATED,
+        description=f"Bill created: {data.bill_name}",
+        amount=data.total_amount_due,
+        reference_type="bill"
+    )
+    db.add(event)
+    db.commit()
+    db.refresh(bill)
+    
+    return {"message": "Bill created", "bill_id": bill.id}
+
+@router.get("/list")
+async def list_bills(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    bills = db.query(Bill).filter(Bill.user_id == user.id, Bill.is_active == True).all()
+    
+    result = []
+    for bill in bills:
+        status_info = check_payment_status(bill)
+        result.append({
+            "id": bill.id,
+            "bill_name": bill.bill_name,
+            "bill_type": bill.bill_type.value,
+            "total_amount_due": bill.total_amount_due,
+            "minimum_due": bill.minimum_due,
+            "outstanding_balance": bill.outstanding_balance,
+            "credit_limit": bill.credit_limit,
+            "next_due_date": bill.next_due_date.isoformat() if bill.next_due_date else None,
+            "status": bill.status.value,
+            "payment_status": status_info,
+            "interest_rate": bill.interest_rate,
+            "late_fee": bill.late_fee
+        })
+    
+    total_minimum_due = sum(b.minimum_due for b in bills)
+    overdue_count = sum(1 for b in bills if b.status == BillStatus.OVERDUE)
+    
+    return {
+        "bills": result,
+        "summary": {
+            "total_bills": len(bills),
+            "total_minimum_due": round(total_minimum_due, 2),
+            "overdue_count": overdue_count
+        }
+    }
+
+@router.post("/{bill_id}/pay")
+async def make_payment(
+    bill_id: int, 
+    data: PaymentCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    bill = db.query(Bill).filter(Bill.id == bill_id, Bill.user_id == user.id).first()
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+
+    if data.amount_paid <= 0:
+        raise HTTPException(status_code=400, detail="Payment amount must be positive")
+
+    # Prevent double payment within 5 seconds
+    five_seconds_ago = datetime.utcnow() - timedelta(seconds=5)
+    recent_payment = db.query(BillPayment).filter(
+        BillPayment.bill_id == bill_id,
+        BillPayment.amount_paid == data.amount_paid,
+        BillPayment.created_at >= five_seconds_ago
+    ).first()
+
+    if recent_payment:
+        return {
+            "message": "Payment already recorded (duplicate prevented)",
+            "payment_id": recent_payment.id
+        }
+
+    try:
+        payment_date = datetime.utcnow()
+        payment_result = process_payment(bill, data.amount_paid, payment_date)
+        
+        # Record payment
+        payment = BillPayment(
+            bill_id=bill.id,
+            user_id=user.id,
+            amount_paid=data.amount_paid,
+            payment_date=payment_date,
+            due_date_at_payment=bill.next_due_date,
+            was_late=payment_result["was_late"],
+            days_late=payment_result["days_late"],
+            late_fee_charged=payment_result["late_fee_charged"],
+            interest_charged=payment_result["interest_charged"],
+            payment_method=PaymentMethod(data.payment_method) if data.payment_method else None,
+            notes=data.notes
+        )
+        db.add(payment)
+        
+        # Update bill
+        bill.outstanding_balance = payment_result["new_balance"]
+        bill.next_due_date = payment_result["next_due_date"]
+        bill.status = BillStatus.PAID if payment_result["new_balance"] == 0 else BillStatus.PARTIALLY_PAID
+        
+        # Update current bill cycle
+        current_cycle = db.query(BillCycle).filter(
+            BillCycle.bill_id == bill_id,
+            extract('month', BillCycle.cycle_start) == payment_date.month,
+            extract('year', BillCycle.cycle_start) == payment_date.year
+        ).first()
+
+        if current_cycle:
+            current_cycle.paid_amount += data.amount_paid
+            remaining = current_cycle.amount_due - current_cycle.paid_amount
+            if remaining <= 0:
+                current_cycle.status = BillCycleStatus.PAID
+            elif current_cycle.paid_amount >= current_cycle.minimum_due:
+                current_cycle.status = BillCycleStatus.PARTIALLY_PAID
+
+        # Record financial event
+        event_desc = f"Payment of ₹{data.amount_paid:,.0f} for {bill.bill_name}"
+        if payment_result["was_late"]:
+            event_desc += f" (late by {payment_result['days_late']} days, fee: ₹{payment_result['late_fee_charged']:,.0f})"
+        
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.PAYMENT_MADE,
+            description=event_desc,
+            amount=data.amount_paid,
+            reference_type="bill",
+            reference_id=bill.id
+        )
+        db.add(event)
+        db.commit()
+        
+        return {
+            "message": "Payment recorded successfully",
+            "payment_details": payment_result
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Payment failed: {str(e)}")
+
+@router.get("/{bill_id}/history")
+async def get_payment_history(
+    bill_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    payments = db.query(BillPayment).filter(
+        BillPayment.bill_id == bill_id,
+        BillPayment.user_id == current_user.id
+    ).order_by(BillPayment.payment_date.desc()).all()
+    
+    return {
+        "payments": [
+            {
+                "id": p.id,
+                "amount_paid": p.amount_paid,
+                "payment_date": p.payment_date.isoformat(),
+                "was_late": p.was_late,
+                "days_late": p.days_late,
+                "late_fee_charged": p.late_fee_charged,
+                "interest_charged": p.interest_charged
+            } for p in payments
+        ]
+    }
+
+@router.delete("/{bill_id}")
+async def delete_bill(
+    bill_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    bill = db.query(Bill).filter(Bill.id == bill_id, Bill.user_id == current_user.id).first()
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    bill.is_active = False
+    db.commit()
+    return {"message": "Bill deactivated"}
+
+@router.get("/{bill_id}/current-cycle")
+async def get_current_cycle(
+    bill_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get the current open billing cycle for a bill."""
+    now = datetime.utcnow()
+    cycle = db.query(BillCycle).filter(
+        BillCycle.bill_id == bill_id,
+        BillCycle.user_id == current_user.id,
+        extract('month', BillCycle.cycle_start) == now.month,
+        extract('year', BillCycle.cycle_start) == now.year
+    ).first()
+
+    if not cycle:
+        return {"cycle": None, "message": "No cycle generated yet for this month"}
+
+    remaining = cycle.amount_due - cycle.paid_amount
+
+    return {
+        "cycle": {
+            "id": cycle.id,
+            "cycle_start": cycle.cycle_start.isoformat(),
+            "cycle_end": cycle.cycle_end.isoformat(),
+            "due_date": cycle.due_date.isoformat(),
+            "amount_due": cycle.amount_due,
+            "minimum_due": cycle.minimum_due,
+            "paid_amount": cycle.paid_amount,
+            "remaining": round(remaining, 2),
+            "status": cycle.status.value
+        }
+    }
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\calendar.py
+===============================
+# backend/app/routes/calendar.py
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+from datetime import datetime, timedelta
+
+from ..database import get_db
+from ..models import User, Debt, SavingsGoal, Bill, CalendarEvent
+from .auth import get_current_user
+
+router = APIRouter(prefix="/api/calendar", tags=["calendar"])
+
+@router.get("/events")
+async def get_calendar_events(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Aggregate all upcoming financial events for the next 90 days.
+    """
+    user = current_user
+    today = datetime.utcnow()
+    end_date = today + timedelta(days=90)
+    
+    events = []
+    
+    # 1. Debt EMI dates
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    for debt in debts:
+        # Generate monthly EMI dates for next 90 days
+        for months_ahead in range(1, 4):
+            emi_date = today.replace(day=5) + timedelta(days=30 * months_ahead)  # Assume 5th of month
+            if emi_date <= end_date:
+                events.append({
+                    "id": f"debt_{debt.id}_{months_ahead}",
+                    "type": "emi_payment",
+                    "title": f"{debt.debt_name} EMI",
+                    "amount": debt.monthly_emi,
+                    "date": emi_date.isoformat(),
+                    "status": "upcoming",
+                    "reference_type": "debt",
+                    "reference_id": debt.id
+                })
+    
+    # 2. Bill due dates
+    bills = db.query(Bill).filter(Bill.user_id == user.id, Bill.is_active == True).all()
+    for bill in bills:
+        if bill.next_due_date and bill.next_due_date <= end_date:
+            is_overdue = bill.next_due_date < today
+            events.append({
+                "id": f"bill_{bill.id}",
+                "type": "bill_due",
+                "title": f"{bill.bill_name} Due",
+                "amount": bill.total_amount_due,
+                "date": bill.next_due_date.isoformat(),
+                "status": "overdue" if is_overdue else "upcoming",
+                "reference_type": "bill",
+                "reference_id": bill.id
+            })
+    
+    # 3. Savings goal deadlines
+    goals = db.query(SavingsGoal).filter(
+        SavingsGoal.user_id == user.id,
+        SavingsGoal.is_achieved == False,
+        SavingsGoal.target_date <= end_date
+    ).all()
+    for goal in goals:
+        events.append({
+            "id": f"goal_{goal.id}",
+            "type": "goal_deadline",
+            "title": f"Goal: {goal.goal_name}",
+            "amount": goal.target_amount,
+            "date": goal.target_date.isoformat(),
+            "status": "upcoming",
+            "reference_type": "goal",
+            "reference_id": goal.id
+        })
+    
+    # Sort by date
+    events.sort(key=lambda x: x["date"])
+    
+    # Separate upcoming vs overdue
+    upcoming = [e for e in events if e["status"] == "upcoming"]
+    overdue = [e for e in events if e["status"] == "overdue"]
+    
+    return {
+        "events": events,
+        "upcoming": upcoming,
+        "overdue": overdue,
+        "summary": {
+            "total_events": len(events),
+            "overdue_count": len(overdue),
+            "next_7_days": [e for e in upcoming if 
+                           (datetime.fromisoformat(e["date"]) - today).days <= 7]
+        }
+    }
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\dashboard.py
 ===============================
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models import User, Investment, Debt, Expense
+from ..models import User, Investment, Debt
 from ..ai_engine import AIFinancialEngine
+from ..utils.financial_engine import calculate_cashflow, calculate_net_worth
+from .auth import get_current_user
 
 router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 
+
 @router.get("/")
-async def get_dashboard(db: Session = Depends(get_db)):
-    """Get complete dashboard data"""
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    investments = db.query(Investment).filter(Investment.user_id == user.id).all()
-    debts = db.query(Debt).filter(Debt.user_id == user.id).all()
-    expenses = db.query(Expense).filter(Expense.user_id == user.id).all()
-    
-    total_investments = sum(inv.amount for inv in investments)
-    total_debt = sum(debt.outstanding_principal for debt in debts)
-    total_emi = sum(debt.monthly_emi for debt in debts)
-    total_expenses = sum(exp.amount for exp in expenses)
-    monthly_savings = (user.net_monthly_income or 0) - total_expenses - total_emi
-    
+async def get_dashboard(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+
+    # Use the central financial engine for all calculations
+    cashflow = calculate_cashflow(user, db)
+    net_worth = calculate_net_worth(user, db)
+
     ai_engine = AIFinancialEngine()
     market_insights = ai_engine.get_market_insights()
-    
+
     return {
         "user": {
             "name": user.full_name,
@@ -1682,195 +2763,272 @@ async def get_dashboard(db: Session = Depends(get_db)):
             "risk_tolerance": user.risk_tolerance
         },
         "financial_summary": {
-            "total_investments": round(total_investments, 2),
-            "total_debt": round(total_debt, 2),
-            "monthly_emi": round(total_emi, 2),
-            "monthly_expenses": round(total_expenses, 2),
-            "monthly_savings": round(monthly_savings, 2),
-            "savings_rate": round((monthly_savings / user.net_monthly_income) * 100, 2) if user.net_monthly_income and user.net_monthly_income > 0 else 0
+            "total_investments": net_worth["assets"]["investments"],
+            "total_debt": net_worth["liabilities"]["loans"],
+            "monthly_emi": cashflow["commitments"]["emi"],
+            "monthly_expenses": cashflow["expenses"],
+            "monthly_savings": cashflow["cashflow"],
+            "savings_rate": cashflow["savings_rate"],
+            "net_worth": net_worth["net_worth"]
         },
+        "cashflow": cashflow,
+        "net_worth": net_worth,
         "market_insights": market_insights
     }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\debt.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\debt.py
 ===============================
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from typing import List
 
 from ..database import get_db
-from ..models import Debt, User
-from ..utils.financial_calculations import calculate_emi, calculate_total_interest
+from ..models import User, Debt
+from ..utils.financial_calculations import calculate_emi
+from .auth import get_current_user
 
 router = APIRouter(prefix="/api/debt", tags=["debt"])
 
-class DebtCalculation(BaseModel):
+class EMICalculator(BaseModel):
     principal: float
     interest_rate: float
     tenure_months: int
 
 @router.post("/calculate")
-async def calculate_debt(data: DebtCalculation):
-    """Calculate EMI and interest"""
+async def get_emi_calculation(data: EMICalculator):
+    """Calculate EMI for potential loan"""
     emi = calculate_emi(data.principal, data.interest_rate, data.tenure_months)
-    total_interest = calculate_total_interest(data.principal, emi, data.tenure_months)
-    
-    schedule = []
-    remaining = data.principal
-    monthly_rate = data.interest_rate / (12 * 100)
-    
-    for month in range(1, min(13, data.tenure_months + 1)):
-        interest_payment = remaining * monthly_rate
-        principal_payment = emi - interest_payment
-        remaining -= principal_payment
-        schedule.append({
-            "month": month,
-            "emi": round(emi, 2),
-            "principal": round(principal_payment, 2),
-            "interest": round(interest_payment, 2),
-            "balance": round(remaining, 2)
-        })
-    
     return {
         "emi": round(emi, 2),
-        "total_interest": round(total_interest, 2),
-        "total_payment": round(data.principal + total_interest, 2),
-        "amortization_schedule": schedule
+        "total_payable": round(emi * data.tenure_months, 2),
+        "interest_payable": round((emi * data.tenure_months) - data.principal, 2)
     }
 
-===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\expense.py
-===============================
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
-
-from ..database import get_db
-from ..models import Expense, User
-from ..ai_engine import AIFinancialEngine
-
-router = APIRouter(prefix="/api/expense", tags=["expense"])
-
-class ExpenseCreate(BaseModel):
-    category: str
-    amount: float
-    month: str
-
-@router.post("/create")
-async def create_expense(data: ExpenseCreate, db: Session = Depends(get_db)):
-    """Create expense record"""
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    expense = Expense(user_id=user.id, category=data.category, amount=data.amount, month=data.month)
-    db.add(expense)
-    db.commit()
-    return expense
-
-@router.get("/analyze")
-async def analyze_expenses(db: Session = Depends(get_db)):
-    """Analyze expenses with AI"""
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    expenses = db.query(Expense).filter(Expense.user_id == user.id).all()
-    expense_list = [{"category": e.category, "amount": e.amount} for e in expenses]
-    
-    ai_engine = AIFinancialEngine()
-    return ai_engine.analyze_expenses(expense_list)
+@router.get("/list")
+async def list_user_debts(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """List all active debts for the user"""
+    user = current_user
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    return debts
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\investment.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\investment.py
 ===============================
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
+from typing import List
 
 from ..database import get_db
-from ..models import Investment, User
+from ..models import User, Investment
 from ..ai_engine import AIFinancialEngine
+from .auth import get_current_user
 
-router = APIRouter(prefix="/api/investment", tags=["investment"])
+router = APIRouter(prefix="/api/investment", tags=["investments"])
 
 class InvestmentCreate(BaseModel):
     amount: float
     investment_type: str
     duration_years: int
-    risk_level: str
 
 @router.post("/predict")
 async def predict_investment(data: InvestmentCreate):
-    """Predict investment returns using AI"""
+    """Predict returns for a potential investment"""
     ai_engine = AIFinancialEngine()
-    return ai_engine.predict_investment_return(data.risk_level, data.amount, data.duration_years)
+    return ai_engine.predict_investment_return("medium", data.amount, data.duration_years)
 
 @router.post("/create")
-async def create_investment(data: InvestmentCreate, db: Session = Depends(get_db)):
-    """Create investment record"""
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+async def create_investment(
+    data: InvestmentCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Save a new investment record"""
+    user = current_user
     
     ai_engine = AIFinancialEngine()
-    prediction = ai_engine.predict_investment_return(data.risk_level, data.amount, data.duration_years)
+    prediction = ai_engine.predict_investment_return("medium", data.amount, data.duration_years)
     
-    investment = Investment(
+    new_inv = Investment(
         user_id=user.id,
         amount=data.amount,
         investment_type=data.investment_type,
         duration_years=data.duration_years,
-        predicted_return=prediction["predicted_rate"],
-        risk_score=prediction["risk_score"]
+        predicted_return=prediction["total_value"],
+        risk_score=0.5
     )
-    db.add(investment)
+    db.add(new_inv)
     db.commit()
-    db.refresh(investment)
+    db.refresh(new_inv)
     
-    return {"investment": investment, "prediction": prediction}
+    return {"message": "Investment created", "id": new_inv.id}
 
 @router.get("/recommendations")
-async def get_recommendations(db: Session = Depends(get_db)):
-    """Get personalized recommendations"""
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+async def get_recommendations(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get personalized AI investment recommendations"""
+    user = current_user
     
     investments = db.query(Investment).filter(Investment.user_id == user.id).all()
     total_investments = sum(inv.amount for inv in investments)
     
     ai_engine = AIFinancialEngine()
-    return ai_engine.generate_investment_recommendation(user.monthly_income, user.risk_tolerance, total_investments)
+    return ai_engine.generate_investment_recommendation(user.net_monthly_income, user.risk_tolerance, total_investments)
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\profile.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\notifications.py
 ===============================
-from fastapi import APIRouter, Depends, HTTPException
+# backend/app/routes/notifications.py
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+
+from ..database import get_db
+from ..models import Notification, User
+from .auth import get_current_user
+
+router = APIRouter(prefix="/api/notifications", tags=["notifications"])
+
+
+@router.get("/")
+async def get_notifications(
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
+    unread_only: bool = Query(False),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get notifications for the user with pagination."""
+    query = db.query(Notification).filter(
+        Notification.user_id == current_user.id
+    )
+
+    if unread_only:
+        query = query.filter(Notification.is_read == False)
+
+    total_count = query.count()
+    unread_count = db.query(Notification).filter(
+        Notification.user_id == current_user.id,
+        Notification.is_read == False
+    ).count()
+
+    offset = (page - 1) * page_size
+    notifications = query.order_by(
+        Notification.created_at.desc()
+    ).offset(offset).limit(page_size).all()
+
+    total_pages = (total_count + page_size - 1) // page_size
+
+    return {
+        "notifications": [
+            {
+                "id": n.id,
+                "title": n.title,
+                "message": n.message,
+                "severity": n.severity.value,
+                "is_read": n.is_read,
+                "reference_type": n.reference_type,
+                "reference_id": n.reference_id,
+                "created_at": n.created_at.isoformat()
+            }
+            for n in notifications
+        ],
+        "unread_count": unread_count,
+        "pagination": {
+            "page": page,
+            "page_size": page_size,
+            "total_count": total_count,
+            "total_pages": total_pages,
+            "has_next": page < total_pages,
+            "has_prev": page > 1
+        }
+    }
+
+
+@router.post("/read/{notification_id}")
+async def mark_read(
+    notification_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Mark a single notification as read."""
+    notif = db.query(Notification).filter(
+        Notification.id == notification_id,
+        Notification.user_id == current_user.id
+    ).first()
+    if not notif:
+        raise HTTPException(status_code=404, detail="Notification not found")
+    notif.is_read = True
+    db.commit()
+    return {"message": "Marked as read"}
+
+
+@router.post("/read-all")
+async def mark_all_read(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Mark all notifications as read."""
+    user = current_user
+    db.query(Notification).filter(
+        Notification.user_id == user.id,
+        Notification.is_read == False
+    ).update({"is_read": True})
+    db.commit()
+    return {"message": "All notifications marked as read"}
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\profile.py
+===============================
+# backend/app/routes/profile.py
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr
 from typing import List, Optional
-from datetime import datetime
+from datetime import datetime, timedelta
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 from ..database import get_db
-from ..models import User, AdditionalIncome, Debt, SavingsGoal, ExpenseCategory, IncomeType, DebtType, Priority, GoalType
-from ..utils.tax_calculator import calculate_indian_income_tax, calculate_pf_deduction
-from ..utils.financial_health import *
+from ..models import (
+    User, AdditionalIncome, Debt, SavingsGoal, ExpenseCategory, 
+    IncomeType, Priority, GoalType, Investment, NetWorthSnapshot,
+    FinancialEvent, EventType, DebtType
+)
+from ..utils.financial_health import (
+    calculate_dti_ratio, 
+    calculate_emergency_fund_status,
+    validate_financial_feasibility,
+    calculate_expense_ratios,
+    generate_smart_recommendations
+)
+from ..utils.tax_calculator import calculate_tax_india
+from ..utils.forecasting_engine import forecast_net_worth
+from .auth import get_current_user
 
 router = APIRouter(prefix="/api/profile", tags=["profile"])
+limiter = Limiter(key_func=get_remote_address)
 
-# ========== PYDANTIC MODELS ==========
+# ─── Pydantic Models ────────────────────────────────────────────────────────
 
-class IncomeProfileUpdate(BaseModel):
+class AdditionalIncomeSchema(BaseModel):
+    source_name: str
+    monthly_amount: float
+    is_recurring: bool = True
+
+class IncomeUpdate(BaseModel):
     gross_monthly_salary: float
     income_type: str
     state: str
-    additional_incomes: Optional[List[dict]] = []
+    additional_incomes: List[AdditionalIncomeSchema] = []
 
 class DebtCreate(BaseModel):
     debt_type: str
@@ -1886,7 +3044,7 @@ class DebtCreate(BaseModel):
 class SavingsGoalCreate(BaseModel):
     goal_name: str
     target_amount: float
-    current_saved: float
+    current_saved: float = 0
     target_date: str
     priority: str
     goal_type: str
@@ -1894,444 +3052,412 @@ class SavingsGoalCreate(BaseModel):
 class ExpenseCategoryCreate(BaseModel):
     category_name: str
     monthly_amount: float
-    is_essential: bool
-    is_fixed: bool
+    is_essential: bool = True
+    is_fixed: bool = True
 
-# ========== INCOME ENDPOINTS ==========
+class ScenarioInput(BaseModel):
+    extra_monthly_savings: float = 0       # Additional savings per month
+    salary_change_percent: float = 0       # e.g., 10 for +10%, -5 for -5%
+    debt_prepayment: float = 0             # One-time extra principal payment
+    months: int = 24
 
-@router.put("/income")
-async def update_income_profile(
-    data: IncomeProfileUpdate,
-    db: Session = Depends(get_db)
-):
-    """
-    Update user income and calculate tax
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Update basic income
-    user.gross_monthly_salary = data.gross_monthly_salary
-    user.gross_annual_salary = data.gross_monthly_salary * 12
-    user.income_type = IncomeType(data.income_type)
-    user.state = data.state
-    
-    # Calculate tax
-    tax_info = calculate_indian_income_tax(user.gross_annual_salary, data.state)
-    user.tax_amount = tax_info["monthly_tax"]
-    
-    # Calculate PF
-    user.pf_amount = calculate_pf_deduction(data.gross_monthly_salary)
-    
-    # Calculate net income
-    user.net_monthly_income = (
-        data.gross_monthly_salary 
-        - user.tax_amount 
-        - user.pf_amount 
-        - (user.other_deductions or 0)
-    )
-    
-    # Handle additional incomes
-    # First, delete existing
-    db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).delete()
-    
-    # Add new ones
-    total_additional = 0
-    for add_income in data.additional_incomes:
-        new_income = AdditionalIncome(
-            user_id=user.id,
-            source_name=add_income["source_name"],
-            monthly_amount=add_income["monthly_amount"],
-            is_recurring=add_income.get("is_recurring", True)
-        )
-        db.add(new_income)
-        total_additional += add_income["monthly_amount"]
-    
-    # Add additional income to net
-    user.net_monthly_income += total_additional
-    
-    db.commit()
-    db.refresh(user)
-    
-    return {
-        "message": "Income profile updated successfully",
-        "income_breakdown": {
-            "gross_monthly": user.gross_monthly_salary,
-            "gross_annual": user.gross_annual_salary,
-            "tax_monthly": user.tax_amount,
-            "pf_monthly": user.pf_amount,
-            "additional_income": total_additional,
-            "net_monthly": user.net_monthly_income
-        },
-        "tax_details": tax_info
-    }
+# ─── Income Routes ──────────────────────────────────────────────────────────
 
 @router.get("/income")
-async def get_income_profile(db: Session = Depends(get_db)):
-    """
-    Get complete income profile
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    additional_incomes = db.query(AdditionalIncome).filter(
-        AdditionalIncome.user_id == user.id
-    ).all()
+async def get_income_profile(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    additional = db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).all()
     
     return {
         "gross_monthly_salary": user.gross_monthly_salary,
-        "gross_annual_salary": user.gross_annual_salary,
-        "income_type": user.income_type,
+        "net_monthly_income": user.net_monthly_income,
+        "income_type": user.income_type.value if user.income_type else None,
         "state": user.state,
         "tax_amount": user.tax_amount,
         "pf_amount": user.pf_amount,
-        "other_deductions": user.other_deductions,
-        "net_monthly_income": user.net_monthly_income,
         "additional_incomes": [
             {
-                "id": inc.id,
                 "source_name": inc.source_name,
                 "monthly_amount": inc.monthly_amount,
                 "is_recurring": inc.is_recurring
-            } for inc in additional_incomes
+            } for inc in additional
         ]
     }
 
-# ========== DEBT ENDPOINTS ==========
+@router.put("/income")
+async def update_income_profile(
+    data: IncomeUpdate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    # Validate income is realistic
+    if data.gross_monthly_salary > 10_000_000:  # ₹1 Crore/month
+        raise HTTPException(status_code=400, detail="Salary value seems unrealistically high")
 
-@router.post("/debts")
-async def create_debt(data: DebtCreate, db: Session = Depends(get_db)):
-    """
-    Add new debt to portfolio
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Create debt
-    new_debt = Debt(
-        user_id=user.id,
-        debt_type=DebtType(data.debt_type),
-        debt_name=data.debt_name,
-        total_principal=data.total_principal,
-        outstanding_principal=data.outstanding_principal,
-        interest_rate=data.interest_rate,
-        tenure_months=data.tenure_months,
-        remaining_months=data.remaining_months,
-        monthly_emi=data.monthly_emi,
-        start_date=datetime.fromisoformat(data.start_date),
-        is_active=True
-    )
-    
-    db.add(new_debt)
-    db.commit()
-    db.refresh(new_debt)
-    
-    # Recalculate DTI ratio
-    all_debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    
-    total_emi = sum(debt.monthly_emi for debt in all_debts)
-    dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
-    
-    return {
-        "message": "Debt added successfully",
-        "debt": {
-            "id": new_debt.id,
-            "debt_name": new_debt.debt_name,
-            "debt_type": new_debt.debt_type,
-            "monthly_emi": new_debt.monthly_emi,
-            "outstanding_principal": new_debt.outstanding_principal
-        },
-        "portfolio_summary": {
-            "total_debts": len(all_debts),
-            "total_emi": round(total_emi, 2),
-            "dti_ratio": dti_info
+    if data.gross_monthly_salary < 1000:
+        raise HTTPException(status_code=400, detail="Salary must be at least ₹1,000/month")
+
+    try:
+        # Calculate Tax (India)
+        tax_result = calculate_tax_india(data.gross_monthly_salary * 12, data.state)
+        
+        # Update User
+        user.gross_monthly_salary = data.gross_monthly_salary
+        user.gross_annual_salary = data.gross_monthly_salary * 12
+        user.income_type = IncomeType(data.income_type)
+        user.state = data.state
+        user.tax_amount = tax_result["monthly_tax"]
+        user.pf_amount = tax_result["monthly_pf"]
+        user.net_monthly_income = tax_result["monthly_net_take_home"]
+        
+        # Update Additional Incomes (Delete and Replace)
+        db.query(AdditionalIncome).filter(AdditionalIncome.user_id == user.id).delete()
+        for inc in data.additional_incomes:
+            new_inc = AdditionalIncome(
+                user_id=user.id,
+                source_name=inc.source_name,
+                monthly_amount=inc.monthly_amount,
+                is_recurring=inc.is_recurring
+            )
+            db.add(new_inc)
+            user.net_monthly_income += inc.monthly_amount
+            
+        db.commit()
+        db.refresh(user)
+        
+        return {
+            "message": "Income profile updated",
+            "income_breakdown": {
+                "gross_monthly": user.gross_monthly_salary,
+                "tax_monthly": user.tax_amount,
+                "pf_monthly": user.pf_amount,
+                "net_monthly": user.net_monthly_income
+            }
         }
-    }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to update income: {str(e)}")
+
+# ─── Debt Routes ────────────────────────────────────────────────────────────
 
 @router.get("/debts")
-async def get_all_debts(db: Session = Depends(get_db)):
-    """
-    Get all user debts with portfolio summary
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def get_debts(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    
-    total_emi = sum(debt.monthly_emi for debt in debts)
-    total_outstanding = sum(debt.outstanding_principal for debt in debts)
-    
+    total_emi = sum(d.monthly_emi for d in debts)
     dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
     
     return {
         "debts": [
             {
-                "id": debt.id,
-                "debt_name": debt.debt_name,
-                "debt_type": debt.debt_type,
-                "total_principal": debt.total_principal,
-                "outstanding_principal": debt.outstanding_principal,
-                "interest_rate": debt.interest_rate,
-                "monthly_emi": debt.monthly_emi,
-                "remaining_months": debt.remaining_months,
-                "start_date": debt.start_date.isoformat() if debt.start_date else None,
-                "progress_percentage": round(
-                    ((debt.total_principal - debt.outstanding_principal) / debt.total_principal) * 100, 2
-                ) if debt.total_principal > 0 else 0
-            } for debt in debts
+                "id": d.id,
+                "debt_type": d.debt_type.value,
+                "debt_name": d.debt_name,
+                "outstanding_principal": d.outstanding_principal,
+                "interest_rate": d.interest_rate,
+                "remaining_months": d.remaining_months,
+                "monthly_emi": d.monthly_emi,
+                "progress_percentage": round((1 - d.outstanding_principal/d.total_principal) * 100, 1) if d.total_principal > 0 else 0
+            } for d in debts
         ],
         "summary": {
             "total_debts": len(debts),
             "total_emi": round(total_emi, 2),
-            "total_outstanding": round(total_outstanding, 2),
             "dti_ratio": dti_info
         }
     }
 
-@router.delete("/debts/{debt_id}")
-async def delete_debt(debt_id: int, db: Session = Depends(get_db)):
-    """
-    Delete/mark debt as completed
-    """
-    debt = db.query(Debt).filter(Debt.id == debt_id).first()
+@router.post("/debts")
+async def create_debt(
+    data: DebtCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
     
+    # Validate EMI vs income
+    if user.net_monthly_income and data.monthly_emi > user.net_monthly_income:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Monthly EMI (₹{data.monthly_emi:,.0f}) cannot exceed net income "
+                   f"(₹{user.net_monthly_income:,.0f})"
+        )
+
+    # Validate outstanding <= principal
+    if data.outstanding_principal > data.total_principal:
+        raise HTTPException(
+            status_code=400,
+            detail="Outstanding principal cannot exceed total principal"
+        )
+
+    # Check total DTI after adding this debt
+    existing_debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    current_total_emi = sum(d.monthly_emi for d in existing_debts)
+    new_total_emi = current_total_emi + data.monthly_emi
+
+    dti_warning = None
+    if user.net_monthly_income and (new_total_emi / user.net_monthly_income) > 0.80:
+        dti_warning = f"Total DTI will reach {(new_total_emi/user.net_monthly_income*100):.0f}% — very high"
+
+    try:
+        new_debt = Debt(
+            user_id=user.id,
+            debt_type=DebtType(data.debt_type),
+            debt_name=data.debt_name,
+            total_principal=data.total_principal,
+            outstanding_principal=data.outstanding_principal,
+            interest_rate=data.interest_rate,
+            tenure_months=data.tenure_months,
+            remaining_months=data.remaining_months,
+            monthly_emi=data.monthly_emi,
+            start_date=datetime.fromisoformat(data.start_date),
+            expected_end_date=datetime.utcnow() + timedelta(days=data.remaining_months * 30)
+        )
+        db.add(new_debt)
+        
+        # Log event
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.DEBT_ADDED,
+            description=f"New debt added: {data.debt_name} — EMI ₹{data.monthly_emi:,.0f}",
+            amount=data.total_principal,
+            reference_type="debt"
+        )
+        db.add(event)
+        
+        db.commit()
+        db.refresh(new_debt)
+        
+        return {
+            "message": "Debt added successfully",
+            "debt": {"id": new_debt.id, "name": new_debt.debt_name},
+            "portfolio_summary": (await get_debts(db, user)),
+            "warning": dti_warning
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to add debt: {str(e)}")
+
+@router.delete("/debts/{debt_id}")
+async def delete_debt(
+    debt_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    debt = db.query(Debt).filter(Debt.id == debt_id, Debt.user_id == current_user.id).first()
     if not debt:
         raise HTTPException(status_code=404, detail="Debt not found")
-    
-    debt.is_active = False
-    debt.completed_at = datetime.utcnow()
-    
+    db.delete(debt)
     db.commit()
-    
-    return {"message": "Debt marked as completed"}
+    return {"message": "Debt deleted"}
 
-# ========== SAVINGS GOALS ENDPOINTS ==========
-
-@router.post("/savings-goals")
-async def create_savings_goal(data: SavingsGoalCreate, db: Session = Depends(get_db)):
-    """
-    Create new savings goal with feasibility check
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Calculate monthly contribution needed
-    target_date = datetime.fromisoformat(data.target_date)
-    months_to_goal = max(1, (target_date.year - datetime.now().year) * 12 + (target_date.month - datetime.now().month))
-    
-    monthly_needed = (data.target_amount - data.current_saved) / months_to_goal
-    
-    # Create goal
-    new_goal = SavingsGoal(
-        user_id=user.id,
-        goal_name=data.goal_name,
-        target_amount=data.target_amount,
-        current_saved=data.current_saved,
-        target_date=target_date,
-        priority=Priority(data.priority),
-        goal_type=GoalType(data.goal_type),
-        monthly_contribution_needed=monthly_needed
-    )
-    
-    db.add(new_goal)
-    db.commit()
-    db.refresh(new_goal)
-    
-    # Check feasibility
-    all_goals = db.query(SavingsGoal).filter(
-        SavingsGoal.user_id == user.id,
-        SavingsGoal.is_achieved == False
-    ).all()
-    
-    total_savings_needed = sum(goal.monthly_contribution_needed for goal in all_goals)
-    
-    # Get current commitments
-    active_debts = db.query(Debt).filter(
-        Debt.user_id == user.id,
-        Debt.is_active == True
-    ).all()
-    total_emi = sum(debt.monthly_emi for debt in active_debts)
-    
-    expense_categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    total_expenses = sum(exp.monthly_amount for exp in expense_categories)
-    
-    feasibility = validate_financial_feasibility(
-        user.net_monthly_income,
-        total_expenses,
-        total_emi,
-        total_savings_needed
-    )
-    
-    return {
-        "message": "Savings goal created",
-        "goal": {
-            "id": new_goal.id,
-            "goal_name": new_goal.goal_name,
-            "target_amount": new_goal.target_amount,
-            "monthly_contribution_needed": round(monthly_needed, 2),
-            "months_to_goal": months_to_goal
-        },
-        "feasibility_check": feasibility
-    }
+# ─── Savings Goals Routes ───────────────────────────────────────────────────
 
 @router.get("/savings-goals")
-async def get_savings_goals(db: Session = Depends(get_db)):
-    """
-    Get all savings goals with progress
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def get_savings_goals(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    goals = db.query(SavingsGoal).filter(SavingsGoal.user_id == user.id).all()
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    goals = db.query(SavingsGoal).filter(
-        SavingsGoal.user_id == user.id,
-        SavingsGoal.is_achieved == False
-    ).all()
-    
-    total_monthly_needed = sum(goal.monthly_contribution_needed for goal in goals)
+    total_needed = sum(g.monthly_contribution_needed for g in goals)
     
     return {
         "goals": [
             {
-                "id": goal.id,
-                "goal_name": goal.goal_name,
-                "target_amount": goal.target_amount,
-                "current_saved": goal.current_saved,
-                "progress_percentage": round((goal.current_saved / goal.target_amount) * 100, 2) if goal.target_amount > 0 else 0,
-                "monthly_contribution_needed": goal.monthly_contribution_needed,
-                "target_date": goal.target_date.isoformat() if goal.target_date else None,
-                "priority": goal.priority,
-                "goal_type": goal.goal_type
-            } for goal in goals
+                "id": g.id,
+                "goal_name": g.goal_name,
+                "target_amount": g.target_amount,
+                "current_saved": g.current_saved,
+                "target_date": g.target_date.isoformat(),
+                "priority": g.priority.value,
+                "goal_type": g.goal_type.value,
+                "monthly_contribution_needed": round(g.monthly_contribution_needed, 2),
+                "progress_percentage": round((g.current_saved / g.target_amount) * 100, 1) if g.target_amount > 0 else 0
+            } for g in goals
         ],
         "summary": {
             "total_goals": len(goals),
-            "total_monthly_contribution_needed": round(total_monthly_needed, 2)
+            "total_monthly_contribution_needed": round(total_needed, 2)
         }
     }
 
-# ========== EXPENSES ENDPOINTS ==========
+@router.post("/savings-goals")
+async def create_savings_goal(
+    data: SavingsGoalCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    # Logic to calculate monthly needed
+    target_date = datetime.fromisoformat(data.target_date)
+    months_left = (target_date - datetime.utcnow()).days / 30
+    if months_left <= 0: months_left = 1
+    
+    monthly_needed = (data.target_amount - data.current_saved) / months_left
+    if monthly_needed < 0: monthly_needed = 0
+    
+    # Validate target is achievable given cashflow
+    from ..utils.financial_engine import calculate_cashflow
+    cashflow = calculate_cashflow(user, db)
+    available = cashflow["cashflow"]
+
+    feasibility_warning = None
+    if monthly_needed > available * 2:  # Warn if contribution > 2x available cashflow
+        feasibility_warning = (
+            f"Monthly contribution needed (₹{monthly_needed:,.0f}) is very high "
+            f"compared to available cashflow (₹{available:,.0f})"
+        )
+
+    try:
+        new_goal = SavingsGoal(
+            user_id=user.id,
+            goal_name=data.goal_name,
+            target_amount=data.target_amount,
+            current_saved=data.current_saved,
+            target_date=target_date,
+            priority=Priority(data.priority),
+            goal_type=GoalType(data.goal_type),
+            monthly_contribution_needed=monthly_needed
+        )
+        db.add(new_goal)
+        
+        # Log event
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.GOAL_CREATED,
+            description=f"Savings goal created: {data.goal_name} — target ₹{data.target_amount:,.0f}",
+            amount=data.target_amount,
+            reference_type="goal"
+        )
+        db.add(event)
+        
+        db.commit()
+        db.refresh(new_goal)
+        
+        # Check feasibility
+        feasibility = validate_financial_feasibility(
+            user.net_monthly_income, 
+            0, 
+            0, 
+            monthly_needed
+        )
+        
+        return {
+            "message": "Goal created successfully",
+            "goal_id": new_goal.id,
+            "feasibility_check": feasibility,
+            "warning": feasibility_warning
+        }
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to create goal: {str(e)}")
+
+@router.delete("/savings-goals/{goal_id}")
+async def delete_savings_goal(
+    goal_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    goal = db.query(SavingsGoal).filter(SavingsGoal.id == goal_id, SavingsGoal.user_id == current_user.id).first()
+    if not goal:
+        raise HTTPException(status_code=404, detail="Goal not found")
+    db.delete(goal)
+    db.commit()
+    return {"message": "Goal deleted"}
+
+# ─── Expense Categories Routes ──────────────────────────────────────────────
+
+@router.get("/expense-categories")
+async def get_expense_categories(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    categories = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    
+    total_expenses = sum(c.monthly_amount for c in categories)
+    essential_expenses = sum(c.monthly_amount for c in categories if c.is_essential)
+    
+    expenses_dict = {c.category_name: c.monthly_amount for c in categories}
+    analysis = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
+    
+    return {
+        "categories": [
+            {
+                "id": c.id,
+                "category_name": c.category_name,
+                "monthly_amount": c.monthly_amount,
+                "is_essential": c.is_essential,
+                "is_fixed": c.is_fixed,
+                "percentage_of_income": round((c.monthly_amount / user.net_monthly_income) * 100, 1) if user.net_monthly_income > 0 else 0
+            } for c in categories
+        ],
+        "summary": {
+            "total_expenses": round(total_expenses, 2),
+            "essential_expenses": round(essential_expenses, 2),
+            "non_essential_expenses": round(total_expenses - essential_expenses, 2),
+            "expense_ratio": round((total_expenses / user.net_monthly_income) * 100, 1) if user.net_monthly_income > 0 else 0
+        },
+        "analysis": analysis
+    }
 
 @router.post("/expense-categories")
-async def create_expense_category(data: ExpenseCategoryCreate, db: Session = Depends(get_db)):
-    """
-    Add expense category
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
+async def create_expense_category(
+    data: ExpenseCategoryCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
     
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    new_category = ExpenseCategory(
+    new_cat = ExpenseCategory(
         user_id=user.id,
         category_name=data.category_name,
         monthly_amount=data.monthly_amount,
         is_essential=data.is_essential,
         is_fixed=data.is_fixed
     )
-    
-    db.add(new_category)
+    db.add(new_cat)
     db.commit()
-    db.refresh(new_category)
+    db.refresh(new_cat)
     
-    # Calculate expense ratios
-    all_categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    
-    expenses_dict = {cat.category_name: cat.monthly_amount for cat in all_categories}
-    ratios = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
-    
-    return {
-        "message": "Expense category added",
-        "category": {
-            "id": new_category.id,
-            "category_name": new_category.category_name,
-            "monthly_amount": new_category.monthly_amount
-        },
-        "expense_analysis": ratios
-    }
+    return {"message": "Expense category added", "category_id": new_cat.id}
 
-@router.get("/expense-categories")
-async def get_expense_categories(db: Session = Depends(get_db)):
-    """
-    Get all expense categories with analysis
-    """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    categories = db.query(ExpenseCategory).filter(
-        ExpenseCategory.user_id == user.id
-    ).all()
-    
-    total_expenses = sum(cat.monthly_amount for cat in categories)
-    essential_expenses = sum(cat.monthly_amount for cat in categories if cat.is_essential)
-    non_essential = total_expenses - essential_expenses
-    
-    expenses_dict = {cat.category_name: cat.monthly_amount for cat in categories}
-    ratios = calculate_expense_ratios(expenses_dict, user.net_monthly_income)
-    
-    return {
-        "categories": [
-            {
-                "id": cat.id,
-                "category_name": cat.category_name,
-                "monthly_amount": cat.monthly_amount,
-                "is_essential": cat.is_essential,
-                "is_fixed": cat.is_fixed,
-                "percentage_of_income": round((cat.monthly_amount / user.net_monthly_income) * 100, 2) if user.net_monthly_income > 0 else 0
-            } for cat in categories
-        ],
-        "summary": {
-            "total_expenses": round(total_expenses, 2),
-            "essential_expenses": round(essential_expenses, 2),
-            "non_essential_expenses": round(non_essential, 2),
-            "expense_ratio": round((total_expenses / user.net_monthly_income) * 100, 2) if user.net_monthly_income > 0 else 0
-        },
-        "analysis": ratios
-    }
+@router.delete("/expense-categories/{category_id}")
+async def delete_expense_category(
+    category_id: int, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    category = db.query(ExpenseCategory).filter(ExpenseCategory.id == category_id, ExpenseCategory.user_id == current_user.id).first()
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    db.delete(category)
+    db.commit()
+    return {"message": "Category deleted"}
 
-# ========== FINANCIAL OVERVIEW ==========
+# ─── Financial Overview ─────────────────────────────────────────────────────
 
 @router.get("/financial-overview")
-async def get_financial_overview(db: Session = Depends(get_db)):
+async def get_financial_overview(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
     Complete financial health dashboard
     """
-    user_email = "demo@user.com"
-    user = db.query(User).filter(User.email == user_email).first()
-    
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = current_user
     
     # Get all data
     debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
@@ -2350,7 +3476,6 @@ async def get_financial_overview(db: Session = Depends(get_db)):
     dti_info = calculate_dti_ratio(total_emi, user.net_monthly_income)
     
     # Emergency Fund Status
-    # Assume first goal named "Emergency Fund" or create default check
     emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
     emergency_saved = emergency_goal.current_saved if emergency_goal else 0
     emergency_status = calculate_emergency_fund_status(emergency_saved, total_expenses)
@@ -2399,56 +3524,481 @@ async def get_financial_overview(db: Session = Depends(get_db)):
         "recommendations": generate_smart_recommendations(user, debts, goals, expenses)
     }
 
-def generate_smart_recommendations(user, debts, goals, expenses):
+# ─── Forecasting and Scenarios ──────────────────────────────────────────────
+
+@router.get("/forecast")
+@limiter.limit("60/minute")
+async def get_financial_forecast(
+    request: Request,
+    scenario: str = "normal", 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    user = current_user
+    
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    expenses = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    investments = db.query(Investment).filter(Investment.user_id == user.id).all()
+    
+    total_emi = sum(d.monthly_emi for d in debts)
+    total_expenses = sum(e.monthly_amount for e in expenses)
+    total_investments = sum(i.amount for i in investments)
+    total_debt = sum(d.outstanding_principal for d in debts)
+    
+    projections = forecast_net_worth(
+        net_income=user.net_monthly_income or 0,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=total_investments,
+        total_debt=total_debt,
+        months=24,
+        scenario=scenario
+    )
+    
+    return {
+        "scenario": scenario,
+        "projections": projections,
+        "summary": {
+            "current_net_worth": round(total_investments - total_debt, 2),
+            "projected_net_worth_12m": projections[11]["net_worth"] if len(projections) > 11 else 0,
+            "projected_net_worth_24m": projections[23]["net_worth"] if len(projections) > 23 else 0
+        }
+    }
+
+@router.get("/net-worth-history")
+async def get_net_worth_history(
+    days: int = 30, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
     """
-    Generate personalized recommendations
+    Returns net worth snapshots for the past N days.
+    Used for the net worth trend chart.
     """
-    recommendations = []
-    
-    total_emi = sum(debt.monthly_emi for debt in debts)
-    total_expenses = sum(exp.monthly_amount for exp in expenses)
-    total_debt_outstanding = sum(debt.outstanding_principal for debt in debts)
-    
-    dti = (total_emi / user.net_monthly_income) * 100 if user.net_monthly_income > 0 else 0
-    
-    # DTI-based recommendations
-    if dti > 40:
-        recommendations.append({
-            "type": "debt",
-            "priority": "high",
-            "message": f"DTI at {dti:.1f}% - Focus on debt reduction",
-            "action": "Consider debt consolidation or extra payments to high-interest loans"
-        })
-    
-    # Expense-based recommendations
-    for exp in expenses:
-        ratio = (exp.monthly_amount / user.net_monthly_income) * 100 if user.net_monthly_income > 0 else 0
-        if exp.category_name.lower() == "housing" and ratio > 40:
-            recommendations.append({
-                "type": "expense",
-                "priority": "medium",
-                "message": f"Housing costs at {ratio:.1f}% of income",
-                "action": "Consider relocating or finding roommate to reduce rent"
-            })
-    
-    # Emergency fund recommendation
-    emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
-    if not emergency_goal or (emergency_goal and emergency_goal.current_saved < total_expenses * 3):
-        recommendations.append({
-            "type": "savings",
-            "priority": "high",
-            "message": "Emergency fund insufficient",
-            "action": f"Build {total_expenses * 3:,.0f} emergency fund (3 months expenses) before aggressive investing"
-        })
-    
-    return recommendations
+    user = current_user
+
+    since = datetime.utcnow() - timedelta(days=days)
+    snapshots = db.query(NetWorthSnapshot).filter(
+        NetWorthSnapshot.user_id == user.id,
+        NetWorthSnapshot.snapshot_date >= since
+    ).order_by(NetWorthSnapshot.snapshot_date.asc()).all()
+
+    if not snapshots:
+        # Return current calculated value as single data point
+        from ..utils.financial_engine import calculate_net_worth
+        nw = calculate_net_worth(user, db)
+        return {
+            "snapshots": [{
+                "date": datetime.utcnow().strftime("%d %b"),
+                "net_worth": nw["net_worth"],
+                "assets": nw["assets"]["total"],
+                "liabilities": nw["liabilities"]["total"]
+            }],
+            "days_of_data": 1,
+            "trend": "insufficient_data"
+        }
+
+    result = [
+        {
+            "date": s.snapshot_date.strftime("%d %b"),
+            "net_worth": round(s.net_worth, 2),
+            "assets": round(s.total_assets, 2),
+            "liabilities": round(s.total_liabilities, 2)
+        }
+        for s in snapshots
+    ]
+
+    # Calculate trend
+    first_nw = snapshots[0].net_worth
+    last_nw = snapshots[-1].net_worth
+    change = last_nw - first_nw
+    trend = "up" if change > 0 else "down" if change < 0 else "flat"
+
+    return {
+        "snapshots": result,
+        "days_of_data": len(snapshots),
+        "trend": trend,
+        "change": round(change, 2),
+        "change_pct": round((change / abs(first_nw) * 100), 2) if first_nw != 0 else 0
+    }
+
+@router.post("/scenario/simulate")
+@limiter.limit("30/minute")
+async def simulate_scenario(
+    request: Request,
+    data: ScenarioInput, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Run 'what-if' scenarios:
+    - What if I got a 20% salary hike?
+    - What if I paid extra ₹5000/month toward debt?
+    - What if I added ₹3000/month to savings?
+    """
+    user = current_user
+
+    debts = db.query(Debt).filter(Debt.user_id == user.id, Debt.is_active == True).all()
+    expenses = db.query(ExpenseCategory).filter(ExpenseCategory.user_id == user.id).all()
+    investments = db.query(Investment).filter(Investment.user_id == user.id).all()
+
+    total_emi = sum(d.monthly_emi for d in debts)
+    total_expenses = sum(e.monthly_amount for e in expenses)
+    total_investments = sum(i.amount for i in investments)
+    total_debt = sum(d.outstanding_principal for d in debts)
+
+    # Apply scenario modifiers
+    modified_income = user.net_monthly_income or 0
+    if data.salary_change_percent != 0:
+        modified_income *= (1 + data.salary_change_percent / 100)
+
+    modified_investments = total_investments
+    modified_debt = max(0, total_debt - data.debt_prepayment)
+
+    # Run base scenario (current state)
+    base_projections = forecast_net_worth(
+        net_income=user.net_monthly_income or 0,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=total_investments,
+        total_debt=total_debt,
+        months=data.months,
+        scenario="normal"
+    )
+
+    # Run modified scenario
+    modified_projections = forecast_net_worth(
+        net_income=modified_income,
+        total_expenses=total_expenses,
+        total_emi=total_emi,
+        total_investments=modified_investments + data.extra_monthly_savings,
+        total_debt=modified_debt,
+        months=data.months,
+        scenario="normal"
+    )
+
+    base_final = base_projections[-1]["net_worth"] if base_projections else 0
+    modified_final = modified_projections[-1]["net_worth"] if modified_projections else 0
+    improvement = modified_final - base_final
+
+    return {
+        "scenario_inputs": data.dict(),
+        "base_scenario": {
+            "label": "Current Path",
+            "projections": base_projections,
+            "final_net_worth": round(base_final, 2)
+        },
+        "modified_scenario": {
+            "label": "With Changes",
+            "projections": modified_projections,
+            "final_net_worth": round(modified_final, 2)
+        },
+        "improvement": round(improvement, 2),
+        "improvement_pct": round((improvement / abs(base_final) * 100), 2) if base_final != 0 else 0
+    }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\routes\__init__.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\transactions.py
+===============================
+# backend/app/routes/transactions.py
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.orm import Session
+from sqlalchemy import func, extract
+from pydantic import BaseModel
+from typing import Optional
+from datetime import datetime, timedelta
+
+from ..database import get_db
+from ..models import (
+    User, ExpenseTransaction, ExpenseCategory,
+    FinancialEvent, EventType
+)
+from .auth import get_current_user
+
+router = APIRouter(prefix="/api/transactions", tags=["transactions"])
+
+
+# ─── Pydantic Models ────────────────────────────────────────────────────────
+
+class TransactionCreate(BaseModel):
+    description: str
+    amount: float
+    category_id: Optional[int] = None
+    transaction_date: Optional[str] = None   # ISO string "2025-03-15"
+    bill_id: Optional[int] = None
+
+
+# ─── Route 1: Create Transaction ────────────────────────────────────────────
+
+@router.post("/create")
+async def create_transaction(
+    data: TransactionCreate, 
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Record a real expense transaction.
+    This is what ACTUALLY happened — not a budget estimate.
+    """
+    user = current_user
+
+    # Validate amount
+    if data.amount <= 0:
+        raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+        
+    if data.amount > (user.net_monthly_income or 999999):
+        raise HTTPException(
+            status_code=400,
+            detail="Transaction amount exceeds monthly income — please verify"
+        )
+
+    # Validate category if provided
+    category = None
+    if data.category_id:
+        category = db.query(ExpenseCategory).filter(
+            ExpenseCategory.id == data.category_id,
+            ExpenseCategory.user_id == user.id
+        ).first()
+        if not category:
+            raise HTTPException(status_code=404, detail="Category not found")
+
+    # Parse date or use now
+    txn_date = datetime.utcnow()
+    if data.transaction_date:
+        try:
+            txn_date = datetime.fromisoformat(data.transaction_date)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+
+    # ── Deduplication Check ──────────────────────────────────────────────────────
+    ten_seconds_ago = datetime.utcnow() - timedelta(seconds=10)
+    duplicate = db.query(ExpenseTransaction).filter(
+        ExpenseTransaction.user_id == user.id,
+        ExpenseTransaction.description == data.description,
+        ExpenseTransaction.amount == data.amount,
+        ExpenseTransaction.transaction_date >= ten_seconds_ago
+    ).first()
+
+    if duplicate:
+        return {
+            "message": "Transaction already recorded (duplicate prevented)",
+            "transaction": {
+                "id": duplicate.id,
+                "description": duplicate.description,
+                "amount": duplicate.amount,
+                "transaction_date": duplicate.transaction_date.isoformat()
+            }
+        }
+
+    try:
+        # Insert transaction
+        transaction = ExpenseTransaction(
+            user_id=user.id,
+            category_id=data.category_id,
+            description=data.description,
+            amount=data.amount,
+            transaction_date=txn_date,
+            bill_id=data.bill_id
+        )
+        db.add(transaction)
+
+        # Log financial event
+        cat_name = category.category_name if category else "Uncategorized"
+        event = FinancialEvent(
+            user_id=user.id,
+            event_type=EventType.EXPENSE_ADDED,
+            description=f"{data.description} — ₹{data.amount:,.0f} ({cat_name})",
+            amount=data.amount,
+            reference_type="transaction"
+        )
+        db.add(event)
+        db.commit()
+        db.refresh(transaction)
+
+        return {
+            "message": "Transaction recorded",
+            "transaction": {
+                "id": transaction.id,
+                "description": transaction.description,
+                "amount": transaction.amount,
+                "transaction_date": transaction.transaction_date.isoformat(),
+                "category_id": transaction.category_id
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=f"Failed to record transaction: {str(e)}")
+
+
+# ─── Route 2: List Transactions ─────────────────────────────────────────────
+
+@router.get("/list")
+async def list_transactions(
+    month: Optional[int] = Query(None, ge=1, le=12),
+    year: Optional[int] = Query(None),
+    category_id: Optional[int] = Query(None),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(50, ge=1, le=200),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    List transactions with filtering and pagination.
+    """
+    user = current_user
+
+    now = datetime.utcnow()
+    filter_month = month or now.month
+    filter_year = year or now.year
+
+    # Base query
+    query = db.query(ExpenseTransaction).filter(
+        ExpenseTransaction.user_id == user.id,
+        extract('month', ExpenseTransaction.transaction_date) == filter_month,
+        extract('year', ExpenseTransaction.transaction_date) == filter_year
+    )
+
+    if category_id:
+        query = query.filter(ExpenseTransaction.category_id == category_id)
+
+    # Count total
+    total_count = query.count()
+
+    # Apply pagination
+    offset = (page - 1) * page_size
+    transactions = query.order_by(
+        ExpenseTransaction.transaction_date.desc()
+    ).offset(offset).limit(page_size).all()
+
+    # Build category name map
+    categories = db.query(ExpenseCategory).filter(
+        ExpenseCategory.user_id == user.id
+    ).all()
+    cat_map = {c.id: c.category_name for c in categories}
+
+    # All transactions for breakdown
+    all_transactions = db.query(ExpenseTransaction).filter(
+        ExpenseTransaction.user_id == user.id,
+        extract('month', ExpenseTransaction.transaction_date) == filter_month,
+        extract('year', ExpenseTransaction.transaction_date) == filter_year
+    ).all()
+
+    breakdown = {}
+    for t in all_transactions:
+        key = t.category_id or 0
+        breakdown[key] = breakdown.get(key, 0) + t.amount
+
+    total_spent = sum(t.amount for t in all_transactions)
+    total_pages = (total_count + page_size - 1) // page_size
+
+    return {
+        "transactions": [
+            {
+                "id": t.id,
+                "description": t.description,
+                "amount": t.amount,
+                "transaction_date": t.transaction_date.isoformat(),
+                "category_id": t.category_id,
+                "category_name": cat_map.get(t.category_id, "Uncategorized") if t.category_id else "Uncategorized"
+            }
+            for t in transactions
+        ],
+        "total_spent": round(total_spent, 2),
+        "pagination": {
+            "page": page,
+            "page_size": page_size,
+            "total_count": total_count,
+            "total_pages": total_pages,
+            "has_next": page < total_pages,
+            "has_prev": page > 1
+        },
+        "category_breakdown": [
+            {
+                "category_id": k,
+                "category_name": cat_map.get(k, "Uncategorized") if k else "Uncategorized",
+                "total_spent": round(v, 2)
+            }
+            for k, v in sorted(breakdown.items(), key=lambda x: x[1], reverse=True)
+        ],
+        "period": {"month": filter_month, "year": filter_year}
+    }
+
+
+# ─── Route 3: Monthly Summary ────────────────────────────────────────────────
+
+@router.get("/monthly-summary")
+async def monthly_summary(
+    month: Optional[int] = Query(None, ge=1, le=12),
+    year: Optional[int] = Query(None),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Category-wise spending totals vs budget for a given month.
+    """
+    user = current_user
+
+    now = datetime.utcnow()
+    filter_month = month or now.month
+    filter_year = year or now.year
+
+    # Get actual spending from transactions
+    transactions = db.query(ExpenseTransaction).filter(
+        ExpenseTransaction.user_id == user.id,
+        extract('month', ExpenseTransaction.transaction_date) == filter_month,
+        extract('year', ExpenseTransaction.transaction_date) == filter_year
+    ).all()
+
+    # Get budget categories
+    categories = db.query(ExpenseCategory).filter(
+        ExpenseCategory.user_id == user.id
+    ).all()
+
+    # Build actual spending map
+    actual_by_cat = {}
+    for t in transactions:
+        cid = t.category_id or 0
+        actual_by_cat[cid] = actual_by_cat.get(cid, 0) + t.amount
+
+    total_actual = sum(t.amount for t in transactions)
+    total_budgeted = sum(c.monthly_amount for c in categories)
+
+    summary = []
+    for cat in categories:
+        actual = actual_by_cat.get(cat.id, 0)
+        budgeted = cat.monthly_amount
+        variance = actual - budgeted
+        pct_used = (actual / budgeted * 100) if budgeted > 0 else 0
+
+        summary.append({
+            "category_id": cat.id,
+            "category_name": cat.category_name,
+            "budgeted": round(budgeted, 2),
+            "actual_spent": round(actual, 2),
+            "variance": round(variance, 2),
+            "percent_used": round(pct_used, 1),
+            "over_budget": variance > 0
+        })
+
+    summary.sort(key=lambda x: x["actual_spent"], reverse=True)
+
+    return {
+        "period": {"month": filter_month, "year": filter_year},
+        "total_actual_spent": round(total_actual, 2),
+        "total_budgeted": round(total_budgeted, 2),
+        "overall_variance": round(total_actual - total_budgeted, 2),
+        "categories": summary
+    }
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\routes\__init__.py
 ===============================
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\utils\financial_calculations.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\financial_calculations.py
 ===============================
 import math
 
@@ -2471,7 +4021,197 @@ def calculate_future_value(principal: float, annual_rate: float, years: int) -> 
     return round(principal * math.pow(1 + annual_rate, years), 2)
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\utils\financial_health.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\financial_engine.py
+===============================
+# backend/app/utils/financial_engine.py
+
+from sqlalchemy.orm import Session
+from sqlalchemy import extract
+from datetime import datetime
+from typing import Optional
+
+
+def calculate_cashflow(
+    user,
+    db: Session,
+    month: Optional[int] = None,
+    year: Optional[int] = None
+) -> dict:
+    """
+    Single source of truth for all cashflow calculations.
+    Used by: dashboard, forecast, financial_overview, scheduler.
+
+    Returns:
+        income:        net monthly take-home
+        expenses:      actual transactions this month (or budgeted if no transactions)
+        commitments:   EMI + min bill payments + goal contributions
+        cashflow:      income - expenses - commitments
+    """
+    from ..models import (
+        ExpenseTransaction, ExpenseCategory,
+        Debt, Bill, BillStatus, SavingsGoal
+    )
+
+    now = datetime.utcnow()
+    filter_month = month or now.month
+    filter_year = year or now.year
+
+    net_income = user.net_monthly_income or 0
+
+    # ── Actual expenses from transactions ──────────────────────────────────
+    transactions = db.query(ExpenseTransaction).filter(
+        ExpenseTransaction.user_id == user.id,
+        extract('month', ExpenseTransaction.transaction_date) == filter_month,
+        extract('year', ExpenseTransaction.transaction_date) == filter_year
+    ).all()
+
+    actual_expenses = sum(t.amount for t in transactions)
+
+    # Fallback to budgeted if no transactions yet
+    if actual_expenses == 0:
+        cats = db.query(ExpenseCategory).filter(
+            ExpenseCategory.user_id == user.id
+        ).all()
+        actual_expenses = sum(c.monthly_amount for c in cats)
+
+    # ── Commitments ────────────────────────────────────────────────────────
+    # 1. Debt EMIs
+    active_debts = db.query(Debt).filter(
+        Debt.user_id == user.id,
+        Debt.is_active == True
+    ).all()
+    total_emi = sum(d.monthly_emi for d in active_debts)
+
+    # 2. Bill minimum payments (only pending/overdue bills)
+    active_bills = db.query(Bill).filter(
+        Bill.user_id == user.id,
+        Bill.is_active == True,
+        Bill.status.in_([BillStatus.PENDING, BillStatus.OVERDUE])
+    ).all()
+    total_min_bills = sum(b.minimum_due for b in active_bills)
+
+    # 3. Goal contributions
+    active_goals = db.query(SavingsGoal).filter(
+        SavingsGoal.user_id == user.id,
+        SavingsGoal.is_achieved == False
+    ).all()
+    total_goal_contributions = sum(g.monthly_contribution_needed or 0 for g in active_goals)
+
+    total_commitments = total_emi + total_min_bills + total_goal_contributions
+
+    # ── Cashflow ───────────────────────────────────────────────────────────
+    cashflow = net_income - actual_expenses - total_commitments
+
+    return {
+        "income": round(net_income, 2),
+        "expenses": round(actual_expenses, 2),
+        "commitments": {
+            "total": round(total_commitments, 2),
+            "emi": round(total_emi, 2),
+            "bill_minimums": round(total_min_bills, 2),
+            "goal_contributions": round(total_goal_contributions, 2)
+        },
+        "cashflow": round(cashflow, 2),
+        "cashflow_positive": cashflow >= 0,
+        "expense_ratio": round((actual_expenses / net_income * 100), 2) if net_income > 0 else 0,
+        "commitment_ratio": round((total_commitments / net_income * 100), 2) if net_income > 0 else 0,
+        "savings_rate": round((cashflow / net_income * 100), 2) if net_income > 0 else 0
+    }
+
+
+def calculate_net_worth(user, db: Session) -> dict:
+    """
+    Assets minus Liabilities = Net Worth.
+    """
+    from ..models import Investment, Debt, Bill
+
+    # ── Assets ─────────────────────────────────────────────────────────────
+    investments = db.query(Investment).filter(
+        Investment.user_id == user.id
+    ).all()
+    total_investments = sum(i.amount for i in investments)
+
+    # Cash/savings assumed as accessible funds
+    # (If you add a savings_balance field to User later, use that)
+    savings_balance = 0
+
+    total_assets = total_investments + savings_balance
+
+    # ── Liabilities ────────────────────────────────────────────────────────
+    active_debts = db.query(Debt).filter(
+        Debt.user_id == user.id,
+        Debt.is_active == True
+    ).all()
+    total_debt = sum(d.outstanding_principal for d in active_debts)
+
+    active_bills = db.query(Bill).filter(
+        Bill.user_id == user.id,
+        Bill.is_active == True
+    ).all()
+    total_credit_outstanding = sum(b.outstanding_balance for b in active_bills)
+
+    total_liabilities = total_debt + total_credit_outstanding
+
+    net_worth = total_assets - total_liabilities
+
+    return {
+        "assets": {
+            "investments": round(total_investments, 2),
+            "savings": round(savings_balance, 2),
+            "total": round(total_assets, 2)
+        },
+        "liabilities": {
+            "loans": round(total_debt, 2),
+            "credit_cards": round(total_credit_outstanding, 2),
+            "total": round(total_liabilities, 2)
+        },
+        "net_worth": round(net_worth, 2),
+        "debt_to_asset_ratio": round((total_liabilities / total_assets * 100), 2)
+            if total_assets > 0 else 0
+    }
+
+
+def calculate_commitments(user, db: Session) -> dict:
+    """
+    Returns all fixed monthly obligations.
+    """
+    from ..models import Debt, Bill, BillStatus, SavingsGoal
+
+    debts = db.query(Debt).filter(
+        Debt.user_id == user.id,
+        Debt.is_active == True
+    ).all()
+
+    bills = db.query(Bill).filter(
+        Bill.user_id == user.id,
+        Bill.is_active == True
+    ).all()
+
+    goals = db.query(SavingsGoal).filter(
+        SavingsGoal.user_id == user.id,
+        SavingsGoal.is_achieved == False
+    ).all()
+
+    net_income = user.net_monthly_income or 1
+
+    emi_total = sum(d.monthly_emi for d in debts)
+    bill_min_total = sum(b.minimum_due for b in bills)
+    goal_total = sum(g.monthly_contribution_needed or 0 for g in goals)
+
+    grand_total = emi_total + bill_min_total + goal_total
+    commitment_ratio = (grand_total / net_income) * 100
+
+    return {
+        "emi_payments": round(emi_total, 2),
+        "bill_minimums": round(bill_min_total, 2),
+        "goal_contributions": round(goal_total, 2),
+        "total_commitments": round(grand_total, 2),
+        "commitment_ratio": round(commitment_ratio, 2),
+        "status": "healthy" if commitment_ratio < 50 else "warning" if commitment_ratio < 70 else "critical"
+    }
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\financial_health.py
 ===============================
 from typing import Dict, List
 
@@ -2673,7 +4413,203 @@ def calculate_expense_ratios(expenses_by_category: Dict[str, float], net_income:
     }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\utils\tax_calculator.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\forecasting_engine.py
+===============================
+# backend/app/utils/forecasting_engine.py
+
+from datetime import datetime, timedelta
+from typing import List, Dict
+
+def forecast_net_worth(
+    net_income: float,
+    total_expenses: float,
+    total_emi: float,
+    total_investments: float,
+    total_debt: float,
+    months: int = 24,
+    income_growth_rate: float = 0.05,     # 5% annual raise
+    investment_return_rate: float = 0.10,  # 10% annual return
+    scenario: str = "normal"              # "normal", "missed_payment", "salary_hike"
+) -> List[Dict]:
+    """
+    Project net worth over N months.
+    Returns list of monthly snapshots.
+    """
+    monthly_savings = net_income - total_expenses - total_emi
+    current_investments = total_investments
+    current_debt = total_debt
+    current_income = net_income
+    
+    projections = []
+    
+    for month in range(1, months + 1):
+        # Annual income growth applied monthly
+        if month % 12 == 0:
+            current_income *= (1 + income_growth_rate)
+        
+        # Monthly investment return
+        monthly_return_rate = investment_return_rate / 12
+        current_investments *= (1 + monthly_return_rate)
+        current_investments += monthly_savings
+        
+        # Debt reduces by EMI principal component (simplified)
+        current_debt = max(0, current_debt - (total_emi * 0.6))  # ~60% of EMI goes to principal
+        
+        # Scenario modifiers
+        if scenario == "missed_payment" and month % 6 == 0:
+            # Simulate missing a payment every 6 months
+            late_fee = total_emi * 0.02  # 2% late fee
+            current_investments -= late_fee
+        
+        if scenario == "salary_hike" and month == 12:
+            current_income *= 1.20  # 20% raise at month 12
+        
+        net_worth = current_investments - current_debt
+        
+        projections.append({
+            "month": month,
+            "month_label": _get_month_label(month),
+            "net_worth": round(net_worth, 2),
+            "investments": round(current_investments, 2),
+            "debt": round(current_debt, 2),
+            "monthly_income": round(current_income, 2)
+        })
+    
+    return projections
+
+def forecast_goal_completion(
+    target_amount: float,
+    current_saved: float,
+    monthly_contribution: float,
+    return_rate: float = 0.06
+) -> dict:
+    """
+    Predict when a savings goal will be completed.
+    """
+    if monthly_contribution <= 0:
+        return {"achievable": False, "reason": "No monthly contribution set"}
+    
+    balance = current_saved
+    months_needed = 0
+    monthly_rate = return_rate / 12
+    
+    while balance < target_amount and months_needed < 600:  # Max 50 years
+        balance = balance * (1 + monthly_rate) + monthly_contribution
+        months_needed += 1
+    
+    if months_needed >= 600:
+        return {"achievable": False, "reason": "Goal requires too long to achieve"}
+    
+    completion_date = datetime.utcnow() + timedelta(days=months_needed * 30)
+    
+    return {
+        "achievable": True,
+        "months_needed": months_needed,
+        "completion_date": completion_date.strftime("%Y-%m-%d"),
+        "total_contributed": round(monthly_contribution * months_needed, 2),
+        "interest_earned": round(balance - current_saved - (monthly_contribution * months_needed), 2)
+    }
+
+def _get_month_label(month_offset: int) -> str:
+    from dateutil.relativedelta import relativedelta
+    future = datetime.utcnow() + relativedelta(months=month_offset)
+    return future.strftime("%b %Y")
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\payment_engine.py
+===============================
+# backend/app/utils/payment_engine.py
+
+from datetime import datetime, timedelta
+from typing import Optional
+
+def check_payment_status(bill) -> dict:
+    """
+    Check if a bill is overdue and calculate penalties.
+    Call this daily via scheduler.
+    """
+    today = datetime.utcnow()
+    due_date = bill.next_due_date
+    
+    if today <= due_date:
+        days_until_due = (due_date - today).days
+        return {
+            "status": "upcoming",
+            "days_until_due": days_until_due,
+            "late_fee": 0,
+            "interest": 0
+        }
+    
+    # Payment is overdue
+    days_late = (today - due_date).days
+    late_fee = bill.late_fee if days_late >= 1 else 0
+    
+    # Daily interest on outstanding balance
+    daily_rate = bill.interest_rate / 365 / 100
+    interest = bill.outstanding_balance * daily_rate * days_late
+    
+    return {
+        "status": "overdue",
+        "days_late": days_late,
+        "late_fee": round(late_fee, 2),
+        "interest": round(interest, 2),
+        "total_penalty": round(late_fee + interest, 2)
+    }
+
+def calculate_next_due_date(due_date_day: int, from_date: Optional[datetime] = None) -> datetime:
+    """
+    Calculate the next due date given a day of month.
+    E.g., due_date_day=15 → next 15th of month.
+    """
+    today = from_date or datetime.utcnow()
+    
+    # Try current month first
+    try:
+        next_due = today.replace(day=due_date_day, hour=0, minute=0, second=0, microsecond=0)
+    except ValueError:
+        # Day doesn't exist in current month (e.g., 31 in April)
+        # Use last day of month
+        import calendar
+        last_day = calendar.monthrange(today.year, today.month)[1]
+        next_due = today.replace(day=last_day, hour=0, minute=0, second=0, microsecond=0)
+    
+    # If that date is in the past, move to next month
+    if next_due <= today:
+        if today.month == 12:
+            next_due = next_due.replace(year=today.year + 1, month=1)
+        else:
+            next_due = next_due.replace(month=today.month + 1)
+    
+    return next_due
+
+def process_payment(bill, amount_paid: float, payment_date: datetime) -> dict:
+    """
+    Process a payment against a bill.
+    Returns payment details including whether it was late.
+    """
+    due_date = bill.next_due_date
+    is_late = payment_date > due_date
+    days_late = max(0, (payment_date - due_date).days) if is_late else 0
+    
+    late_fee = bill.late_fee if is_late else 0
+    daily_rate = bill.interest_rate / 365 / 100
+    interest = bill.outstanding_balance * daily_rate * days_late if is_late else 0
+    
+    # Update outstanding balance
+    new_balance = max(0, bill.outstanding_balance - amount_paid)
+    
+    return {
+        "amount_paid": amount_paid,
+        "was_late": is_late,
+        "days_late": days_late,
+        "late_fee_charged": round(late_fee, 2),
+        "interest_charged": round(interest, 2),
+        "new_balance": round(new_balance, 2),
+        "next_due_date": calculate_next_due_date(bill.due_date_day, payment_date)
+    }
+
+===============================
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\tax_calculator.py
 ===============================
 def calculate_indian_income_tax(annual_income: float, state: str = None) -> dict:
     """
@@ -2735,11 +4671,11 @@ def calculate_pf_deduction(gross_monthly: float) -> float:
     return round(pf, 2)
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\backend\app\utils\__init__.py
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\backend\app\utils\__init__.py
 ===============================
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\Dockerfile
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\Dockerfile
 ===============================
 FROM nginx:alpine
 
@@ -2752,7 +4688,7 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\index.html
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\index.html
 ===============================
 <!DOCTYPE html>
 <html lang="en">
@@ -2783,6 +4719,25 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\index.html
             </nav>
         </div>
         <div class="toolbar-right">
+            <!-- Notification Bell -->
+            <div class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifications">
+                <span style="font-size:16px;">🔔</span>
+                <span class="notif-badge" id="notif-badge" style="display:none;">0</span>
+            </div>
+
+            <!-- Notification Panel (hidden by default) -->
+            <div class="notif-panel" id="notif-panel" style="display:none;">
+                <div class="notif-panel-header">
+                    <span>Notifications</span>
+                    <button onclick="markAllRead()" style="font-size:11px; color:#1a56db; background:none; border:none; cursor:pointer;">
+                        Mark all read
+                    </button>
+                </div>
+                <div id="notif-list">
+                    <p style="padding:16px; color:#9ca3af; font-size:12px; text-align:center;">Loading...</p>
+                </div>
+            </div>
+
             <div class="toolbar-meta">
                 <span class="meta-label">Last sync</span>
                 <span class="meta-value" id="last-sync">--</span>
@@ -2806,6 +4761,11 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\index.html
 
         <!-- ===================== KPI ROW ===================== -->
         <section class="kpi-row" id="kpi-row">
+            <!-- Populated by dashboard.js -->
+        </section>
+
+        <!-- ===================== UPCOMING PAYMENTS STRIP ===================== -->
+        <section id="upcoming-payments" class="upcoming-payments-section">
             <!-- Populated by dashboard.js -->
         </section>
 
@@ -2890,6 +4850,18 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\index.html
                     </div>
                 </div>
 
+                <!-- Net Worth History Chart -->
+                <div class="chart-card">
+                    <div class="chart-card-header">
+                        <div>
+                            <p class="chart-card-title">Net Worth Trend</p>
+                            <p class="chart-card-subtitle">Last 30 days</p>
+                        </div>
+                        <div class="chart-card-badge" id="nw-change-badge">—</div>
+                    </div>
+                    <div id="chart-networth" style="height:160px;"></div>
+                </div>
+
             </div>
         </section>
 
@@ -2936,7 +4908,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\index.html
 </html>
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\nginx.conf
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\nginx.conf
 ===============================
 server {
     listen 80;
@@ -2956,7 +4928,7 @@ server {
 }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\settings.html
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\settings.html
 ===============================
 <!DOCTYPE html>
 <html lang="en">
@@ -3011,6 +4983,11 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\settings.ht
                     class="settings-tab">
                 💳 Debt Portfolio
             </button>
+            <button onclick="settingsManager.switchTab('bills')"
+                    id="settings-tab-bills"
+                    class="settings-tab">
+                💸 Bills & Cards
+            </button>
             <button onclick="settingsManager.switchTab('goals')"
                     id="settings-tab-goals"
                     class="settings-tab">
@@ -3034,6 +5011,10 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\settings.ht
         </div>
         
         <div id="settings-content-debts" class="settings-content hidden">
+            <!-- Populated by settings.js -->
+        </div>
+
+        <div id="settings-content-bills" class="settings-content hidden">
             <!-- Populated by settings.js -->
         </div>
         
@@ -3065,7 +5046,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\settings.ht
 </html>
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\test_checklist.md
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\test_checklist.md
 ===============================
 # Frontend Testing Checklist
 
@@ -3215,17 +5196,17 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\test_checkl
 - Notes: ____________________
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\components\modals.html
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\components\modals.html
 ===============================
 <!-- Reusable Modals Component -->
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\components\navbar.html
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\components\navbar.html
 ===============================
 <!-- Reusable Navbar Component -->
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\components.css
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\css\components.css
 ===============================
 /**
  * COMPONENTS.CSS
@@ -3406,7 +5387,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\compone
 @keyframes spin { to { transform:rotate(360deg); } }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\dashboard.css
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\css\dashboard.css
 ===============================
 /* ============================================================
    DASHBOARD.CSS — Enterprise Analytics Style
@@ -4183,8 +6164,92 @@ body {
     .dashboard-container { padding: 14px; }
 }
 
+/* ── Notification Bell ─────────────────────────────────── */
+.notif-bell {
+    position: relative;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+    margin-right: 10px;
+}
+.notif-bell:hover { background: var(--bg-toolbar-hover); }
+
+.notif-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #c81e1e;
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Notification Panel ─────────────────────────────────── */
+.notif-panel {
+    position: absolute;
+    top: 56px;
+    right: 20px;
+    width: 340px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-light);
+    z-index: 200;
+}
+
+.notif-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    position: sticky;
+    top: 0;
+    background: white;
+}
+
+.notif-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-light);
+    cursor: pointer;
+    transition: background 0.12s;
+}
+.notif-item:hover { background: var(--bg-page); }
+.notif-item.unread { border-left: 3px solid var(--color-primary); }
+.notif-item.critical { border-left-color: var(--color-danger); }
+.notif-item.warning { border-left-color: var(--color-warning); }
+
+.notif-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+}
+.notif-message {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+.notif-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\main.css
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\css\main.css
 ===============================
 /**
  * MAIN.CSS — Global base (enterprise edition)
@@ -4257,7 +6322,7 @@ a:hover { text-decoration: underline; }
 @media (min-width: 1280px) { .container { max-width: 1280px; } }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\responsive.css
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\css\responsive.css
 ===============================
 /**
  * RESPONSIVE.CSS
@@ -4436,7 +6501,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\css\respons
 }
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\api.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\api.js
 ===============================
 /**
  * API Communication Layer
@@ -4451,23 +6516,44 @@ class API {
     }
     
     /**
-     * Generic fetch wrapper with error handling
+     * Generic fetch wrapper with error handling and JWT support
      */
     async request(endpoint, options = {}) {
         const url = `${this.baseURL}${endpoint}`;
         
+        // Get stored token
+        const token = localStorage.getItem('wealthflow_token');
+        
         const defaultOptions = {
             headers: {
                 'Content-Type': 'application/json',
+                ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             },
             ...options
         };
         
+        // Merge headers if options has them
+        if (options.headers) {
+            defaultOptions.headers = { ...defaultOptions.headers, ...options.headers };
+        }
+        
         try {
             const response = await fetch(url, defaultOptions);
             
+            // Redirect to login if unauthorized
+            if (response.status === 401) {
+                localStorage.removeItem('wealthflow_token');
+                localStorage.removeItem('wealthflow_user');
+                // Only redirect if not already on login/register pages
+                if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
+                    window.location.href = 'login.html';
+                }
+                return;
+            }
+            
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
             }
             
             return await response.json();
@@ -4477,6 +6563,38 @@ class API {
         }
     }
     
+    // ========== AUTH ENDPOINTS ==========
+
+    async register(data) {
+        return this.request('/api/auth/register', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async login(email, password) {
+        const result = await this.request('/api/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        if (result && result.access_token) {
+            localStorage.setItem('wealthflow_token', result.access_token);
+            localStorage.setItem('wealthflow_user', JSON.stringify(result.user));
+        }
+        return result;
+    }
+
+    logout() {
+        localStorage.removeItem('wealthflow_token');
+        localStorage.removeItem('wealthflow_user');
+        window.location.href = 'login.html';
+    }
+
+    getCurrentUser() {
+        const stored = localStorage.getItem('wealthflow_user');
+        return stored ? JSON.parse(stored) : null;
+    }
+
     // ========== INCOME ENDPOINTS ==========
     
     async getIncomeProfile() {
@@ -4608,13 +6726,108 @@ class API {
     async getFinancialOverview() {
         return this.request('/api/profile/financial-overview');
     }
+
+    // ========== BILLS ENDPOINTS ==========
+
+    async getBills() {
+        return this.request('/api/bills/list');
+    }
+
+    async createBill(data) {
+        return this.request('/api/bills/create', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async payBill(billId, data) {
+        return this.request(`/api/bills/${billId}/pay`, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async getBillHistory(billId) {
+        return this.request(`/api/bills/${billId}/history`);
+    }
+
+    async deleteBill(billId) {
+        return this.request(`/api/bills/${billId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    // ========== CALENDAR ENDPOINTS ==========
+
+    async getCalendarEvents() {
+        return this.request('/api/calendar/events');
+    }
+
+    // ========== FORECASTING ENDPOINTS ==========
+
+    async getForecast(scenario = 'normal') {
+        return this.request(`/api/profile/forecast?scenario=${scenario}`);
+    }
+
+    async getNetWorthHistory(days = 30) {
+        return this.request(`/api/profile/net-worth-history?days=${days}`);
+    }
+
+    async simulateScenario(data) {
+        return this.request('/api/profile/scenario/simulate', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    // ========== TRANSACTION ENDPOINTS ==========
+
+    async createTransaction(data) {
+        return this.request('/api/transactions/create', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async listTransactions(month = null, year = null, categoryId = null) {
+        let url = '/api/transactions/list';
+        const params = [];
+        if (month) params.push(`month=${month}`);
+        if (year) params.push(`year=${year}`);
+        if (categoryId) params.push(`category_id=${categoryId}`);
+        if (params.length) url += '?' + params.join('&');
+        return this.request(url);
+    }
+
+    async getMonthlySummary(month = null, year = null) {
+        let url = '/api/transactions/monthly-summary';
+        const params = [];
+        if (month) params.push(`month=${month}`);
+        if (year) params.push(`year=${year}`);
+        if (params.length) url += '?' + params.join('&');
+        return this.request(url);
+    }
+
+    // ========== NOTIFICATION ENDPOINTS ==========
+
+    async getNotifications() {
+        return this.request('/api/notifications/');
+    }
+
+    async markNotificationRead(id) {
+        return this.request(`/api/notifications/read/${id}`, { method: 'POST' });
+    }
+
+    async markAllNotificationsRead() {
+        return this.request('/api/notifications/read-all', { method: 'POST' });
+    }
 }
 
 // Initialize global API instance
 window.api = new API();
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\charts.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\charts.js
 ===============================
 /**
  * Chart Rendering Logic — ECharts Edition
@@ -4744,7 +6957,7 @@ class ChartManager {
 window.chartManager = new ChartManager();
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\config.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\config.js
 ===============================
 /**
  * Configuration & Constants
@@ -4809,20 +7022,23 @@ const CONFIG = {
 window.CONFIG = CONFIG;
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\dashboard.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\dashboard.js
 ===============================
 /**
  * DASHBOARD.JS — Enterprise Analytics Dashboard
  * WealthFlow AI
  *
  * Renders: KPI Row, Alert Strip, EMI Bar Chart, Cashflow Bars,
- *          Expense Treemap, Goals Donut, Health Gauge, Debt Table
+ *          Expense Treemap, Goals Donut, Health Gauge, Debt Table,
+ *          Upcoming Payments, Net Worth Trend
  *
  * Backend calls (via api.js):
  *   GET /api/dashboard/
  *   GET /api/profile/savings-goals
  *   GET /api/profile/expense-categories
  *   GET /api/profile/debts
+ *   GET /api/calendar/events
+ *   GET /api/profile/net-worth-history
  */
 
 class Dashboard {
@@ -4844,12 +7060,14 @@ class Dashboard {
 
             this.renderKPIs();
             this.renderAlertStrip();
+            this.renderUpcomingPayments();
             this.renderCashflowBars();
             this.renderEMIBarChart();
             this.renderExpenseTreemap();
             this.renderGoalsDonut();
             this.renderHealthGauge();
             this.renderHealthIndicators();
+            this.renderNetWorthChart();
             this.renderDebtTable();
             this.updateToolbar();
 
@@ -4868,17 +7086,19 @@ class Dashboard {
     // ─────────────────────────────────────────────
 
     async loadAllData() {
-        const [dashboard, goals, expenses, debts] = await Promise.all([
+        const [dashboard, goals, expenses, debts, calendar] = await Promise.all([
             api.getDashboard(),
             api.getSavingsGoals(),
             api.getExpenseCategories(),
-            api.getDebts()
+            api.getDebts(),
+            api.getCalendarEvents()
         ]);
 
         this.data = dashboard;
         this.data.goals    = goals;
         this.data.expenses = expenses;
         this.data.debts    = debts;
+        this.data.calendar = calendar;
 
         // Recalculate with real settings data
         this._recalculate();
@@ -5039,6 +7259,62 @@ class Dashboard {
                 ${a.text}
             </div>
         `).join('');
+    }
+
+    // ─────────────────────────────────────────────
+    // UPCOMING PAYMENTS
+    // ─────────────────────────────────────────────
+
+    renderUpcomingPayments() {
+        const container = document.getElementById('upcoming-payments');
+        if (!container || !this.data.calendar) return;
+        
+        const next7 = this.data.calendar.summary.next_7_days || [];
+        const overdue = this.data.calendar.overdue || [];
+        
+        if (next7.length === 0 && overdue.length === 0) {
+            container.style.display = 'none';
+            return;
+        }
+        
+        const allItems = [...overdue, ...next7].slice(0, 6);
+        
+        container.style.display = 'block';
+        container.innerHTML = `
+            <div style="background:white; border-radius:8px; border:1px solid #e5e7eb; 
+                        padding:16px 20px; box-shadow:0 1px 3px rgba(0,0,0,0.07); margin-bottom: 20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                    <p style="font-size:13px; font-weight:600; color:#111928;">Upcoming Payments</p>
+                    <a href="settings.html" style="font-size:12px; color:#1a56db;">View All →</a>
+                </div>
+                <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px;">
+                    ${allItems.map(item => {
+                        const isOverdue = item.status === 'overdue';
+                        const date = new Date(item.date);
+                        return `
+                            <div style="min-width:160px; padding:12px; border-radius:6px; 
+                                        border:1px solid ${isOverdue ? '#fca5a5' : '#e5e7eb'}; 
+                                        background:${isOverdue ? '#fef2f2' : '#f9fafb'}; flex-shrink:0;">
+                                <p style="font-size:10px; font-weight:600; text-transform:uppercase; 
+                                          color:${isOverdue ? '#c81e1e' : '#6b7280'}; letter-spacing:0.4px;">
+                                    ${isOverdue ? '⚠ OVERDUE' : item.type.replace('_', ' ').toUpperCase()}
+                                </p>
+                                <p style="font-size:12px; font-weight:600; color:#111928; margin:4px 0;">
+                                    ${item.title}
+                                </p>
+                                <p style="font-size:13px; font-weight:700; color:${isOverdue ? '#c81e1e' : '#1a56db'}; 
+                                          font-family:'IBM Plex Mono',monospace;">
+                                    ₹${Math.round(item.amount || 0).toLocaleString('en-IN')}
+                                </p>
+                                <p style="font-size:10px; color:#9ca3af; margin-top:3px;">
+                                    ${date.toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
+                                </p>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            </div>
+        `;
     }
 
     // ─────────────────────────────────────────────
@@ -5395,6 +7671,77 @@ class Dashboard {
     }
 
     // ─────────────────────────────────────────────
+    // NET WORTH TREND
+    // ─────────────────────────────────────────────
+
+    async renderNetWorthChart() {
+        const el = document.getElementById('chart-networth');
+        if (!el || typeof echarts === 'undefined') return;
+
+        if (this.charts.networth) { this.charts.networth.dispose(); }
+
+        try {
+            const data = await api.getNetWorthHistory(30);
+            const badge = document.getElementById('nw-change-badge');
+
+            if (badge && data.change !== undefined) {
+                const sign = data.change >= 0 ? '+' : '';
+                badge.textContent = `${sign}${this._fmt(data.change)}`;
+                badge.style.color = data.change >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
+            }
+
+            const dates = data.snapshots.map(s => s.date);
+            const values = data.snapshots.map(s => s.net_worth);
+
+            this.charts.networth = echarts.init(el);
+            this.charts.networth.setOption({
+                animation: true,
+                grid: { top: 8, right: 8, bottom: 24, left: 4, containLabel: true },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: (params) => `${params[0].name}<br/>Net Worth: <strong>${this._fmt(params[0].value)}</strong>`,
+                    backgroundColor: '#1f2937',
+                    textStyle: { color: '#f9fafb', fontSize: 11 }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates,
+                    axisLabel: { fontSize: 9, color: '#9ca3af' },
+                    axisLine: { show: false },
+                    axisTick: { show: false }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        fontSize: 9,
+                        color: '#9ca3af',
+                        formatter: v => v >= 100000 ? `₹${(v/100000).toFixed(0)}L` : `₹${(v/1000).toFixed(0)}K`
+                    },
+                    splitLine: { lineStyle: { color: '#f3f4f6' } }
+                },
+                series: [{
+                    type: 'line',
+                    data: values,
+                    smooth: true,
+                    symbol: 'none',
+                    lineStyle: { color: data.trend === 'up' ? '#0e9f6e' : '#c81e1e', width: 2 },
+                    areaStyle: {
+                        color: {
+                            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                            colorStops: [
+                                { offset: 0, color: data.trend === 'up' ? 'rgba(14,159,110,0.2)' : 'rgba(200,30,30,0.2)' },
+                                { offset: 1, color: 'rgba(255,255,255,0)' }
+                            ]
+                        }
+                    }
+                }]
+            });
+        } catch (e) {
+            el.innerHTML = '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:11px;">No history yet</div>';
+        }
+    }
+
+    // ─────────────────────────────────────────────
     // DEBT TABLE
     // ─────────────────────────────────────────────
 
@@ -5518,11 +7865,75 @@ class Dashboard {
     }
 }
 
+// ── Notification System ─────────────────────────────────────────────────────
+
+async function loadNotifications() {
+    try {
+        const data = await api.getNotifications();
+        const badge = document.getElementById('notif-badge');
+        const list  = document.getElementById('notif-list');
+
+        if (data.unread_count > 0) {
+            badge.textContent = data.unread_count;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+
+        if (!data.notifications.length) {
+            list.innerHTML = '<p style="padding:20px; color:#9ca3af; font-size:12px; text-align:center;">No notifications</p>';
+            return;
+        }
+
+        list.innerHTML = data.notifications.map(n => {
+            const timeAgo = _timeAgo(n.created_at);
+            const cls = `notif-item ${n.is_read ? '' : 'unread'} ${n.severity}`;
+            return `
+                <div class="${cls}" onclick="markRead(${n.id})">
+                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-message">${n.message}</div>
+                    <div class="notif-time">${timeAgo}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error('Failed to load notifications:', e);
+    }
+}
+
+function toggleNotifPanel() {
+    const panel = document.getElementById('notif-panel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+async function markRead(id) {
+    await api.markNotificationRead(id);
+    loadNotifications();
+}
+
+async function markAllRead() {
+    await api.markAllNotificationsRead();
+    loadNotifications();
+}
+
+function _timeAgo(isoString) {
+    const diff = Date.now() - new Date(isoString).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1440) return `${Math.floor(mins/60)}h ago`;
+    return `${Math.floor(mins/1440)}d ago`;
+}
+
 // Boot
-document.addEventListener('DOMContentLoaded', () => { new Dashboard(); });
+document.addEventListener('DOMContentLoaded', () => { 
+    new Dashboard(); 
+    loadNotifications();
+    // Refresh notifications every 5 minutes
+    setInterval(loadNotifications, 5 * 60 * 1000);
+});
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\dashboard.js.backup
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\dashboard.js.backup
 ===============================
 /**
  * Dashboard Page Logic
@@ -5772,7 +8183,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\settings.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\settings.js
 ===============================
 /**
  * Settings Page Logic - COMPLETE
@@ -5844,6 +8255,9 @@ class SettingsManager {
                     break;
                 case 'expenses':
                     await this.loadExpensesTab();
+                    break;
+                case 'bills':
+                    await this.loadBillsTab();
                     break;
                 case 'overview':
                     await this.loadOverviewTab();
@@ -7171,6 +9585,299 @@ class SettingsManager {
     }
     
     // ========================================
+    // BILLS TAB
+    // ========================================
+
+    async loadBillsTab() {
+        const container = document.getElementById('settings-content-bills');
+        Utils.showLoading('settings-content-bills');
+        
+        try {
+            this.data.bills = await api.getBills();
+            
+            container.innerHTML = `
+                <div style="background:white; border-radius:6px; padding:28px; 
+                            box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 style="font-size:15px; font-weight:700; color:#1f4e79; 
+                                   text-transform:uppercase; letter-spacing:0.5px;">
+                            Bills & Credit Cards
+                        </h2>
+                        <button onclick="settingsManager.showAddBillModal()" 
+                                style="padding:8px 20px; background:#1f4e79; color:white; border:none; 
+                                       border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
+                            + Add Bill
+                        </button>
+                    </div>
+                    
+                    <div id="bills-list" class="space-y-4 mb-8">
+                        ${this.renderBillsList()}
+                    </div>
+                    
+                    <div style="background:#1f4e79; color:white; padding:20px; border-radius:6px;">
+                        <h3 class="font-bold mb-4">📊 Bills Summary</h3>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-sm opacity-90">Total Bills</p>
+                                <p class="text-3xl font-bold">${this.data.bills.summary.total_bills}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm opacity-90">Min Due This Month</p>
+                                <p class="text-3xl font-bold">₹${Math.round(this.data.bills.summary.total_minimum_due).toLocaleString('en-IN')}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm opacity-90">Overdue Bills</p>
+                                <p class="text-3xl font-bold" style="color:${this.data.bills.summary.overdue_count > 0 ? '#ff6b6b' : '#69db7c'}">
+                                    ${this.data.bills.summary.overdue_count}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } catch (error) {
+            container.innerHTML = `<div class="alert alert-danger">Failed to load bills: ${error.message}</div>`;
+        }
+    }
+
+    renderBillsList() {
+        if (!this.data.bills || !this.data.bills.bills || this.data.bills.bills.length === 0) {
+            return `<div class="text-center py-12">
+                <p class="text-6xl mb-4">💳</p>
+                <p class="text-gray-500">No bills added yet</p>
+            </div>`;
+        }
+        
+        return this.data.bills.bills.map(bill => {
+            const ps = bill.payment_status;
+            const statusColor = ps.status === 'overdue' ? '#c81e1e' : '#0e9f6e';
+            const statusLabel = ps.status === 'overdue' 
+                ? `⚠️ Overdue by ${ps.days_late} days — Penalty: ₹${ps.total_penalty}` 
+                : `✓ Due in ${ps.days_until_due} days`;
+            
+            return `
+                <div style="border:1px solid ${ps.status === 'overdue' ? '#fca5a5' : '#e8eaed'}; 
+                            border-radius:6px; padding:16px; background:${ps.status === 'overdue' ? '#fff5f5' : 'white'};">
+                    <div class="flex justify-between items-start mb-3">
+                        <div>
+                            <h4 class="font-bold">${bill.bill_name}</h4>
+                            <p class="text-sm" style="color:${statusColor};">${statusLabel}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="settingsManager.showPayBillModal(${bill.id})"
+                                    style="padding:6px 16px; background:#1f4e79; color:white; border:none; 
+                                           border-radius:4px; font-size:12px; cursor:pointer;">
+                                Pay Now
+                            </button>
+                            <button onclick="settingsManager.deleteBill(${bill.id})"
+                                    style="padding:6px 12px; background:white; color:#c81e1e; border:1px solid #fca5a5; 
+                                           border-radius:4px; font-size:12px; cursor:pointer;">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div>
+                            <p class="text-xs text-gray-500">Amount Due</p>
+                            <p class="font-bold">₹${Math.round(bill.total_amount_due).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Min Due</p>
+                            <p class="font-bold">₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Next Due</p>
+                            <p class="font-bold">${bill.next_due_date ? new Date(bill.next_due_date).toLocaleDateString('en-IN') : 'N/A'}</p>
+                        </div>
+                    </div>
+                    ${bill.credit_limit > 0 ? `
+                        <div class="mt-3">
+                            <div class="flex justify-between text-xs mb-1">
+                                <span>Credit Used</span>
+                                <span>${((bill.outstanding_balance / bill.credit_limit) * 100).toFixed(0)}% of ₹${Math.round(bill.credit_limit).toLocaleString('en-IN')}</span>
+                            </div>
+                            <div style="background:#f0f0f0; height:4px; border-radius:4px;">
+                                <div style="background:${bill.outstanding_balance/bill.credit_limit > 0.7 ? '#c81e1e' : '#1a56db'}; 
+                                            height:4px; border-radius:4px; 
+                                            width:${Math.min(100,(bill.outstanding_balance/bill.credit_limit)*100).toFixed(0)}%;"></div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    showPayBillModal(billId) {
+        const bill = this.data.bills.bills.find(b => b.id === billId);
+        if (!bill) return;
+        
+        const modalHtml = `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="pay-bill-modal">
+                <div style="background:white; border-radius:6px; padding:28px; max-width:500px; width:100%; margin:16px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">
+                        Pay: ${bill.bill_name}
+                    </h3>
+                    <div style="background:#f4f6f9; padding:12px; border-radius:4px; margin-bottom:16px;">
+                        <p class="text-sm">Amount Due: <strong>₹${Math.round(bill.total_amount_due).toLocaleString('en-IN')}</strong></p>
+                        <p class="text-sm">Minimum Due: <strong>₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</strong></p>
+                    </div>
+                    <form id="pay-bill-form">
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-2">Payment Amount (₹) *</label>
+                            <input type="number" id="pay-amount" 
+                                   value="${bill.total_amount_due}"
+                                   class="w-full px-4 py-2 border-2 rounded-lg" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold mb-2">Payment Method</label>
+                            <select id="pay-method" class="w-full px-4 py-2 border-2 rounded-lg">
+                                <option value="upi">UPI</option>
+                                <option value="net_banking">Net Banking</option>
+                                <option value="debit_card">Debit Card</option>
+                                <option value="auto_debit">Auto Debit</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="settingsManager.closeModal('pay-bill-modal')"
+                                    style="flex:1; padding:10px; background:white; color:#555; border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    style="flex:1; padding:10px; background:#0e9f6e; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                                Confirm Payment
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        document.getElementById('pay-bill-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                await api.payBill(billId, {
+                    amount_paid: parseFloat(document.getElementById('pay-amount').value),
+                    payment_method: document.getElementById('pay-method').value
+                });
+                Utils.showToast('✅ Payment recorded successfully!', 'success');
+                this.closeModal('pay-bill-modal');
+                await this.loadBillsTab();
+            } catch (err) {
+                Utils.showToast('Failed to record payment', 'danger');
+            }
+        });
+    }
+
+    showAddBillModal() {
+        const modalHtml = `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto" id="add-bill-modal">
+                <div style="background:white; border-radius:6px; padding:28px; max-width:600px; width:100%; margin:16px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">Add New Bill</h3>
+                    <form id="add-bill-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Bill Name *</label>
+                                <input type="text" id="bill-name" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="HDFC Credit Card" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Bill Type *</label>
+                                <select id="bill-type" class="w-full px-4 py-2 border-2 rounded-lg" required>
+                                    <option value="credit_card">Credit Card</option>
+                                    <option value="electricity">Electricity</option>
+                                    <option value="internet">Internet</option>
+                                    <option value="mobile">Mobile</option>
+                                    <option value="insurance">Insurance</option>
+                                    <option value="subscription">Subscription</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Total Amount Due (₹) *</label>
+                                <input type="number" id="bill-amount" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="5000" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Minimum Due (₹)</label>
+                                <input type="number" id="bill-min-due" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="500" value="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Billing Cycle Day (1-31) *</label>
+                                <input type="number" id="bill-cycle-day" class="w-full px-4 py-2 border-2 rounded-lg" min="1" max="31" value="1" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Due Date Day (1-31) *</label>
+                                <input type="number" id="bill-due-day" class="w-full px-4 py-2 border-2 rounded-lg" min="1" max="31" value="15" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Interest Rate (% p.a.)</label>
+                                <input type="number" id="bill-interest" class="w-full px-4 py-2 border-2 rounded-lg" step="0.1" value="0">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold mb-2">Late Fee (₹)</label>
+                                <input type="number" id="bill-late-fee" class="w-full px-4 py-2 border-2 rounded-lg" value="0">
+                            </div>
+                            <div class="col-span-2">
+                                <label class="block text-sm font-semibold mb-2">Credit Limit (₹) — for Cards</label>
+                                <input type="number" id="bill-credit-limit" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="100000" value="0">
+                            </div>
+                        </div>
+                        <div class="flex gap-3">
+                            <button type="button" onclick="settingsManager.closeModal('add-bill-modal')"
+                                    style="flex:1; padding:10px; background:white; color:#555; border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                                Cancel
+                            </button>
+                            <button type="submit"
+                                    style="flex:1; padding:10px; background:#1f4e79; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                                Add Bill
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        
+        document.getElementById('add-bill-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const data = {
+                bill_name: document.getElementById('bill-name').value,
+                bill_type: document.getElementById('bill-type').value,
+                total_amount_due: parseFloat(document.getElementById('bill-amount').value),
+                minimum_due: parseFloat(document.getElementById('bill-min-due').value),
+                outstanding_balance: parseFloat(document.getElementById('bill-amount').value), // Initial balance same as amount due
+                credit_limit: parseFloat(document.getElementById('bill-credit-limit').value),
+                billing_cycle_day: parseInt(document.getElementById('bill-cycle-day').value),
+                due_date_day: parseInt(document.getElementById('bill-due-day').value),
+                interest_rate: parseFloat(document.getElementById('bill-interest').value),
+                late_fee: parseFloat(document.getElementById('bill-late-fee').value)
+            };
+            
+            try {
+                await api.createBill(data);
+                Utils.showToast('✅ Bill added successfully!', 'success');
+                this.closeModal('add-bill-modal');
+                await this.loadBillsTab();
+            } catch (err) {
+                Utils.showToast('Failed to add bill', 'danger');
+            }
+        });
+    }
+
+    async deleteBill(billId) {
+        if (!confirm('Are you sure you want to deactivate this bill?')) return;
+        try {
+            await api.deleteBill(billId);
+            Utils.showToast('✅ Bill deactivated', 'success');
+            await this.loadBillsTab();
+        } catch (err) {
+            Utils.showToast('Failed to delete bill', 'danger');
+        }
+    }
+    
+    // ========================================
     // OVERVIEW TAB
     // ========================================
     
@@ -7373,7 +10080,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\utils.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\utils.js
 ===============================
 /**
  * Display Utilities
@@ -7626,6 +10333,26 @@ const Utils = {
     },
     
     /**
+     * Disable a button for N milliseconds after click to prevent double-submit.
+     * Usage: onClick="Utils.preventDouble(this, () => yourFunction())"
+     */
+    preventDouble(button, callback, delayMs = 3000) {
+        if (button.disabled) return;
+        button.disabled = true;
+        const originalText = button.textContent;
+        button.textContent = 'Processing...';
+
+        try {
+            callback();
+        } finally {
+            setTimeout(() => {
+                button.disabled = false;
+                button.textContent = originalText;
+            }, delayMs);
+        }
+    },
+
+    /**
      * Debounce function
      */
     debounce(func, delay = CONFIG.UI.DEBOUNCE_DELAY) {
@@ -7641,7 +10368,7 @@ const Utils = {
 window.Utils = Utils;
 
 ===============================
-FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\fintech-demo\frontend\js\validation.js
+FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\validation.js
 ===============================
 /**
  * Form Validation
