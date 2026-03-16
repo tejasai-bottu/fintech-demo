@@ -7,6 +7,7 @@ const CONFIG = {
     // API Configuration
     API: {
         BASE_URL: 'http://localhost:8000',
+        BILL_SCANNER_URL: 'http://localhost:8001',
         TIMEOUT: 30000, // 30 seconds
         RETRY_ATTEMPTS: 3
     },

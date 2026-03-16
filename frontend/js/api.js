@@ -316,6 +316,34 @@ class API {
     async markAllNotificationsRead() {
         return this.request('/api/notifications/read-all', { method: 'POST' });
     }
+
+    // ========== BILL SCANNER ENDPOINTS ==========
+
+    async uploadReceipt(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        const url = `${CONFIG.API.BILL_SCANNER_URL}/api/upload`;
+        const response = await fetch(url, {
+            method: 'POST',
+            body: formData
+            // Note: Don't set Content-Type header for FormData, browser will do it with boundary
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        return await response.json();
+    }
+
+    async getScannerStats() {
+        const url = `${CONFIG.API.BILL_SCANNER_URL}/api/stats/dashboard`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch scanner stats');
+        return await response.json();
+    }
 }
 
 // Initialize global API instance

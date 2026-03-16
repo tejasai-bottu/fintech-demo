@@ -1172,10 +1172,17 @@ class SettingsManager {
                 <div class="bg-white rounded-xl shadow-lg p-8">
                     <div class="flex justify-between items-center mb-6">
                         <h2 class="text-2xl font-bold">📊 Monthly Expenses</h2>
-                        <button onclick="settingsManager.showAddExpenseModal()" 
-                                class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
-                            ➕ Add Category
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="settingsManager.showAddExpenseModal()" 
+                                    class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
+                                ➕ Add Category
+                            </button>
+                            <button onclick="settingsManager.showScanReceiptModal()" 
+                                    style="padding:8px 20px; background:#0e9f6e; color:white; border:none; 
+                                           border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
+                                📷 Scan Receipt
+                            </button>
+                        </div>
                     </div>
                     
                     <!-- Categories List -->
@@ -1206,20 +1213,43 @@ class SettingsManager {
                     </div>
                     
                     ${this.renderExpenseWarnings()}
+
+                    <div id="receipt-history-section" class="mt-6">
+                        <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
+                        <div id="receipt-list">Loading...</div>
+                    </div>
                 </div>
             `;
+
+            await this.loadReceiptHistory();
             
         } catch (error) {
             console.error('Error loading expenses tab:', error);
             container.innerHTML = `
-                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg">
+                <div class="bg-red-50 border-l-4 border-red-500 p-6 rounded-lg mb-6">
                     <p class="text-red-700 font-semibold">Failed to load expenses</p>
-                    <button onclick="settingsManager.loadExpensesTab()" 
-                            class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg text-sm">
-                        Retry
-                    </button>
+                    <p class="text-sm text-red-600 mt-2">${error.message}</p>
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="settingsManager.loadExpensesTab()" 
+                                class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">
+                            Retry
+                        </button>
+                        <button onclick="settingsManager.showScanReceiptModal()" 
+                                style="padding:8px 20px; background:#0e9f6e; color:white; border:none; 
+                                       border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
+                            📷 Scan Receipt
+                        </button>
+                    </div>
+                </div>
+
+                <div id="receipt-history-section" class="mt-6 bg-white rounded-xl shadow-lg p-8">
+                    <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
+                    <div id="receipt-list">Loading...</div>
                 </div>
             `;
+            
+            // Try to load history anyway as it uses a different service
+            this.loadReceiptHistory();
         }
     }
     
@@ -1394,6 +1424,126 @@ class SettingsManager {
         } catch (error) {
             console.error('Error deleting expense:', error);
             Utils.showToast('Failed to delete category', 'danger');
+        }
+    }
+
+    async loadReceiptHistory() {
+        try {
+            const url = `${CONFIG.API.BILL_SCANNER_URL}/api/receipts`;
+            const response = await fetch(url);
+            const data = await response.json();
+            
+            // Handle both {receipts: [...]} and direct [...] formats
+            const receipts = Array.isArray(data) ? data : (data.receipts || []);
+
+            const historyContainer = document.getElementById('receipt-list');
+            if (!historyContainer) return;
+
+            historyContainer.innerHTML = receipts.length === 0
+                ? '<p class="text-sm text-gray-400">No scanned receipts yet.</p>'
+                : receipts.map(r => `
+                    <div style="border:1px solid #e8eaed; border-radius:6px; padding:12px; 
+                                margin-bottom:8px; background:white; display:flex; 
+                                justify-content:space-between; align-items:center;">
+                        <span class="text-sm text-gray-500">${r.date || 'No Date'}</span>
+                        <strong>${r.vendor}</strong>
+                        <span>₹${r.amount}</span>
+                        <span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; 
+                                     border-radius:99px; font-size:12px;">${r.category}</span>
+                    </div>
+                `).join('');
+        } catch (error) {
+            console.error("Could not load receipt history:", error);
+        }
+    }
+
+    showScanReceiptModal() {
+        const modalHtml = `
+            <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="scan-receipt-modal">
+                <div style="background:white; border-radius:6px; padding:28px; 
+                            max-width:500px; width:100%; margin:16px;">
+                    <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">
+                        📷 Scan Receipt
+                    </h3>
+                    <div id="scan-result" class="hidden mb-4 p-4 bg-green-50 rounded-lg border border-green-200">
+                        <p class="text-sm font-semibold text-green-700" id="scan-result-text"></p>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-sm font-semibold mb-2">Select Receipt Image</label>
+                        <input type="file" id="receiptInput" accept="image/*"
+                               style="width:100%; padding:8px; border:2px dashed #cbd5e1; border-radius:6px;">
+                    </div>
+                    <div class="flex gap-3">
+                        <button type="button" onclick="settingsManager.closeModal('scan-receipt-modal')"
+                                style="flex:1; padding:10px; background:white; color:#555; 
+                                       border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                            Cancel
+                        </button>
+                        <button type="button" onclick="settingsManager.handleReceiptUpload()"
+                                id="scan-submit-btn"
+                                style="flex:1; padding:10px; background:#0e9f6e; color:white; 
+                                       border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                            Upload & Scan
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    }
+
+    async handleReceiptUpload() {
+        const file = document.getElementById('receiptInput').files[0];
+        if (!file) {
+            Utils.showToast('Please select an image first', 'warning');
+            return;
+        }
+
+        const btn = document.getElementById('scan-submit-btn');
+        btn.textContent = 'Processing...';
+        btn.disabled = true;
+
+        try {
+            const result = await window.api.uploadReceipt(file);
+
+            // Show inline result
+            const resultBox = document.getElementById('scan-result');
+            document.getElementById('scan-result-text').textContent =
+                `✅ ${result.vendor} — ₹${result.amount} (${result.category})` +
+                (result.expense_synced ? ' • Synced to dashboard' : '');
+            resultBox.classList.remove('hidden');
+
+            // AUTO-ADD to Fintech Expenses
+            try {
+                const essentialCategories = ['restaurant', 'grocery', 'pharmacy', 'fast_food'];
+                const isEssential = essentialCategories.includes(result.category?.toLowerCase());
+                
+                await api.createExpenseCategory({
+                    category_name: result.vendor || "Unknown Vendor",
+                    monthly_amount: parseFloat(result.amount) || 0,
+                    is_essential: isEssential,
+                    is_fixed: false // Variable purchase
+                });
+                
+                // If on expenses tab, refresh the list in background
+                if (this.currentTab === 'expenses') {
+                    this.loadExpensesTab(); 
+                }
+                
+                Utils.showToast(`✅ Added ${result.vendor} to expenses`, 'success');
+            } catch (bridgeError) {
+                console.error("Auto-add to expenses failed:", bridgeError);
+                Utils.showToast('Scanner sync failed, but receipt stored', 'warning');
+            }
+
+            // Refresh receipt history list below
+            await this.loadReceiptHistory();
+
+        } catch (error) {
+            Utils.showToast('Failed to process receipt: ' + error.message, 'danger');
+        } finally {
+            btn.textContent = 'Upload & Scan';
+            btn.disabled = false;
         }
     }
     

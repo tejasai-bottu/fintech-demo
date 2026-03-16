@@ -91,7 +91,32 @@
         </div>
         
         <div id="settings-content-expenses" class="settings-content hidden">
-            <!-- Populated by settings.js -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">📊 Monthly Expenses</h2>
+                    <div class="flex gap-2">
+                        <button onclick="settingsManager.showAddExpenseModal()" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
+                            ➕ Add Category
+                        </button>
+                        <button onclick="settingsManager.showScanReceiptModal()" style="padding:8px 20px; background:#0e9f6e; color:white; border:none; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
+                            📷 Scan Receipt
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="expenses-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <!-- Categories List will be populated by JS -->
+                </div>
+                
+                <div id="expense-summary-container">
+                    <!-- Summary will be populated by JS -->
+                </div>
+                
+                <div id="receipt-history-section" class="mt-6">
+                    <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
+                    <div id="receipt-list">Loading...</div>
+                </div>
+            </div>
         </div>
         
         <div id="settings-content-overview" class="settings-content hidden">
@@ -110,5 +135,15 @@
     <script src="js/validation.js"></script>
     <script src="js/settings.js"></script>
     
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Wait for settingsManager to initialize, then load receipt history
+            setTimeout(() => {
+                if (window.settingsManager) {
+                    settingsManager.loadReceiptHistory();
+                }
+            }, 500);
+        });
+    </script>
 </body>
 </html>

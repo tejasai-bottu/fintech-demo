@@ -45,6 +45,25 @@ services:
     volumes:
       - ./frontend:/usr/share/nginx/html:ro
 
+  bill-scanner:
+    build: ./bill-scanner
+    container_name: fintech-bill-scanner
+    ports:
+      - "${BILL_SCANNER_PORT}:8001"
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      VECTOR_DATA_PATH: /app/vector_data
+      FINTECH_BASE_URL: http://backend:8000
+      FINTECH_EMAIL: ${POSTGRES_USER}@example.com # Using DB user as a placeholder email
+      FINTECH_PASSWORD: ${POSTGRES_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - fintech-network
+    volumes:
+      - ./bill-scanner/app:/app
+
 networks:
   fintech-network:
     driver: bridge
