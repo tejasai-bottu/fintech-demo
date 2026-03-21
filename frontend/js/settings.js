@@ -16,9 +16,7 @@ import {
     loadDebtsTab,
     renderDebtsList,
     showAddDebtModal,
-    calculateEMIPreview,
     saveDebt,
-    showDTIWarning,
     deleteDebt
 } from './settings/debts.tab.js';
 
@@ -27,7 +25,6 @@ import {
     renderGoalsList,
     showAddGoalModal,
     saveGoal,
-    showFeasibilityWarning,
     deleteGoal
 } from './settings/goals.tab.js';
 
@@ -71,7 +68,11 @@ class SettingsManager {
     }
 
     async init() {
-        await this.switchTab('income');
+        try {
+            await this.switchTab('income');
+        } finally {
+            Utils.hideGlobalLoading();
+        }
     }
 
     // --------------------------------------------------------
@@ -114,6 +115,8 @@ class SettingsManager {
         } catch (error) {
             console.error(`Error loading ${tabName} tab:`, error);
             Utils.showToast(`Failed to load ${tabName} data`, 'danger');
+        } finally {
+            Utils.hideGlobalLoading(); // Always ensure global loader hides
         }
     }
 
@@ -130,7 +133,6 @@ class SettingsManager {
     // --------------------------------------------------------
 
     showAddDebtModal()                 { showAddDebtModal(this); }
-    calculateEMIPreview()              { calculateEMIPreview(); }
     saveDebt()                         { saveDebt(this); }
     deleteDebt(debtId)                 { deleteDebt(this, debtId); }
 
@@ -172,5 +174,16 @@ class SettingsManager {
 
 // Initialise on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
-    window.settingsManager = new SettingsManager();
+    const manager = new SettingsManager();
+    window.settingsManager = manager;                    // overwrite proxy
+    document.dispatchEvent(new Event('settingsReady')); // signal ready
+
+    // Safety fallback: ensure loader hides even if app crashes
+    setTimeout(() => {
+        const el = document.getElementById('loading-overlay');
+        if (el) {
+            el.classList.add('hide');
+            setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
+        }
+    }, 8000);
 });

@@ -1,6 +1,6 @@
 /**
  * Settings - Expenses Tab
- * Handles expense categories and receipt scanning
+ * Handles expense category management and receipt scanning
  */
 
 export async function loadExpensesTab(manager) {
@@ -11,57 +11,33 @@ export async function loadExpensesTab(manager) {
         manager.data.expenses = await api.getExpenseCategories();
 
         container.innerHTML = `
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">📊 Monthly Expenses</h2>
-                    <div class="flex gap-2">
-                        <button onclick="settingsManager.showAddExpenseModal()" 
-                                class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
-                            ➕ Add Category
-                        </button>
-                        <button onclick="settingsManager.showScanReceiptModal()" 
-                                style="padding:8px 20px; background:#0e9f6e; color:white; border:none; 
-                                       border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
-                            📷 Scan Receipt
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Categories List -->
-                <div id="expenses-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    ${renderExpensesList(manager)}
-                </div>
-                
-                <!-- Summary -->
-                <div style="background:#1f4e79; color:white; padding:20px; border-radius:6px;">
-                    <h3 class="font-bold mb-4">💰 Expense Summary</h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <p class="text-sm opacity-90">Total Expenses</p>
-                            <p class="text-3xl font-bold">${Utils.formatCurrency(manager.data.expenses.summary.total_expenses)}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm opacity-90">Essential</p>
-                            <p class="text-3xl font-bold">${Utils.formatCurrency(manager.data.expenses.summary.essential_expenses)}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm opacity-90">Non-Essential</p>
-                            <p class="text-3xl font-bold">${Utils.formatCurrency(manager.data.expenses.summary.non_essential_expenses)}</p>
-                        </div>
-                    </div>
-                    <div class="mt-4 p-3 bg-white bg-opacity-20 rounded-lg">
-                        <p class="text-sm font-semibold">Expense Ratio: ${manager.data.expenses.summary.expense_ratio}%</p>
-                    </div>
-                </div>
-                
-                ${renderExpenseWarnings(manager)}
-
-                <div id="receipt-history-section" class="mt-6">
-                    <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
-                    <div id="receipt-list">Loading...</div>
-                </div>
+    <div class="settings-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <p class="settings-block-title" style="margin:0;border:none;padding:0;">Monthly Expenses</p>
+            <div style="display:flex;gap:8px;">
+                <button onclick="settingsManager.showAddExpenseModal()" class="glow-button">+ Add Category</button>
+                <button onclick="settingsManager.showScanReceiptModal()" class="btn-ghost">📷 Scan Receipt</button>
             </div>
-        `;
+        </div>
+        <div id="expenses-list" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            ${renderExpensesList(manager)}
+        </div>
+    </div>
+    <div class="settings-block">
+        <p class="settings-block-title">Expense Summary</p>
+        <div class="summary-banner">
+            <div class="summary-banner-stat"><span class="summary-banner-label">Total Expenses</span><span class="summary-banner-value">${Utils.formatCurrency(manager.data.expenses.summary.total_expenses)}</span></div>
+            <div class="summary-banner-stat"><span class="summary-banner-label">Essential</span><span class="summary-banner-value">${Utils.formatCurrency(manager.data.expenses.summary.essential_expenses)}</span></div>
+            <div class="summary-banner-stat"><span class="summary-banner-label">Non-Essential</span><span class="summary-banner-value">${Utils.formatCurrency(manager.data.expenses.summary.non_essential_expenses)}</span></div>
+            <div class="summary-banner-stat"><span class="summary-banner-label">Expense Ratio</span><span class="summary-banner-value">${manager.data.expenses.summary.expense_ratio}%</span></div>
+        </div>
+        ${renderExpenseWarnings(manager)}
+    </div>
+    <div class="settings-block">
+        <p class="settings-block-title">Scanned Receipts</p>
+        <div id="receipt-list" style="color:#64748b;font-size:13px;">Loading...</div>
+    </div>
+`;
 
         await loadReceiptHistory();
 
@@ -76,17 +52,7 @@ export async function loadExpensesTab(manager) {
                             class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm">
                         Retry
                     </button>
-                    <button onclick="settingsManager.showScanReceiptModal()" 
-                            style="padding:8px 20px; background:#0e9f6e; color:white; border:none; 
-                                   border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
-                        📷 Scan Receipt
-                    </button>
                 </div>
-            </div>
-
-            <div id="receipt-history-section" class="mt-6 bg-white rounded-xl shadow-lg p-8">
-                <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
-                <div id="receipt-list">Loading...</div>
             </div>
         `;
 
@@ -96,33 +62,21 @@ export async function loadExpensesTab(manager) {
 
 export function renderExpensesList(manager) {
     if (!manager.data.expenses.categories || manager.data.expenses.categories.length === 0) {
-        return `
-            <div class="col-span-2 text-center py-12">
-                <p class="text-6xl mb-4">📊</p>
-                <p class="text-gray-500">No expense categories yet</p>
-                <p class="text-sm text-gray-400">Click "Add Category" to get started</p>
-            </div>
-        `;
+        return `<div style="grid-column:span 2;text-align:center;padding:40px;color:#64748b;font-size:13px;">No expense categories yet</div>`;
     }
-
     return manager.data.expenses.categories.map(cat => `
-        <div style="border:1px solid #e8eaed; border-radius:6px; padding:16px; 
-                    background:white; transition:box-shadow 150ms;">
-            <div class="flex justify-between items-start mb-3">
+        <div class="item-card" style="flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
                 <div>
-                    <h4 class="font-bold">${cat.category_name}</h4>
-                    <p class="text-sm text-gray-600">
-                        ${cat.is_essential ? '✓ Essential' : 'Non-essential'} • 
-                        ${cat.is_fixed ? 'Fixed' : 'Variable'}
-                    </p>
+                    <div class="item-card-title">${cat.category_name}</div>
+                    <div class="item-card-sub">${cat.is_essential ? 'Essential' : 'Non-essential'} · ${cat.is_fixed ? 'Fixed' : 'Variable'}</div>
                 </div>
-                <button onclick="settingsManager.deleteExpenseCategory(${cat.id})" 
-                        class="text-red-600 hover:underline text-sm">
-                    ×
-                </button>
+                <button onclick="settingsManager.deleteExpenseCategory(${cat.id})" class="btn-danger-ghost" style="padding:4px 10px;font-size:11px;">×</button>
             </div>
-            <p class="text-2xl font-bold text-blue-600">${Utils.formatCurrency(cat.monthly_amount)}</p>
-            <p class="text-xs text-gray-500">${cat.percentage_of_income}% of income</p>
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="item-card-amount" style="font-size:16px;">${Utils.formatCurrency(cat.monthly_amount)}</span>
+                <span style="font-size:11px;color:#64748b;">${cat.percentage_of_income}% of income</span>
+            </div>
         </div>
     `).join('');
 }
@@ -135,10 +89,10 @@ export function renderExpenseWarnings(manager) {
 
     return `
         <div class="mt-6 space-y-3">
-            <h3 class="font-bold">⚠️ Warnings</h3>
+            <h3 class="font-bold text-sm text-gray-400">⚠️ Warnings</h3>
             ${manager.data.expenses.analysis.warnings.map(warning => `
-                <div class="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded">
-                    <p class="text-sm font-semibold text-yellow-700">${warning.message}</p>
+                <div style="padding:10px; background:rgba(251,191,36,0.1); border-left:3px solid #fbbf24; border-radius:4px;">
+                    <p class="text-xs font-semibold text-yellow-500">${warning.message}</p>
                 </div>
             `).join('')}
         </div>
@@ -147,30 +101,28 @@ export function renderExpenseWarnings(manager) {
 
 export function showAddExpenseModal(manager) {
     const modalHtml = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="add-expense-modal">
-            <div style="background:white; border-radius:6px; padding:28px; 
-                        max-width:600px; width:100%; margin:16px; 
-                        box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+<div class="dark-modal-bg" id="add-expense-modal">
+    <div class="dark-modal">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 style="font-size:16px; font-weight:700; color:#1f4e79;">Add Expense Category</h3>
+                    <h3 class="dark-modal-title">Add Expense Category</h3>
                     <button onclick="settingsManager.closeModal('add-expense-modal')" 
-                            class="text-gray-500 hover:text-gray-700 text-2xl">
+                            class="text-gray-500 hover:text-gray-700 text-2xl" style="margin-top:-24px;">
                         ×
                     </button>
                 </div>
                 
                 <form id="add-expense-form">
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold mb-2">Category Name *</label>
+                        <label class="dark-label">Category Name *</label>
                         <input type="text" id="expense-category-name" 
-                               class="w-full px-4 py-2 border-2 rounded-lg" 
+                               class="dark-input" 
                                placeholder="e.g., Rent, Food, Transport" required>
                     </div>
                     
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold mb-2">Monthly Amount (₹) *</label>
+                        <label class="dark-label">Monthly Amount (₹) *</label>
                         <input type="number" id="expense-amount" 
-                               class="w-full px-4 py-2 border-2 rounded-lg" 
+                               class="dark-input" 
                                placeholder="15000" required>
                     </div>
                     
@@ -188,14 +140,10 @@ export function showAddExpenseModal(manager) {
                     <div class="flex gap-3">
                         <button type="button" 
                                 onclick="settingsManager.closeModal('add-expense-modal')"
-                                style="flex:1; padding:10px; background:white; color:#555; 
-                                       border:1px solid #ddd; border-radius:4px; font-size:13px; 
-                                       font-weight:600; cursor:pointer;">
+                                class="btn-ghost" style="flex:1;">
                             Cancel
                         </button>
-                        <button type="submit"
-                                style="flex:1; padding:10px; background:#1f4e79; color:white; border:none; 
-                                       border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
+                        <button type="submit" class="glow-button" style="flex:1;">
                             Add Category
                         </button>
                     </div>
@@ -264,14 +212,12 @@ export async function loadReceiptHistory() {
         historyContainer.innerHTML = receipts.length === 0
             ? '<p class="text-sm text-gray-400">No scanned receipts yet.</p>'
             : receipts.map(r => `
-                <div style="border:1px solid #e8eaed; border-radius:6px; padding:12px; 
-                            margin-bottom:8px; background:white; display:flex; 
-                            justify-content:space-between; align-items:center;">
-                    <span class="text-sm text-gray-500">${r.date || 'No Date'}</span>
-                    <strong>${r.vendor}</strong>
-                    <span>₹${r.amount}</span>
-                    <span style="background:#e0f2fe; color:#0369a1; padding:2px 8px; 
-                                 border-radius:99px; font-size:12px;">${r.category}</span>
+                <div class="item-card" style="padding:12px; margin-bottom:8px;">
+                    <div style="flex:1;">
+                        <p class="item-card-title" style="font-size:13px;">${r.vendor}</p>
+                        <p class="item-card-sub" style="font-size:11px;">${r.date || 'No Date'} · ${r.category}</p>
+                    </div>
+                    <span class="item-card-amount" style="font-size:15px;">₹${r.amount}</span>
                 </div>
             `).join('');
     } catch (error) {
@@ -281,30 +227,23 @@ export async function loadReceiptHistory() {
 
 export function showScanReceiptModal() {
     const modalHtml = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="scan-receipt-modal">
-            <div style="background:white; border-radius:6px; padding:28px; 
-                        max-width:500px; width:100%; margin:16px;">
-                <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">
-                    📷 Scan Receipt
-                </h3>
-                <div id="scan-result" class="hidden mb-4 p-4 bg-green-50 rounded-lg border border-green-200">
-                    <p class="text-sm font-semibold text-green-700" id="scan-result-text"></p>
+<div class="dark-modal-bg" id="scan-receipt-modal">
+    <div class="dark-modal">
+                <h3 class="dark-modal-title">📷 Scan Receipt</h3>
+                <div id="scan-result" class="hidden mb-4 p-4 bg-green-900/20 rounded-lg border border-green-500/30">
+                    <p class="text-sm font-semibold text-green-400" id="scan-result-text"></p>
                 </div>
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold mb-2">Select Receipt Image</label>
-                    <input type="file" id="receiptInput" accept="image/*"
-                           style="width:100%; padding:8px; border:2px dashed #cbd5e1; border-radius:6px;">
+                    <label class="dark-label">Select Receipt Image</label>
+                    <input type="file" id="receiptInput" accept="image/*" class="dark-input" style="padding:20px; border-style:dashed;">
                 </div>
                 <div class="flex gap-3">
                     <button type="button" onclick="settingsManager.closeModal('scan-receipt-modal')"
-                            style="flex:1; padding:10px; background:white; color:#555; 
-                                   border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                            class="btn-ghost" style="flex:1;">
                         Cancel
                     </button>
                     <button type="button" onclick="settingsManager.handleReceiptUpload()"
-                            id="scan-submit-btn"
-                            style="flex:1; padding:10px; background:#0e9f6e; color:white; 
-                                   border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                            id="scan-submit-btn" class="glow-button" style="flex:1;">
                         Upload & Scan
                     </button>
                 </div>
@@ -330,8 +269,7 @@ export async function handleReceiptUpload(manager) {
 
         const resultBox = document.getElementById('scan-result');
         document.getElementById('scan-result-text').textContent =
-            `✅ ${result.vendor} — ₹${result.amount} (${result.category})` +
-            (result.expense_synced ? ' • Synced to dashboard' : '');
+            `✅ ${result.vendor} — ₹${result.amount} (${result.category})`;
         resultBox.classList.remove('hidden');
 
         try {
@@ -352,7 +290,6 @@ export async function handleReceiptUpload(manager) {
             Utils.showToast(`✅ Added ${result.vendor} to expenses`, 'success');
         } catch (bridgeError) {
             console.error("Auto-add to expenses failed:", bridgeError);
-            Utils.showToast('Scanner sync failed, but receipt stored', 'warning');
         }
 
         await loadReceiptHistory();

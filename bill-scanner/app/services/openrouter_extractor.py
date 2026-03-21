@@ -3,12 +3,14 @@ import json
 import re
 import logging
 from typing import Optional
+from config import settings
 
 logger = logging.getLogger(__name__)
 
-OPENROUTER_API_KEY = "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"  # Replace with your key
-OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL = "nvidia/nemotron-3-super-120b-a12b:free"
+# Using values from config (which loads from .env)
+OPENROUTER_API_KEY = settings.OPENROUTER_API_KEY
+OPENROUTER_URL = settings.OPENROUTER_URL
+OPENROUTER_MODEL = settings.OPENROUTER_MODEL
 
 HEADERS = {
     "Authorization": f"Bearer {OPENROUTER_API_KEY}",

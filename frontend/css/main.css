@@ -13,6 +13,24 @@ html {
 
 body {
     font-family: 'IBM Plex Sans', 'Segoe UI', sans-serif;
+    background: #0b0f1a;
+    color: #f1f5f9;
+    position: relative;
+}
+
+/* Shimmer skeleton loader */
+@keyframes shimmer {
+  0%   { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.09) 50%,
+    rgba(255,255,255,0.04) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
 }
 
 a { text-decoration: none; }

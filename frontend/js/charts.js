@@ -1,6 +1,6 @@
 /**
  * Chart Rendering Logic — ECharts Edition
- * WealthFlow AI
+ * Fintrix
  */
 
 class ChartManager {

@@ -207,31 +207,65 @@ const Utils = {
      * Show toast notification
      */
     showToast(message, type = 'info') {
+        const colors = {
+            success: { bg: 'rgba(52,211,153,0.12)', border: 'rgba(52,211,153,0.25)', color: '#34d399' },
+            danger:  { bg: 'rgba(248,113,113,0.12)', border: 'rgba(248,113,113,0.25)', color: '#f87171' },
+            warning: { bg: 'rgba(251,191,36,0.12)', border: 'rgba(251,191,36,0.25)', color: '#fbbf24' },
+            info:    { bg: 'rgba(129,140,248,0.12)', border: 'rgba(129,140,248,0.25)', color: '#818cf8' }
+        };
+        const c = colors[type] || colors.info;
         const toast = document.createElement('div');
-        toast.className = `fixed top-4 right-4 px-6 py-4 rounded-lg shadow-lg ${this.getSeverityBg(type)} ${this.getSeverityColor(type)} z-50 slide-in`;
+        toast.style.cssText = `
+            position:fixed; top:20px; right:20px; z-index:9999;
+            padding:12px 20px; border-radius:12px; font-size:13px; font-weight:500;
+            background:${c.bg}; border:1px solid ${c.border}; color:${c.color};
+            backdrop-filter:blur(16px); font-family:inherit;
+            box-shadow:0 8px 24px rgba(0,0,0,0.4);
+            animation:slideInUp 0.25s ease-out;
+            max-width:320px;
+        `;
         toast.textContent = message;
-        
         document.body.appendChild(toast);
-        
-        setTimeout(() => {
-            toast.remove();
-        }, CONFIG.UI.TOAST_DURATION);
+        setTimeout(() => { toast.style.opacity='0'; toast.style.transition='opacity 0.3s'; setTimeout(()=>toast.remove(), 300); }, CONFIG.UI.TOAST_DURATION);
     },
     
     /**
-     * Show loading spinner
+     * Show skeleton loading UI
      */
     showLoading(elementId) {
-        const element = document.getElementById(elementId);
-        if (element) {
-            element.innerHTML = `
-                <div class="flex items-center justify-center py-8">
-                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-                </div>
-            `;
-        }
+        const el = document.getElementById(elementId);
+        if (!el) return;
+
+        el.innerHTML = `
+            <div class="skeleton-wrapper">
+                ${Array(3).fill(`
+                    <div class="skeleton-card">
+                        <div class="skeleton-avatar"></div>
+                        <div class="skeleton-lines">
+                            <div class="skeleton-line short"></div>
+                            <div class="skeleton-line long"></div>
+                        </div>
+                        <div class="skeleton-dot"></div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
     },
     
+    /**
+     * Hide global loading overlay with fade
+     */
+    hideGlobalLoading() {
+        const el = document.getElementById('loading-overlay');
+        if (!el) return;
+
+        el.classList.add('hide');
+
+        setTimeout(() => {
+            if (el.parentNode) el.remove();
+        }, 400);
+    },
+
     // ========== VALIDATION HELPERS ==========
     
     /**
@@ -282,3 +316,4 @@ const Utils = {
 
 // Make available globally
 window.Utils = Utils;
+window.hideGlobalLoading = () => Utils.hideGlobalLoading();

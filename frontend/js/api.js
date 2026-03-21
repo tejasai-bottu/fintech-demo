@@ -17,7 +17,7 @@ class API {
         const url = `${this.baseURL}${endpoint}`;
         
         // Get stored token
-        const token = localStorage.getItem('wealthflow_token');
+        const token = localStorage.getItem('Fintrix_token');
         
         const defaultOptions = {
             headers: {
@@ -37,8 +37,8 @@ class API {
             
             // Redirect to login if unauthorized
             if (response.status === 401) {
-                localStorage.removeItem('wealthflow_token');
-                localStorage.removeItem('wealthflow_user');
+                localStorage.removeItem('Fintrix_token');
+                localStorage.removeItem('Fintrix_user');
                 // Only redirect if not already on login/register pages
                 if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
                     window.location.href = 'login.html';
@@ -73,20 +73,20 @@ class API {
             body: JSON.stringify({ email, password })
         });
         if (result && result.access_token) {
-            localStorage.setItem('wealthflow_token', result.access_token);
-            localStorage.setItem('wealthflow_user', JSON.stringify(result.user));
+            localStorage.setItem('Fintrix_token', result.access_token);
+            localStorage.setItem('Fintrix_user', JSON.stringify(result.user));
         }
         return result;
     }
 
     logout() {
-        localStorage.removeItem('wealthflow_token');
-        localStorage.removeItem('wealthflow_user');
+        localStorage.removeItem('Fintrix_token');
+        localStorage.removeItem('Fintrix_user');
         window.location.href = 'login.html';
     }
 
     getCurrentUser() {
-        const stored = localStorage.getItem('wealthflow_user');
+        const stored = localStorage.getItem('Fintrix_user');
         return stored ? JSON.parse(stored) : null;
     }
 

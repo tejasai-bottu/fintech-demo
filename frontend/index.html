@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WealthFlow AI — Analytics Dashboard</title>
+    <title>Fintrix — Analytics Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -19,7 +20,7 @@
         <div class="toolbar-left">
             <div class="brand">
                 <div class="brand-icon">W</div>
-                <span class="brand-name">WealthFlow <span class="brand-sub">AI</span></span>
+                <span class="brand-name">Fintrix <span class="brand-sub"> </span></span>
             </div>
             <nav class="toolbar-nav">
                 <a href="index.html" class="nav-link active">Dashboard</a>
@@ -58,150 +59,198 @@
         </div>
     </header>
 
+    <!-- ===================== HERO SECTION ===================== -->
+    <section class="hero-section" id="hero-section" style="
+        position: sticky;
+        top: 52px;
+        z-index: 10;
+        pointer-events: none;
+        padding: 80px 24px 60px;
+        text-align: left;
+        max-width: 1600px;
+        margin: 0 auto;
+    ">
+      <div class="hero-content">
+        <div class="hero-left">
+          <p class="hero-eyebrow">Financial Intelligence</p>
+          <h1 class="hero-title">Your Financial<br><span class="hero-gradient">Command Center</span></h1>
+          <p class="hero-sub">Real-time analytics on your wealth, debts, and goals — all in one place.</p>
+          <div class="hero-actions">
+            <a href="settings.html" class="glow-button" style="pointer-events:auto;">Configure Profile →</a>
+            <button class="hero-btn-secondary" style="pointer-events:auto;" onclick="document.getElementById('kpi-row').scrollIntoView({behavior:'smooth'})">View Dashboard</button>
+          </div>
+        </div>
+        <div class="hero-right" id="hero-right"></div>
+      </div>
+    </section>
+
     <!-- ===================== PAGE BODY ===================== -->
     <main class="dashboard-container" id="dashboard-main">
 
-        <!-- Loading State -->
+        <!-- GLOBAL LOADER -->
         <div id="loading-overlay" class="loading-overlay">
-            <div class="loading-spinner"></div>
-            <p class="loading-text">Fetching financial data...</p>
+          <div class="loader-wrapper">
+            <span class="loader-letter">l</span>
+            <span class="loader-letter">o</span>
+            <span class="loader-letter">a</span>
+            <span class="loader-letter">d</span>
+            <span class="loader-letter">i</span>
+            <span class="loader-letter">n</span>
+            <span class="loader-letter">g</span>
+            <div class="loader"></div>
+          </div>
         </div>
 
-        <!-- ===================== KPI ROW ===================== -->
-        <section class="kpi-row" id="kpi-row">
-            <!-- Populated by dashboard.js -->
-        </section>
+        <!-- 2. Insight Strip (replaces alert-strip) -->
+        <div id="insight-strip" class="insight-strip fade-section"></div>
 
-        <!-- ===================== UPCOMING PAYMENTS STRIP ===================== -->
-        <section id="upcoming-payments" class="upcoming-payments-section">
-            <!-- Populated by dashboard.js -->
-        </section>
+        <!-- 3. KPI -->
+        <div class="fade-section">
+          <section class="kpi-row" id="kpi-row">
+              <!-- Populated by dashboard.js -->
+          </section>
+        </div>
 
-        <!-- ===================== ALERT STRIP ===================== -->
-        <div id="alert-strip" class="alert-strip" style="display:none;"></div>
-
-        <!-- ===================== ANALYTICS GRID ===================== -->
-        <section class="analytics-grid">
-
-            <!-- LEFT COLUMN -->
-            <div class="analytics-col analytics-col-left">
-
-                <!-- EMI Breakdown Bar Chart -->
-                <div class="chart-card" id="card-emi">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">EMI Breakdown</p>
-                            <p class="chart-card-subtitle">Monthly debt payments</p>
-                        </div>
-                        <div class="chart-card-badge" id="emi-total-badge">—</div>
-                    </div>
-                    <div class="chart-body" id="chart-emi-bar" style="height:220px;"></div>
-                </div>
-
-                <!-- Cashflow Distribution -->
-                <div class="chart-card" id="card-cashflow">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">Cash Flow Distribution</p>
-                            <p class="chart-card-subtitle">% of net income</p>
-                        </div>
-                    </div>
-                    <div class="cashflow-bars" id="cashflow-bars">
-                        <!-- Populated by dashboard.js -->
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- CENTER COLUMN — Treemap -->
-            <div class="analytics-col analytics-col-center">
-                <div class="chart-card chart-card-tall">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">Expense Allocation</p>
-                            <p class="chart-card-subtitle">Monthly spending by category</p>
-                        </div>
-                        <div class="legend-group" id="treemap-legend"></div>
-                    </div>
-                    <div id="chart-treemap" style="height:420px;"></div>
-                </div>
-            </div>
-
-            <!-- RIGHT COLUMN -->
-            <div class="analytics-col analytics-col-right">
-
-                <!-- Goals Donut -->
-                <div class="chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">Savings Goals</p>
-                            <p class="chart-card-subtitle">Progress overview</p>
-                        </div>
-                    </div>
-                    <div id="chart-goals-donut" style="height:180px;"></div>
-                    <div class="goal-list" id="goal-list">
-                        <!-- Populated by dashboard.js -->
-                    </div>
-                </div>
-
-                <!-- Health Score Gauge -->
-                <div class="chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">Financial Health</p>
-                            <p class="chart-card-subtitle">Composite score</p>
-                        </div>
-                    </div>
-                    <div id="chart-health-gauge" style="height:180px;"></div>
-                    <div class="health-indicators" id="health-indicators">
-                        <!-- Populated by dashboard.js -->
-                    </div>
-                </div>
-
-                <!-- Net Worth History Chart -->
-                <div class="chart-card">
-                    <div class="chart-card-header">
-                        <div>
-                            <p class="chart-card-title">Net Worth Trend</p>
-                            <p class="chart-card-subtitle">Last 30 days</p>
-                        </div>
-                        <div class="chart-card-badge" id="nw-change-badge">—</div>
-                    </div>
-                    <div id="chart-networth" style="height:160px;"></div>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- ===================== DATA TABLE ===================== -->
-        <section class="data-table-section">
-            <div class="table-header">
+        <!-- 4. Main Visualization (NEW — big single chart) -->
+        <div class="fade-section">
+          <section class="main-viz-section" id="main-viz-section">
+            <div class="chart-card main-chart-card">
+              <div class="chart-card-header">
                 <div>
-                    <p class="table-title">Debt Portfolio</p>
-                    <p class="table-subtitle">All active liabilities</p>
+                  <p class="chart-card-title">Net Worth Trend</p>
+                  <p class="chart-card-subtitle">Last 30 days — your wealth trajectory</p>
                 </div>
-                <a href="settings.html" class="table-action-btn">Manage Portfolio →</a>
+                <div class="chart-card-badge" id="nw-change-badge">—</div>
+              </div>
+              <div id="chart-networth" style="height:280px;"></div>
             </div>
-            <div class="table-wrapper">
-                <table class="data-table" id="debt-table">
-                    <thead>
-                        <tr>
-                            <th>Debt Name</th>
-                            <th>Type</th>
-                            <th>Outstanding</th>
-                            <th>Monthly EMI</th>
-                            <th>Rate</th>
-                            <th>Remaining</th>
-                            <th>Progress</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody id="debt-table-body">
-                        <!-- Populated by dashboard.js -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+          </section>
+        </div>
+
+        <!-- 5. Secondary Analytics (existing analytics-grid, but WITHOUT net worth) -->
+        <div class="fade-section">
+          <section class="analytics-grid">
+
+              <!-- LEFT COLUMN -->
+              <div class="analytics-col analytics-col-left">
+
+                  <!-- EMI Breakdown Bar Chart -->
+                  <div class="chart-card" id="card-emi">
+                      <div class="chart-card-header">
+                          <div>
+                              <p class="chart-card-title">EMI Breakdown</p>
+                              <p class="chart-card-subtitle">Monthly debt payments</p>
+                          </div>
+                          <div class="chart-card-badge" id="emi-total-badge">—</div>
+                      </div>
+                      <div class="chart-body" id="chart-emi-bar" style="height:220px;"></div>
+                  </div>
+
+                  <!-- Cashflow Distribution -->
+                  <div class="chart-card" id="card-cashflow">
+                      <div class="chart-card-header">
+                          <div>
+                              <p class="chart-card-title">Cash Flow Distribution</p>
+                              <p class="chart-card-subtitle">% of net income</p>
+                          </div>
+                      </div>
+                      <div class="cashflow-bars" id="cashflow-bars">
+                          <!-- Populated by dashboard.js -->
+                      </div>
+                  </div>
+
+              </div>
+
+              <!-- CENTER COLUMN — Treemap -->
+              <div class="analytics-col analytics-col-center">
+                  <div class="chart-card chart-card-tall">
+                      <div class="chart-card-header">
+                          <div>
+                              <p class="chart-card-title">Expense Allocation</p>
+                              <p class="chart-card-subtitle">Monthly spending by category</p>
+                          </div>
+                          <div class="legend-group" id="treemap-legend"></div>
+                      </div>
+                      <div id="chart-treemap" style="height:420px;"></div>
+                  </div>
+              </div>
+
+              <!-- RIGHT COLUMN -->
+              <div class="analytics-col analytics-col-right">
+
+                  <!-- Goals Donut -->
+                  <div class="chart-card">
+                      <div class="chart-card-header">
+                          <div>
+                              <p class="chart-card-title">Savings Goals</p>
+                              <p class="chart-card-subtitle">Progress overview</p>
+                          </div>
+                      </div>
+                      <div id="chart-goals-donut" style="height:180px;"></div>
+                      <div class="goal-list" id="goal-list">
+                          <!-- Populated by dashboard.js -->
+                      </div>
+                  </div>
+
+                  <!-- Health Score Gauge -->
+                  <div class="chart-card">
+                      <div class="chart-card-header">
+                          <div>
+                              <p class="chart-card-title">Financial Health</p>
+                              <p class="chart-card-subtitle">Composite score</p>
+                          </div>
+                      </div>
+                      <div id="chart-health-gauge" style="height:180px;"></div>
+                      <div class="health-indicators" id="health-indicators">
+                          <!-- Populated by dashboard.js -->
+                      </div>
+                  </div>
+
+              </div>
+          </section>
+        </div>
+
+        <!-- 6. Action Cards (NEW) -->
+        <div class="fade-section">
+          <section class="action-cards-section" id="action-cards-section"></section>
+        </div>
+
+        <!-- 7. Upcoming Payments (moved here) -->
+        <div class="fade-section">
+          <section id="upcoming-payments" class="upcoming-payments-section"></section>
+        </div>
+
+        <!-- 8. Table (last, reduced priority) -->
+        <div class="fade-section">
+          <section class="data-table-section">
+              <div class="table-header">
+                  <div>
+                      <p class="table-title">Debt Portfolio</p>
+                      <p class="table-subtitle">All active liabilities</p>
+                  </div>
+                  <a href="settings.html" class="table-action-btn">Manage Portfolio →</a>
+              </div>
+              <div class="table-wrapper">
+                  <table class="data-table" id="debt-table">
+                      <thead>
+                          <tr>
+                              <th>Debt Name</th>
+                              <th>Type</th>
+                              <th>Outstanding</th>
+                              <th>Monthly EMI</th>
+                              <th>Rate</th>
+                              <th>Remaining</th>
+                              <th>Progress</th>
+                              <th>Status</th>
+                          </tr>
+                      </thead>
+                      <tbody id="debt-table-body">
+                          <!-- Populated by dashboard.js -->
+                      </tbody>
+                  </table>
+              </div>
+          </section>
+        </div>
 
     </main>
 
@@ -211,6 +260,107 @@
     <script src="js/api.js"></script>
     <script src="js/validation.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/animations.js"></script>
+    <script>
+    const dashHero = document.getElementById('hero-section');
+    const heroTitle = dashHero.querySelector('.hero-title');
+    const heroSub   = dashHero.querySelector('.hero-sub');
+    const heroEyebrow = dashHero.querySelector('.hero-eyebrow');
+    const heroActions = dashHero.querySelector('.hero-actions');
+    const heroRight = dashHero.querySelector('.hero-right');
+
+    window.addEventListener('scroll', () => {
+        const scrollY   = window.scrollY;
+        const maxScroll = window.innerHeight * 0.55;
+        const progress  = Math.min(scrollY / maxScroll, 1);
+        const ease      = 1 - Math.pow(1 - progress, 3);
+
+        // Whole hero fades and lifts
+        dashHero.style.opacity   = Math.max(1 - ease * 1.5, 0);
+        dashHero.style.transform = `translateY(${-ease * 80}px)`;
+        dashHero.style.filter    = `blur(${ease * 5}px)`;
+    }, { passive: true });
+    </script>
+    <style>
+      /* Hero section styles — inline here to keep component-local */
+      .hero-section {
+        padding: 40px 0 20px;
+      }
+      .hero-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+      }
+      .hero-left { flex: 1; }
+      .hero-right {
+        flex: 0 0 280px;
+        background: rgba(255,255,255,0.04);
+        border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-height: 140px;
+      }
+      .hero-eyebrow {
+        font-size: 11px;
+        font-weight: 600;
+        color: #818cf8;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+      .hero-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #f1f5f9;
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      .hero-gradient {
+        background: linear-gradient(135deg, #818cf8, #c084fc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-sub {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+      .hero-actions { display: flex; gap: 12px; align-items: center; }
+      .hero-btn-secondary {
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.1);
+        color: #cbd5e1;
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+      }
+      .hero-btn-secondary:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.2);
+      }
+      .hero-stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+      }
+      .hero-stat-label { color: #64748b; }
+      .hero-stat-value { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #f1f5f9; font-weight: 600; }
+      @media (max-width: 768px) {
+        .hero-right { display: none; }
+        .hero-title { font-size: 24px; }
+      }
+    </style>
 
 </body>
 </html>

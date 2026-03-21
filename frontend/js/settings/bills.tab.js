@@ -11,113 +11,51 @@ export async function loadBillsTab(manager) {
         manager.data.bills = await api.getBills();
 
         container.innerHTML = `
-            <div style="background:white; border-radius:6px; padding:28px; 
-                        box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 style="font-size:15px; font-weight:700; color:#1f4e79; 
-                               text-transform:uppercase; letter-spacing:0.5px;">
-                        Bills & Credit Cards
-                    </h2>
-                    <button onclick="settingsManager.showAddBillModal()" 
-                            style="padding:8px 20px; background:#1f4e79; color:white; border:none; 
-                                   border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
-                        + Add Bill
-                    </button>
-                </div>
-                
-                <div id="bills-list" class="space-y-4 mb-8">
-                    ${renderBillsList(manager)}
-                </div>
-                
-                <div style="background:#1f4e79; color:white; padding:20px; border-radius:6px;">
-                    <h3 class="font-bold mb-4">📊 Bills Summary</h3>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <p class="text-sm opacity-90">Total Bills</p>
-                            <p class="text-3xl font-bold">${manager.data.bills.summary.total_bills}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm opacity-90">Min Due This Month</p>
-                            <p class="text-3xl font-bold">₹${Math.round(manager.data.bills.summary.total_minimum_due).toLocaleString('en-IN')}</p>
-                        </div>
-                        <div>
-                            <p class="text-sm opacity-90">Overdue Bills</p>
-                            <p class="text-3xl font-bold" style="color:${manager.data.bills.summary.overdue_count > 0 ? '#ff6b6b' : '#69db7c'}">
-                                ${manager.data.bills.summary.overdue_count}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
+    <div class="settings-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <p class="settings-block-title" style="margin:0;border:none;padding:0;">Bills & Credit Cards</p>
+            <button onclick="settingsManager.showAddBillModal()" class="glow-button">+ Add Bill</button>
+        </div>
+        <div id="bills-list">${renderBillsList(manager)}</div>
+    </div>
+    <div class="settings-block">
+        <p class="settings-block-title">Bills Summary</p>
+        <div class="summary-banner">
+            <div class="summary-banner-stat"><span class="summary-banner-label">Total Bills</span><span class="summary-banner-value">${manager.data.bills.summary.total_bills}</span></div>
+            <div class="summary-banner-stat"><span class="summary-banner-label">Min Due This Month</span><span class="summary-banner-value">₹${Math.round(manager.data.bills.summary.total_minimum_due).toLocaleString('en-IN')}</span></div>
+            <div class="summary-banner-stat"><span class="summary-banner-label">Overdue</span><span class="summary-banner-value" style="color:${manager.data.bills.summary.overdue_count > 0 ? '#f87171' : '#34d399'}">${manager.data.bills.summary.overdue_count}</span></div>
+        </div>
+    </div>
+`;
     } catch (error) {
         container.innerHTML = `<div class="alert alert-danger">Failed to load bills: ${error.message}</div>`;
     }
 }
 
 export function renderBillsList(manager) {
-    if (!manager.data.bills || !manager.data.bills.bills || manager.data.bills.bills.length === 0) {
-        return `<div class="text-center py-12">
-            <p class="text-6xl mb-4">💳</p>
-            <p class="text-gray-500">No bills added yet</p>
-        </div>`;
+    if (!manager.data.bills?.bills?.length) {
+        return `<div style="text-align:center;padding:40px;color:#64748b;font-size:13px;">No bills added yet</div>`;
     }
-
     return manager.data.bills.bills.map(bill => {
         const ps = bill.payment_status;
-        const statusColor = ps.status === 'overdue' ? '#c81e1e' : '#0e9f6e';
-        const statusLabel = ps.status === 'overdue'
-            ? `⚠️ Overdue by ${ps.days_late} days — Penalty: ₹${ps.total_penalty}`
-            : `✓ Due in ${ps.days_until_due} days`;
-
+        const isOverdue = ps.status === 'overdue';
         return `
-            <div style="border:1px solid ${ps.status === 'overdue' ? '#fca5a5' : '#e8eaed'}; 
-                        border-radius:6px; padding:16px; background:${ps.status === 'overdue' ? '#fff5f5' : 'white'};">
-                <div class="flex justify-between items-start mb-3">
-                    <div>
-                        <h4 class="font-bold">${bill.bill_name}</h4>
-                        <p class="text-sm" style="color:${statusColor};">${statusLabel}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="settingsManager.showPayBillModal(${bill.id})"
-                                style="padding:6px 16px; background:#1f4e79; color:white; border:none; 
-                                       border-radius:4px; font-size:12px; cursor:pointer;">
-                            Pay Now
-                        </button>
-                        <button onclick="settingsManager.deleteBill(${bill.id})"
-                                style="padding:6px 12px; background:white; color:#c81e1e; border:1px solid #fca5a5; 
-                                       border-radius:4px; font-size:12px; cursor:pointer;">
-                            Delete
-                        </button>
+            <div class="item-card" style="${isOverdue ? 'border-color:rgba(248,113,113,0.25);' : ''}">
+                <div class="item-card-left">
+                    <div class="item-card-title">${bill.bill_name}</div>
+                    <div class="item-card-sub" style="color:${isOverdue ? '#f87171' : '#64748b'};">
+                        ${isOverdue ? `⚠ Overdue ${ps.days_late}d` : `Due in ${ps.days_until_due} days`}
+                        ${bill.credit_limit > 0 ? ` · ${((bill.outstanding_balance/bill.credit_limit)*100).toFixed(0)}% utilization` : ''}
                     </div>
                 </div>
-                <div class="grid grid-cols-3 gap-3">
-                    <div>
-                        <p class="text-xs text-gray-500">Amount Due</p>
-                        <p class="font-bold">₹${Math.round(bill.total_amount_due).toLocaleString('en-IN')}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500">Min Due</p>
-                        <p class="font-bold">₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</p>
-                    </div>
-                    <div>
-                        <p class="text-xs text-gray-500">Next Due</p>
-                        <p class="font-bold">${bill.next_due_date ? new Date(bill.next_due_date).toLocaleDateString('en-IN') : 'N/A'}</p>
+                <div style="text-align:right;flex-shrink:0;">
+                    <div class="item-card-amount">${Utils.formatCurrency(bill.total_amount_due)}</div>
+                    <div style="font-size:11px;color:#64748b;">min ₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</div>
+                    <div class="item-card-actions" style="margin-top:10px;">
+                        <button onclick="settingsManager.showPayBillModal(${bill.id})" class="btn-ghost" style="font-size:11px;">Pay</button>
+                        <button onclick="settingsManager.deleteBill(${bill.id})" class="btn-danger-ghost" style="font-size:11px;">Delete</button>
                     </div>
                 </div>
-                ${bill.credit_limit > 0 ? `
-                    <div class="mt-3">
-                        <div class="flex justify-between text-xs mb-1">
-                            <span>Credit Used</span>
-                            <span>${((bill.outstanding_balance / bill.credit_limit) * 100).toFixed(0)}% of ₹${Math.round(bill.credit_limit).toLocaleString('en-IN')}</span>
-                        </div>
-                        <div style="background:#f0f0f0; height:4px; border-radius:4px;">
-                            <div style="background:${bill.outstanding_balance/bill.credit_limit > 0.7 ? '#c81e1e' : '#1a56db'}; 
-                                        height:4px; border-radius:4px; 
-                                        width:${Math.min(100,(bill.outstanding_balance/bill.credit_limit)*100).toFixed(0)}%;"></div>
-                        </div>
-                    </div>
-                ` : ''}
             </div>
         `;
     }).join('');
@@ -128,25 +66,23 @@ export function showPayBillModal(manager, billId) {
     if (!bill) return;
 
     const modalHtml = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" id="pay-bill-modal">
-            <div style="background:white; border-radius:6px; padding:28px; max-width:500px; width:100%; margin:16px;">
-                <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">
-                    Pay: ${bill.bill_name}
-                </h3>
-                <div style="background:#f4f6f9; padding:12px; border-radius:4px; margin-bottom:16px;">
+<div class="dark-modal-bg" id="pay-bill-modal">
+    <div class="dark-modal">
+                <h3 class="dark-modal-title">Pay: ${bill.bill_name}</h3>
+                <div style="background:rgba(255,255,255,0.05); padding:16px; border-radius:8px; margin-bottom:20px;">
                     <p class="text-sm">Amount Due: <strong>₹${Math.round(bill.total_amount_due).toLocaleString('en-IN')}</strong></p>
-                    <p class="text-sm">Minimum Due: <strong>₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</strong></p>
+                    <p class="text-sm text-gray-400">Minimum Due: <strong>₹${Math.round(bill.minimum_due).toLocaleString('en-IN')}</strong></p>
                 </div>
                 <form id="pay-bill-form">
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold mb-2">Payment Amount (₹) *</label>
+                        <label class="dark-label">Payment Amount (₹) *</label>
                         <input type="number" id="pay-amount" 
                                value="${bill.total_amount_due}"
-                               class="w-full px-4 py-2 border-2 rounded-lg" required>
+                               class="dark-input" required>
                     </div>
                     <div class="mb-4">
-                        <label class="block text-sm font-semibold mb-2">Payment Method</label>
-                        <select id="pay-method" class="w-full px-4 py-2 border-2 rounded-lg">
+                        <label class="dark-label">Payment Method</label>
+                        <select id="pay-method" class="dark-select">
                             <option value="upi">UPI</option>
                             <option value="net_banking">Net Banking</option>
                             <option value="debit_card">Debit Card</option>
@@ -155,11 +91,10 @@ export function showPayBillModal(manager, billId) {
                     </div>
                     <div class="flex gap-3">
                         <button type="button" onclick="settingsManager.closeModal('pay-bill-modal')"
-                                style="flex:1; padding:10px; background:white; color:#555; border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                                class="btn-ghost" style="flex:1;">
                             Cancel
                         </button>
-                        <button type="submit"
-                                style="flex:1; padding:10px; background:#0e9f6e; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                        <button type="submit" class="glow-button" style="flex:1;">
                             Confirm Payment
                         </button>
                     </div>
@@ -188,18 +123,18 @@ export function showPayBillModal(manager, billId) {
 
 export function showAddBillModal(manager) {
     const modalHtml = `
-        <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto" id="add-bill-modal">
-            <div style="background:white; border-radius:6px; padding:28px; max-width:600px; width:100%; margin:16px;">
-                <h3 style="font-size:16px; font-weight:700; color:#1f4e79; margin-bottom:16px;">Add New Bill</h3>
+<div class="dark-modal-bg" id="add-bill-modal">
+    <div class="dark-modal">
+                <h3 class="dark-modal-title">Add New Bill</h3>
                 <form id="add-bill-form">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Bill Name *</label>
-                            <input type="text" id="bill-name" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="HDFC Credit Card" required>
+                            <label class="dark-label">Bill Name *</label>
+                            <input type="text" id="bill-name" class="dark-input" placeholder="HDFC Credit Card" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Bill Type *</label>
-                            <select id="bill-type" class="w-full px-4 py-2 border-2 rounded-lg" required>
+                            <label class="dark-label">Bill Type *</label>
+                            <select id="bill-type" class="dark-select" required>
                                 <option value="credit_card">Credit Card</option>
                                 <option value="electricity">Electricity</option>
                                 <option value="internet">Internet</option>
@@ -210,41 +145,40 @@ export function showAddBillModal(manager) {
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Total Amount Due (₹) *</label>
-                            <input type="number" id="bill-amount" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="5000" required>
+                            <label class="dark-label">Total Amount Due (₹) *</label>
+                            <input type="number" id="bill-amount" class="dark-input" placeholder="5000" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Minimum Due (₹)</label>
-                            <input type="number" id="bill-min-due" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="500" value="0">
+                            <label class="dark-label">Minimum Due (₹)</label>
+                            <input type="number" id="bill-min-due" class="dark-input" placeholder="500" value="0">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Billing Cycle Day (1-31) *</label>
-                            <input type="number" id="bill-cycle-day" class="w-full px-4 py-2 border-2 rounded-lg" min="1" max="31" value="1" required>
+                            <label class="dark-label">Billing Cycle Day (1-31) *</label>
+                            <input type="number" id="bill-cycle-day" class="dark-input" min="1" max="31" value="1" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Due Date Day (1-31) *</label>
-                            <input type="number" id="bill-due-day" class="w-full px-4 py-2 border-2 rounded-lg" min="1" max="31" value="15" required>
+                            <label class="dark-label">Due Date Day (1-31) *</label>
+                            <input type="number" id="bill-due-day" class="dark-input" min="1" max="31" value="15" required>
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Interest Rate (% p.a.)</label>
-                            <input type="number" id="bill-interest" class="w-full px-4 py-2 border-2 rounded-lg" step="0.1" value="0">
+                            <label class="dark-label">Interest Rate (% p.a.)</label>
+                            <input type="number" id="bill-interest" class="dark-input" step="0.1" value="0">
                         </div>
                         <div>
-                            <label class="block text-sm font-semibold mb-2">Late Fee (₹)</label>
-                            <input type="number" id="bill-late-fee" class="w-full px-4 py-2 border-2 rounded-lg" value="0">
+                            <label class="dark-label">Late Fee (₹)</label>
+                            <input type="number" id="bill-late-fee" class="dark-input" value="0">
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-sm font-semibold mb-2">Credit Limit (₹) — for Cards</label>
-                            <input type="number" id="bill-credit-limit" class="w-full px-4 py-2 border-2 rounded-lg" placeholder="100000" value="0">
+                            <label class="dark-label">Credit Limit (₹) — for Cards</label>
+                            <input type="number" id="bill-credit-limit" class="dark-input" placeholder="100000" value="0">
                         </div>
                     </div>
                     <div class="flex gap-3">
                         <button type="button" onclick="settingsManager.closeModal('add-bill-modal')"
-                                style="flex:1; padding:10px; background:white; color:#555; border:1px solid #ddd; border-radius:4px; cursor:pointer;">
+                                class="btn-ghost" style="flex:1;">
                             Cancel
                         </button>
-                        <button type="submit"
-                                style="flex:1; padding:10px; background:#1f4e79; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:600;">
+                        <button type="submit" class="glow-button" style="flex:1;">
                             Add Bill
                         </button>
                     </div>

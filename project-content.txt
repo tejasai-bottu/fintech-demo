@@ -4695,7 +4695,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\index.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WealthFlow AI — Analytics Dashboard</title>
+    <title>Fintrix — Analytics Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4711,7 +4711,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\index.html
         <div class="toolbar-left">
             <div class="brand">
                 <div class="brand-icon">W</div>
-                <span class="brand-name">WealthFlow <span class="brand-sub">AI</span></span>
+                <span class="brand-name">Fintrix <span class="brand-sub">AI</span></span>
             </div>
             <nav class="toolbar-nav">
                 <a href="index.html" class="nav-link active">Dashboard</a>
@@ -4935,7 +4935,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\settings.html
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Profile Settings - WealthFlow AI</title>
+    <title>Financial Profile Settings - Fintrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -4953,7 +4953,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\settings.html
         <div style="max-width:1400px; margin:0 auto; padding:14px 24px; display:flex; justify-content:space-between; align-items:center;">
             <div style="display:flex; align-items:center; gap:10px;">
                 <span style="font-size:20px;">💎</span>
-                <h1 style="font-size:16px; font-weight:700; color:#1f4e79; margin:0;">WealthFlow AI</h1>
+                <h1 style="font-size:16px; font-weight:700; color:#1f4e79; margin:0;">Fintrix</h1>
             </div>
             <div style="display:flex; align-items:center; gap:20px; font-size:14px;">
                 <a href="index.html" style="color:#555; font-weight:500;">🏠 Dashboard</a>
@@ -5391,7 +5391,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\css\dashboard.css
 ===============================
 /* ============================================================
    DASHBOARD.CSS — Enterprise Analytics Style
-   WealthFlow AI — IBM Plex Sans / Finance Grade
+   Fintrix — IBM Plex Sans / Finance Grade
    ============================================================ */
 
 /* ==================== DESIGN TOKENS ==================== */
@@ -6522,7 +6522,7 @@ class API {
         const url = `${this.baseURL}${endpoint}`;
         
         // Get stored token
-        const token = localStorage.getItem('wealthflow_token');
+        const token = localStorage.getItem('Fintrix_token');
         
         const defaultOptions = {
             headers: {
@@ -6542,8 +6542,8 @@ class API {
             
             // Redirect to login if unauthorized
             if (response.status === 401) {
-                localStorage.removeItem('wealthflow_token');
-                localStorage.removeItem('wealthflow_user');
+                localStorage.removeItem('Fintrix_token');
+                localStorage.removeItem('Fintrix_user');
                 // Only redirect if not already on login/register pages
                 if (!window.location.pathname.includes('login.html') && !window.location.pathname.includes('register.html')) {
                     window.location.href = 'login.html';
@@ -6578,20 +6578,20 @@ class API {
             body: JSON.stringify({ email, password })
         });
         if (result && result.access_token) {
-            localStorage.setItem('wealthflow_token', result.access_token);
-            localStorage.setItem('wealthflow_user', JSON.stringify(result.user));
+            localStorage.setItem('Fintrix_token', result.access_token);
+            localStorage.setItem('Fintrix_user', JSON.stringify(result.user));
         }
         return result;
     }
 
     logout() {
-        localStorage.removeItem('wealthflow_token');
-        localStorage.removeItem('wealthflow_user');
+        localStorage.removeItem('Fintrix_token');
+        localStorage.removeItem('Fintrix_user');
         window.location.href = 'login.html';
     }
 
     getCurrentUser() {
-        const stored = localStorage.getItem('wealthflow_user');
+        const stored = localStorage.getItem('Fintrix_user');
         return stored ? JSON.parse(stored) : null;
     }
 
@@ -6831,7 +6831,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\charts.js
 ===============================
 /**
  * Chart Rendering Logic — ECharts Edition
- * WealthFlow AI
+ * Fintrix
  */
 
 class ChartManager {
@@ -7026,7 +7026,7 @@ FILE: C:\Users\ASUS\Videos\tarack\fintech-demo\frontend\js\dashboard.js
 ===============================
 /**
  * DASHBOARD.JS — Enterprise Analytics Dashboard
- * WealthFlow AI
+ * Fintrix
  *
  * Renders: KPI Row, Alert Strip, EMI Bar Chart, Cashflow Bars,
  *          Expense Treemap, Goals Donut, Health Gauge, Debt Table,

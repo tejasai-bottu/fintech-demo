@@ -1,6 +1,6 @@
 /**
  * DASHBOARD.JS — Enterprise Analytics Dashboard
- * WealthFlow AI
+ * Fintrix
  *
  * Renders: KPI Row, Alert Strip, EMI Bar Chart, Cashflow Bars,
  *          Expense Treemap, Goals Donut, Health Gauge, Debt Table,
@@ -16,7 +16,7 @@
  */
 
 // Auth guard — redirect to login if no token
-if (!localStorage.getItem('wealthflow_token')) {
+if (!localStorage.getItem('Fintrix_token')) {
     window.location.href = 'login.html';
 }
 
@@ -35,10 +35,11 @@ class Dashboard {
     async init() {
         try {
             await this.loadAllData();
-            this.hideLoading();
+            Utils.hideGlobalLoading();
 
             this.renderKPIs();
-            this.renderAlertStrip();
+            this.renderInsightStrip();
+            this.renderActionCards();
             this.renderUpcomingPayments();
             this.renderCashflowBars();
             this.renderEMIBarChart();
@@ -50,12 +51,15 @@ class Dashboard {
             this.renderDebtTable();
             this.updateToolbar();
 
+            // ADD after renderDebtTable()
+            if (window.populateHeroStats) window.populateHeroStats(this.data);
+
             // Respond to window resize
             window.addEventListener('resize', () => this.resizeCharts());
 
         } catch (err) {
             console.error('[Dashboard] Init failed:', err);
-            this.hideLoading();
+            Utils.hideGlobalLoading();
             this.showFatalError(err.message);
         }
     }
@@ -178,64 +182,153 @@ class Dashboard {
         ];
 
         container.innerHTML = kpis.map(k => `
-            <div class="kpi-card ${k.cls}" id="${k.id}">
-                <div class="kpi-label">
-                    <span class="kpi-icon">${k.icon}</span>
-                    ${k.label}
-                </div>
-                <div class="kpi-value ${k.valueClass || ''}">${k.value}</div>
-                <div class="kpi-footer">
-                    <span class="kpi-sub">${k.sub}</span>
-                    <span class="kpi-badge ${k.badge.cls}">${k.badge.text}</span>
-                </div>
-            </div>
-        `).join('');
+  <div class="kpi-card ${k.cls}" id="${k.id}">
+    
+    <div class="kpi-glow"></div>
+    <div class="kpi-border-glow"></div>
+
+    <div class="kpi-content">
+      <div class="kpi-label">
+        <span class="kpi-icon">${k.icon}</span>
+        ${k.label}
+      </div>
+
+      <div class="kpi-value ${k.valueClass || ''}">
+        ${k.value}
+      </div>
+
+      <div class="kpi-footer">
+        <span class="kpi-sub">${k.sub}</span>
+        <span class="kpi-badge ${k.badge.cls}">
+          ${k.badge.text}
+        </span>
+      </div>
+    </div>
+
+  </div>
+`).join('');
     }
 
     // ─────────────────────────────────────────────
-    // ALERT STRIP
+    // INSIGHT STRIP
     // ─────────────────────────────────────────────
 
-    renderAlertStrip() {
-        const container = document.getElementById('alert-strip');
+    renderInsightStrip() {
+        const container = document.getElementById('insight-strip');
         if (!container) return;
 
         const s   = this.data.financial_summary;
         const dti = this.data.dtiRatio || 0;
+        const goals = this.data.goals.summary.total_goals;
 
-        const alerts = [];
+        const pills = [];
 
         if (s.monthly_savings < 0) {
-            alerts.push({
+            pills.push({
                 cls: 'danger',
-                text: `Budget deficit of ${this._fmt(Math.abs(s.monthly_savings))}/month — reduce commitments or increase income`
+                icon: '⚠',
+                text: `Budget deficit ${this._fmt(Math.abs(s.monthly_savings))}/mo`,
+                link: 'settings.html'
+            });
+        } else {
+            pills.push({
+                cls: 'success',
+                icon: '✓',
+                text: `Saving ${this._fmt(s.monthly_savings)}/month`,
+                link: null
             });
         }
 
         if (dti > 40) {
-            alerts.push({
-                cls: 'warning',
-                text: `High DTI of ${dti.toFixed(0)}% — debt payments are ${dti.toFixed(0)}% of your income`
+            pills.push({ cls: 'danger', icon: '↑', text: `DTI ${dti.toFixed(0)}% — high debt load`, link: 'settings.html' });
+        } else if (dti > 20) {
+            pills.push({ cls: 'warning', icon: '~', text: `DTI ${dti.toFixed(0)}% — moderate`, link: null });
+        }
+
+        if (goals === 0) {
+            pills.push({ cls: 'info', icon: '+', text: 'No goals set — add one', link: 'settings.html' });
+        } else {
+            pills.push({ cls: 'info', icon: '◎', text: `${goals} active goal${goals > 1 ? 's' : ''}`, link: null });
+        }
+
+        container.innerHTML = pills.map(p => `
+            <div class="insight-pill ${p.cls}" ${p.link ? `onclick="location.href='${p.link}'"` : ''}>
+                <span class="insight-pill-dot"></span>
+                <span>${p.icon} ${p.text}</span>
+            </div>
+        `).join('');
+    }
+
+    renderActionCards() {
+        const container = document.getElementById('action-cards-section');
+        if (!container) return;
+
+        const s   = this.data.financial_summary;
+        const dti = this.data.dtiRatio || 0;
+        const goals = this.data.goals.goals || [];
+
+        const cards = [];
+
+        // Card 1: Financial health
+        const score = this._calcHealthScore();
+        const scoreColor = score >= 75 ? 'card-success' : score >= 50 ? 'card-warning' : 'card-danger';
+        cards.push({
+            cls: scoreColor,
+            icon: score >= 75 ? '💚' : score >= 50 ? '🟡' : '🔴',
+            title: `Health Score: ${score}/100`,
+            body: score >= 75
+                ? 'Your finances are in great shape. Keep it up.'
+                : score >= 50
+                ? 'Room to improve — check your DTI and savings rate.'
+                : 'Action needed — your financial health needs attention.',
+            cta: { label: 'View Details →', link: 'settings.html#overview' }
+        });
+
+        // Card 2: Top goal or suggestion
+        if (goals.length > 0) {
+            const topGoal = goals[0];
+            cards.push({
+                cls: 'card-success',
+                icon: '🎯',
+                title: topGoal.goal_name,
+                body: `${topGoal.progress_percentage}% complete — ${this._fmt(topGoal.monthly_contribution_needed)}/month needed`,
+                cta: { label: 'Manage Goals →', link: 'settings.html' }
+            });
+        } else {
+            cards.push({
+                cls: 'card-warning',
+                icon: '🎯',
+                title: 'No savings goals',
+                body: 'Set a target — emergency fund, home down payment, or vacation.',
+                cta: { label: 'Add Goal →', link: 'settings.html' }
             });
         }
 
-        if (this.data.goals.summary.total_goals === 0) {
-            alerts.push({
-                cls: 'info',
-                text: 'No savings goals set — add goals in Profile Settings'
+        // Card 3: DTI or savings tip
+        if (dti > 30) {
+            cards.push({
+                cls: 'card-danger',
+                icon: '💳',
+                title: `DTI at ${dti.toFixed(0)}%`,
+                body: `Your debt payments consume ${dti.toFixed(0)}% of income. Recommended: below 30%.`,
+                cta: { label: 'Review Debts →', link: 'settings.html' }
+            });
+        } else {
+            cards.push({
+                cls: 'card-success',
+                icon: '📈',
+                title: 'Investments',
+                body: this._fmtShort(s.total_investments) + ' portfolio value tracked.',
+                cta: { label: 'View Portfolio →', link: 'settings.html' }
             });
         }
 
-        if (alerts.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-
-        container.style.display = 'flex';
-        container.innerHTML = alerts.map(a => `
-            <div class="alert-chip ${a.cls}">
-                <div class="chip-dot"></div>
-                ${a.text}
+        container.innerHTML = cards.map(c => `
+            <div class="action-card ${c.cls}">
+                <div class="action-card-icon">${c.icon}</div>
+                <div class="action-card-title">${c.title}</div>
+                <div class="action-card-body">${c.body}</div>
+                <a href="${c.cta.link}" class="action-card-cta">${c.cta.label}</a>
             </div>
         `).join('');
     }
@@ -260,40 +353,41 @@ class Dashboard {
         
         container.style.display = 'block';
         container.innerHTML = `
-            <div style="background:white; border-radius:8px; border:1px solid #e5e7eb; 
-                        padding:16px 20px; box-shadow:0 1px 3px rgba(0,0,0,0.07); margin-bottom: 20px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
-                    <p style="font-size:13px; font-weight:600; color:#111928;">Upcoming Payments</p>
-                    <a href="settings.html" style="font-size:12px; color:#1a56db;">View All →</a>
-                </div>
-                <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px;">
-                    ${allItems.map(item => {
-                        const isOverdue = item.status === 'overdue';
-                        const date = new Date(item.date);
-                        return `
-                            <div style="min-width:160px; padding:12px; border-radius:6px; 
-                                        border:1px solid ${isOverdue ? '#fca5a5' : '#e5e7eb'}; 
-                                        background:${isOverdue ? '#fef2f2' : '#f9fafb'}; flex-shrink:0;">
-                                <p style="font-size:10px; font-weight:600; text-transform:uppercase; 
-                                          color:${isOverdue ? '#c81e1e' : '#6b7280'}; letter-spacing:0.4px;">
-                                    ${isOverdue ? '⚠ OVERDUE' : item.type.replace('_', ' ').toUpperCase()}
-                                </p>
-                                <p style="font-size:12px; font-weight:600; color:#111928; margin:4px 0;">
-                                    ${item.title}
-                                </p>
-                                <p style="font-size:13px; font-weight:700; color:${isOverdue ? '#c81e1e' : '#1a56db'}; 
-                                          font-family:'IBM Plex Mono',monospace;">
-                                    ₹${Math.round(item.amount || 0).toLocaleString('en-IN')}
-                                </p>
-                                <p style="font-size:10px; color:#9ca3af; margin-top:3px;">
-                                    ${date.toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
-                                </p>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            </div>
-        `;
+    <div style="background:rgba(255,255,255,0.04); backdrop-filter:blur(20px); border-radius:16px; 
+                border:1px solid rgba(255,255,255,0.08); padding:16px 20px; 
+                box-shadow:0 10px 30px rgba(0,0,0,0.4);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+            <p style="font-size:13px; font-weight:600; color:#f1f5f9;">Upcoming Payments</p>
+            <a href="settings.html" style="font-size:12px; color:#818cf8;">View All →</a>
+        </div>
+        <div style="display:flex; gap:12px; overflow-x:auto; padding-bottom:4px;">
+            ${allItems.map(item => {
+                const isOverdue = item.status === 'overdue';
+                const date = new Date(item.date);
+                return `
+                    <div style="min-width:160px; padding:12px; border-radius:12px; flex-shrink:0;
+                                border:1px solid ${isOverdue ? 'rgba(248,113,113,0.3)' : 'rgba(255,255,255,0.08)'};
+                                background:${isOverdue ? 'rgba(248,113,113,0.08)' : 'rgba(255,255,255,0.04)'};">
+                        <p style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px;
+                                  color:${isOverdue ? '#f87171' : '#64748b'};">
+                            ${isOverdue ? '⚠ OVERDUE' : item.type.replace('_', ' ').toUpperCase()}
+                        </p>
+                        <p style="font-size:12px; font-weight:600; color:#f1f5f9; margin:4px 0;">
+                            ${item.title}
+                        </p>
+                        <p style="font-size:13px; font-weight:700; font-family:'IBM Plex Mono',monospace;
+                                  color:${isOverdue ? '#f87171' : '#818cf8'};">
+                            ₹${Math.round(item.amount || 0).toLocaleString('en-IN')}
+                        </p>
+                        <p style="font-size:10px; color:#64748b; margin-top:3px;">
+                            ${date.toLocaleDateString('en-IN', { day:'numeric', month:'short' })}
+                        </p>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    </div>
+`;
     }
 
     // ─────────────────────────────────────────────
@@ -562,7 +656,7 @@ class Dashboard {
         if (this.charts.health) { this.charts.health.dispose(); }
 
         const score = this._calcHealthScore();
-        const color = score >= 75 ? '#0e9f6e' : score >= 50 ? '#c27803' : '#c81e1e';
+        const color = score >= 75 ? '#34d399' : score >= 50 ? '#fbbf24' : '#f87171';
 
         this.charts.health = echarts.init(el);
         this.charts.health.setOption({
@@ -703,12 +797,17 @@ class Dashboard {
                     data: values,
                     smooth: true,
                     symbol: 'none',
-                    lineStyle: { color: data.trend === 'up' ? '#0e9f6e' : '#c81e1e', width: 2 },
+                    lineStyle: {
+                      color: data.trend === 'up' ? '#34d399' : '#f87171',
+                      width: 2.5,
+                      shadowBlur: 12,
+                      shadowColor: data.trend === 'up' ? 'rgba(52,211,153,0.4)' : 'rgba(248,113,113,0.4)'
+                    },
                     areaStyle: {
                         color: {
                             type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
                             colorStops: [
-                                { offset: 0, color: data.trend === 'up' ? 'rgba(14,159,110,0.2)' : 'rgba(200,30,30,0.2)' },
+                                { offset: 0, color: data.trend === 'up' ? 'rgba(52,211,153,0.25)' : 'rgba(248,113,113,0.25)' },
                                 { offset: 1, color: 'rgba(255,255,255,0)' }
                             ]
                         }
@@ -822,11 +921,6 @@ class Dashboard {
         Object.values(this.charts).forEach(c => { if (c && c.resize) c.resize(); });
     }
 
-    hideLoading() {
-        const el = document.getElementById('loading-overlay');
-        if (el) el.remove();
-    }
-
     showFatalError(msg) {
         const main = document.getElementById('dashboard-main');
         if (main) {
@@ -909,4 +1003,13 @@ document.addEventListener('DOMContentLoaded', () => {
     loadNotifications();
     // Refresh notifications every 5 minutes
     setInterval(loadNotifications, 5 * 60 * 1000);
+
+    // Safety fallback: ensure loader hides even if app crashes
+    setTimeout(() => {
+        const el = document.getElementById('loading-overlay');
+        if (el) {
+            el.classList.add('hide');
+            setTimeout(() => { if (el.parentNode) el.remove(); }, 400);
+        }
+    }, 8000);
 });

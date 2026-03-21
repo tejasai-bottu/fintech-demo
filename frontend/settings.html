@@ -3,147 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Profile Settings - WealthFlow AI</title>
+    <title>Financial Profile Settings - Fintrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Link CSS files -->
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/dashboard.css">
 </head>
-<body class="bg-gray-50">
-    
-    <!-- Navigation (same as dashboard) -->
-    <nav style="background:white; border-bottom:1px solid #e8eaed;" class="sticky top-0 z-50">
-        <div style="max-width:1400px; margin:0 auto; padding:14px 24px; display:flex; justify-content:space-between; align-items:center;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-size:20px;">💎</span>
-                <h1 style="font-size:16px; font-weight:700; color:#1f4e79; margin:0;">WealthFlow AI</h1>
-            </div>
-            <div style="display:flex; align-items:center; gap:20px; font-size:14px;">
-                <a href="index.html" style="color:#555; font-weight:500;">🏠 Dashboard</a>
-                <span style="color:#888;" id="user-name">Demo User</span>
-            </div>
-        </div>
-    </nav>
-    
-    <!-- Main Content -->
-    <main style="max-width:1400px; margin:0 auto; padding:24px;">
-        
-        <h1 style="font-size:20px; font-weight:700; color:#1f4e79; margin-bottom:20px; 
-                   padding-bottom:16px; border-bottom:2px solid #e8eaed;">
-            Financial Profile Settings
-        </h1>
-        
-        <!-- Tab Navigation -->
-        <div style="display:flex; gap:4px; background:white; border:1px solid #e8eaed; 
-                    border-radius:6px; padding:6px; margin-bottom:24px; width:fit-content;">
-            <button onclick="settingsManager.switchTab('income')"
-                    id="settings-tab-income"
-                    class="settings-tab active">
-                💰 Income & Tax
-            </button>
-            <button onclick="settingsManager.switchTab('debts')"
-                    id="settings-tab-debts"
-                    class="settings-tab">
-                💳 Debt Portfolio
-            </button>
-            <button onclick="settingsManager.switchTab('bills')"
-                    id="settings-tab-bills"
-                    class="settings-tab">
-                💸 Bills & Cards
-            </button>
-            <button onclick="settingsManager.switchTab('goals')"
-                    id="settings-tab-goals"
-                    class="settings-tab">
-                🎯 Savings Goals
-            </button>
-            <button onclick="settingsManager.switchTab('expenses')"
-                    id="settings-tab-expenses"
-                    class="settings-tab">
-                📊 Expenses
-            </button>
-            <button onclick="settingsManager.switchTab('overview')"
-                    id="settings-tab-overview"
-                    class="settings-tab">
-                📈 Overview
-            </button>
-        </div>
-        
-        <!-- Tab Content Containers -->
-        <div id="settings-content-income" class="settings-content">
-            <!-- Populated by settings.js -->
-        </div>
-        
-        <div id="settings-content-debts" class="settings-content hidden">
-            <!-- Populated by settings.js -->
-        </div>
+<body style="background:#0b0f1a; color:#f1f5f9; min-height:100vh; overflow-x:hidden;">
 
-        <div id="settings-content-bills" class="settings-content hidden">
-            <!-- Populated by settings.js -->
+<!-- GLOBAL LOADER -->
+<div id="loading-overlay" class="loading-overlay">
+  <div class="loader-wrapper">
+    <span class="loader-letter">l</span>
+    <span class="loader-letter">o</span>
+    <span class="loader-letter">a</span>
+    <span class="loader-letter">d</span>
+    <span class="loader-letter">i</span>
+    <span class="loader-letter">n</span>
+    <span class="loader-letter">g</span>
+    <div class="loader"></div>
+  </div>
+</div>
+
+<!-- ===================== SETTINGS MAIN ===================== -->
+<div style="max-width:1300px; margin:0 auto; padding:28px 24px 80px;">
+
+    <!-- Page Header -->
+    <div style="margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid rgba(255,255,255,0.07);">
+        <a href="index.html" class="back-btn">← Back to Dashboard</a>
+        <p style="font-size:11px; font-weight:600; color:#818cf8; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Financial Profile</p>
+        <h2 style="font-size:20px; font-weight:700; color:#f1f5f9; margin-bottom:4px;">Settings</h2>
+        <p style="font-size:13px; color:#64748b;">Configure your income, debts, goals and expenses</p>
+    </div>
+
+    <!-- Sidebar + Content Layout -->
+    <div style="display:flex; gap:24px; align-items:flex-start;">
+
+        <!-- Sidebar Nav -->
+        <aside class="settings-sidebar">
+            <nav>
+                <button onclick="settingsManager.switchTab('income')"   id="settings-tab-income"   class="settings-tab active"><span class="tab-icon">💰</span><span>Income & Tax</span></button>
+                <button onclick="settingsManager.switchTab('debts')"    id="settings-tab-debts"    class="settings-tab"><span class="tab-icon">💳</span><span>Debt Portfolio</span></button>
+                <button onclick="settingsManager.switchTab('bills')"    id="settings-tab-bills"    class="settings-tab"><span class="tab-icon">💸</span><span>Bills & Cards</span></button>
+                <button onclick="settingsManager.switchTab('goals')"    id="settings-tab-goals"    class="settings-tab"><span class="tab-icon">🎯</span><span>Savings Goals</span></button>
+                <button onclick="settingsManager.switchTab('expenses')" id="settings-tab-expenses" class="settings-tab"><span class="tab-icon">📊</span><span>Expenses</span></button>
+                <button onclick="settingsManager.switchTab('overview')" id="settings-tab-overview" class="settings-tab"><span class="tab-icon">📈</span><span>Overview</span></button>
+            </nav>
+        </aside>
+
+        <!-- Content Panel -->
+        <div class="settings-content-panel">
+            <div id="settings-content-income"   class="settings-content"></div>
+            <div id="settings-content-debts"    class="settings-content hidden"></div>
+            <div id="settings-content-bills"    class="settings-content hidden"></div>
+            <div id="settings-content-goals"    class="settings-content hidden"></div>
+            <div id="settings-content-expenses" class="settings-content hidden"></div>
+            <div id="settings-content-overview" class="settings-content hidden"></div>
         </div>
-        
-        <div id="settings-content-goals" class="settings-content hidden">
-            <!-- Populated by settings.js -->
-        </div>
-        
-        <div id="settings-content-expenses" class="settings-content hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-2xl font-bold">📊 Monthly Expenses</h2>
-                    <div class="flex gap-2">
-                        <button onclick="settingsManager.showAddExpenseModal()" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-bold hover:bg-blue-700">
-                            ➕ Add Category
-                        </button>
-                        <button onclick="settingsManager.showScanReceiptModal()" style="padding:8px 20px; background:#0e9f6e; color:white; border:none; border-radius:4px; font-size:13px; font-weight:600; cursor:pointer;">
-                            📷 Scan Receipt
-                        </button>
-                    </div>
-                </div>
-                
-                <div id="expenses-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    <!-- Categories List will be populated by JS -->
-                </div>
-                
-                <div id="expense-summary-container">
-                    <!-- Summary will be populated by JS -->
-                </div>
-                
-                <div id="receipt-history-section" class="mt-6">
-                    <h3 class="font-bold mb-3">🧾 Scanned Receipts</h3>
-                    <div id="receipt-list">Loading...</div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="settings-content-overview" class="settings-content hidden">
-            <!-- Populated by settings.js -->
-        </div>
-        
-    </main>
-    
-    <!-- Modals Container -->
-    <div id="modals-container"></div>
-    
-    <!-- Load Scripts in ORDER -->
-    <script src="js/config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/validation.js"></script>
-    <script type="module" src="js/settings.js"></script>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Wait for settingsManager to initialize, then load receipt history
-            setTimeout(() => {
-                if (window.settingsManager) {
-                    settingsManager.loadReceiptHistory();
-                }
-            }, 500);
-        });
-    </script>
+    </div>
+
+</div>
+
+<div id="modals-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/api.js"></script>
+<script src="js/validation.js"></script>
+<script type="module" src="js/settings.js"></script>
+
+<script>
+// Proxy — routes onclick calls to settingsManager once module is ready
+const smProxy = new Proxy({}, {
+    get(_, prop) {
+        return (...args) => {
+            if (window.settingsManager !== smProxy) {
+                window.settingsManager[prop](...args);
+            } else {
+                document.addEventListener('settingsReady', () => {
+                    window.settingsManager[prop](...args);
+                }, { once: true });
+            }
+        };
+    }
+});
+window.settingsManager = smProxy;
+</script>
 </body>
 </html>

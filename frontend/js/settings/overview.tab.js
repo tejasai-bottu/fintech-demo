@@ -13,63 +13,54 @@ export async function loadOverviewTab(manager) {
         container.innerHTML = `
             <div class="space-y-8">
                 <!-- Income Section -->
-                <div style="background:white; border-radius:6px; padding:24px; 
-                            box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
-                    <h3 style="font-size:13px; font-weight:700; color:#888; margin-bottom:20px; 
-                               text-transform:uppercase; letter-spacing:0.5px; 
-                               padding-bottom:10px; border-bottom:1px solid #f0f0f0;">
+                <div class="settings-block">
+                    <h3 class="settings-block-title">
                         Income
                     </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:20px;">
                         <div>
-                            <p class="text-sm text-gray-600">Gross Monthly</p>
-                            <p class="text-2xl font-bold">${Utils.formatCurrency(manager.data.overview.income.gross_monthly)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">Gross Monthly</p>
+                            <p style="font-size:20px; font-weight:700; color:#f1f5f9; font-family:'IBM Plex Mono',monospace;">${Utils.formatCurrency(manager.data.overview.income.gross_monthly)}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Tax</p>
-                            <p class="text-2xl font-bold text-red-600">-${Utils.formatCurrency(manager.data.overview.income.tax)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">Tax</p>
+                            <p style="font-size:20px; font-weight:700; color:#f87171; font-family:'IBM Plex Mono',monospace;">-${Utils.formatCurrency(manager.data.overview.income.tax)}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">PF</p>
-                            <p class="text-2xl font-bold text-orange-600">-${Utils.formatCurrency(manager.data.overview.income.pf)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">PF</p>
+                            <p style="font-size:20px; font-weight:700; color:#fbbf24; font-family:'IBM Plex Mono',monospace;">-${Utils.formatCurrency(manager.data.overview.income.pf)}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Net Take-Home</p>
-                            <p class="text-2xl font-bold text-green-600">${Utils.formatCurrency(manager.data.overview.income.net_monthly)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">Net Take-Home</p>
+                            <p style="font-size:20px; font-weight:700; color:#34d399; font-family:'IBM Plex Mono',monospace;">${Utils.formatCurrency(manager.data.overview.income.net_monthly)}</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Commitments Section -->
-                <div style="background:white; border-radius:6px; padding:24px; 
-                            box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
-                    <h3 style="font-size:13px; font-weight:700; color:#888; margin-bottom:20px; 
-                               text-transform:uppercase; letter-spacing:0.5px; 
-                               padding-bottom:10px; border-bottom:1px solid #f0f0f0;">
+                <div class="settings-block">
+                    <h3 class="settings-block-title">
                         Monthly Commitments
                     </h3>
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
                         <div>
-                            <p class="text-sm text-gray-600">Expenses</p>
-                            <p class="text-2xl font-bold">${Utils.formatCurrency(manager.data.overview.commitments.total_expenses)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">Expenses</p>
+                            <p style="font-size:20px; font-weight:700; color:#f1f5f9; font-family:'IBM Plex Mono',monospace;">${Utils.formatCurrency(manager.data.overview.commitments.total_expenses)}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">EMI</p>
-                            <p class="text-2xl font-bold">${Utils.formatCurrency(manager.data.overview.commitments.total_emi)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">EMI</p>
+                            <p style="font-size:20px; font-weight:700; color:#f1f5f9; font-family:'IBM Plex Mono',monospace;">${Utils.formatCurrency(manager.data.overview.commitments.total_emi)}</p>
                         </div>
                         <div>
-                            <p class="text-sm text-gray-600">Total Committed</p>
-                            <p class="text-2xl font-bold text-red-600">${Utils.formatCurrency(manager.data.overview.commitments.total_committed)}</p>
+                            <p style="font-size:12px; color:#64748b; margin-bottom:4px;">Total Committed</p>
+                            <p style="font-size:20px; font-weight:700; color:#f87171; font-family:'IBM Plex Mono',monospace;">${Utils.formatCurrency(manager.data.overview.commitments.total_committed)}</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Health Indicators -->
-                <div style="background:white; border-radius:6px; padding:24px; 
-                            box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
-                    <h3 style="font-size:13px; font-weight:700; color:#888; margin-bottom:20px; 
-                               text-transform:uppercase; letter-spacing:0.5px; 
-                               padding-bottom:10px; border-bottom:1px solid #f0f0f0;">
+                <div class="settings-block">
+                    <h3 class="settings-block-title">
                         Financial Health Indicators
                     </h3>
                     ${renderHealthIndicators(manager)}
@@ -97,45 +88,54 @@ export async function loadOverviewTab(manager) {
 export function renderHealthIndicators(manager) {
     const indicators = manager.data.overview.health_indicators;
 
+    const severityStyle = (sev) => {
+        const map = {
+            success: { bg: 'rgba(52,211,153,0.08)', border: 'rgba(52,211,153,0.2)', color: '#34d399' },
+            warning: { bg: 'rgba(251,191,36,0.08)', border: 'rgba(251,191,36,0.2)', color: '#fbbf24' },
+            danger:  { bg: 'rgba(248,113,113,0.08)', border: 'rgba(248,113,113,0.2)', color: '#f87171' },
+            info:    { bg: 'rgba(129,140,248,0.08)', border: 'rgba(129,140,248,0.2)', color: '#818cf8' }
+        };
+        return map[sev] || map.info;
+    };
+
+    const dti = indicators.dti_ratio;
+    const ef  = indicators.emergency_fund;
+    const feas = indicators.feasibility;
+    const dtiS = severityStyle(dti.severity);
+    const efS  = severityStyle(ef.severity);
+    const feasS = severityStyle(feas.severity);
+
     return `
-        <div class="space-y-6">
-            <!-- DTI Ratio -->
-            <div class="p-6 ${Utils.getSeverityBg(indicators.dti_ratio.severity)} rounded-xl">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-bold">Debt-to-Income Ratio</h4>
-                    <span class="text-2xl font-bold ${Utils.getSeverityColor(indicators.dti_ratio.severity)}">
-                        ${indicators.dti_ratio.ratio}%
-                    </span>
+        <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:18px 20px; background:${dtiS.bg}; border:1px solid ${dtiS.border};
+                        border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                    <p style="font-size:13px; font-weight:600; color:#f1f5f9;">Debt-to-Income Ratio</p>
+                    <span style="font-size:18px; font-weight:700; font-family:'IBM Plex Mono',monospace;
+                                 color:${dtiS.color};">${dti.ratio}%</span>
                 </div>
-                <p class="text-sm font-semibold ${Utils.getSeverityColor(indicators.dti_ratio.severity)}">
-                    ${indicators.dti_ratio.status}
-                </p>
-                <p class="text-sm text-gray-700 mt-2">${indicators.dti_ratio.message}</p>
+                <p style="font-size:12px; font-weight:600; color:${dtiS.color}; margin-bottom:4px;">${dti.status}</p>
+                <p style="font-size:12px; color:#94a3b8;">${dti.message}</p>
             </div>
-            
-            <!-- Emergency Fund -->
-            <div class="p-6 ${Utils.getSeverityBg(indicators.emergency_fund.severity)} rounded-xl">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-bold">Emergency Fund</h4>
-                    <span class="text-2xl font-bold ${Utils.getSeverityColor(indicators.emergency_fund.severity)}">
-                        ${indicators.emergency_fund.months_covered} months
-                    </span>
+
+            <div style="padding:18px 20px; background:${efS.bg}; border:1px solid ${efS.border};
+                        border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                    <p style="font-size:13px; font-weight:600; color:#f1f5f9;">Emergency Fund</p>
+                    <span style="font-size:18px; font-weight:700; font-family:'IBM Plex Mono',monospace;
+                                 color:${efS.color};">${ef.months_covered} mo</span>
                 </div>
-                <p class="text-sm font-semibold ${Utils.getSeverityColor(indicators.emergency_fund.severity)}">
-                    ${indicators.emergency_fund.status}
-                </p>
-                <p class="text-sm text-gray-700 mt-2">${indicators.emergency_fund.message}</p>
+                <p style="font-size:12px; font-weight:600; color:${efS.color}; margin-bottom:4px;">${ef.status}</p>
+                <p style="font-size:12px; color:#94a3b8;">${ef.message}</p>
             </div>
-            
-            <!-- Feasibility -->
-            <div class="p-6 ${Utils.getSeverityBg(indicators.feasibility.severity)} rounded-xl">
-                <div class="flex justify-between items-start mb-2">
-                    <h4 class="font-bold">Savings Feasibility</h4>
-                    <span class="text-2xl font-bold ${Utils.getSeverityColor(indicators.feasibility.severity)}">
-                        ${indicators.feasibility.feasible ? '✓' : '✗'}
-                    </span>
+
+            <div style="padding:18px 20px; background:${feasS.bg}; border:1px solid ${feasS.border};
+                        border-radius:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                    <p style="font-size:13px; font-weight:600; color:#f1f5f9;">Savings Feasibility</p>
+                    <span style="font-size:20px; color:${feasS.color};">${feas.feasible ? '✓' : '✗'}</span>
                 </div>
-                <p class="text-sm text-gray-700">${indicators.feasibility.message}</p>
+                <p style="font-size:12px; color:#94a3b8;">${feas.message}</p>
             </div>
         </div>
     `;
@@ -146,26 +146,33 @@ export function renderRecommendations(manager) {
         return '';
     }
 
+    const priorityStyle = (p) => {
+        const map = {
+            high:   { bg: 'rgba(248,113,113,0.08)', border: '#f87171',  color: '#f87171' },
+            medium: { bg: 'rgba(251,191,36,0.08)',  border: '#fbbf24',  color: '#fbbf24' },
+            low:    { bg: 'rgba(129,140,248,0.08)', border: '#818cf8',  color: '#818cf8' }
+        };
+        return map[p] || map.low;
+    };
+
     return `
-        <div style="background:white; border-radius:6px; padding:24px; 
-                    box-shadow:0 1px 3px rgba(0,0,0,0.08); border:1px solid #e8eaed;">
-            <h3 style="font-size:13px; font-weight:700; color:#888; margin-bottom:20px; 
-                       text-transform:uppercase; letter-spacing:0.5px; 
-                       padding-bottom:10px; border-bottom:1px solid #f0f0f0;">
-                Recommendations
-            </h3>
-            <div class="space-y-4">
-                ${manager.data.overview.recommendations.map(rec => `
-                    <div class="p-4 ${Utils.getSeverityBg(rec.priority)} rounded-lg border-l-4 ${
-                        rec.priority === 'high' ? 'border-red-500' :
-                        rec.priority === 'medium' ? 'border-yellow-500' :
-                        'border-blue-500'
-                    }">
-                        <p class="font-semibold text-sm mb-1 capitalize">${rec.type} • ${rec.priority} Priority</p>
-                        <p class="text-sm text-gray-700 mb-2">${rec.message}</p>
-                        <p class="text-xs text-gray-600">${rec.action}</p>
-                    </div>
-                `).join('')}
+        <div class="settings-block">
+            <p class="settings-block-title">Recommendations</p>
+            <div style="display:flex; flex-direction:column; gap:10px;">
+                ${manager.data.overview.recommendations.map(rec => {
+                    const s = priorityStyle(rec.priority);
+                    return `
+                        <div style="padding:14px 16px; background:${s.bg};
+                                    border-left:3px solid ${s.border};
+                                    border-radius:0 10px 10px 0;">
+                            <p style="font-size:11px; font-weight:700; color:${s.color};
+                                      text-transform:uppercase; letter-spacing:0.4px;
+                                      margin-bottom:4px;">${rec.type} · ${rec.priority} priority</p>
+                            <p style="font-size:13px; color:#f1f5f9; margin-bottom:4px;">${rec.message}</p>
+                            <p style="font-size:11px; color:#64748b;">${rec.action}</p>
+                        </div>
+                    `;
+                }).join('')}
             </div>
         </div>
     `;
