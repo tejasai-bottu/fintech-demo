@@ -9,6 +9,7 @@ import time
 from .database import engine
 from .models import Base, User, IncomeType
 from .routes import auth, investment, debt, dashboard, profile, bills, calendar, transactions, notifications
+from .routes import assets as assets_routes
 from .scheduler import (
     start_scheduler, check_overdue_bills, generate_notifications, 
     daily_networth_snapshot, generate_bill_cycles
@@ -44,6 +45,7 @@ app.include_router(bills.router)
 app.include_router(calendar.router)
 app.include_router(transactions.router)
 app.include_router(notifications.router)
+app.include_router(assets_routes.router)
 
 @app.on_event("startup")
 async def startup_event():

@@ -1,7 +1,11 @@
 /**
  * Settings Page Logic - MAIN ENTRY POINT
- * Imports and wires all tab modules.
- * No logic lives here — only delegation to tab files.
+ * Modified to include the Assets tab.
+ *
+ * CHANGES from original:
+ *   1. Import assets tab functions
+ *   2. Add 'assets' case to loadTabData switch
+ *   3. Add showAddAssetModal / showEditAssetModal / deleteAsset delegates
  */
 
 import {
@@ -53,6 +57,15 @@ import {
     renderHealthIndicators,
     renderRecommendations
 } from './settings/overview.tab.js';
+
+// ── NEW: Assets tab ──────────────────────────────────────────────────────────
+import {
+    loadAssetsTab,
+    renderAssetsList,
+    showAddAssetModal,
+    showEditAssetModal,
+    deleteAsset
+} from './settings/assets.tab.js';
 
 // ============================================================
 // SettingsManager — orchestrates tab switching and delegates
@@ -111,12 +124,13 @@ class SettingsManager {
                 case 'expenses': await loadExpensesTab(this); break;
                 case 'bills':    await loadBillsTab(this);    break;
                 case 'overview': await loadOverviewTab(this); break;
+                case 'assets':   await loadAssetsTab(this);   break; // ← NEW
             }
         } catch (error) {
             console.error(`Error loading ${tabName} tab:`, error);
             Utils.showToast(`Failed to load ${tabName} data`, 'danger');
         } finally {
-            Utils.hideGlobalLoading(); // Always ensure global loader hides
+            Utils.hideGlobalLoading();
         }
     }
 
@@ -163,6 +177,14 @@ class SettingsManager {
     deleteBill(billId)                 { deleteBill(this, billId); }
 
     // --------------------------------------------------------
+    // ASSETS — delegated to assets.tab.js  ← NEW
+    // --------------------------------------------------------
+
+    showAddAssetModal()                { showAddAssetModal(this); }
+    showEditAssetModal(assetId)        { showEditAssetModal(this, assetId); }
+    deleteAsset(assetId)               { deleteAsset(this, assetId); }
+
+    // --------------------------------------------------------
     // MODAL MANAGEMENT
     // --------------------------------------------------------
 
@@ -175,10 +197,9 @@ class SettingsManager {
 // Initialise on DOM ready
 document.addEventListener('DOMContentLoaded', () => {
     const manager = new SettingsManager();
-    window.settingsManager = manager;                    // overwrite proxy
-    document.dispatchEvent(new Event('settingsReady')); // signal ready
+    window.settingsManager = manager;
+    document.dispatchEvent(new Event('settingsReady'));
 
-    // Safety fallback: ensure loader hides even if app crashes
     setTimeout(() => {
         const el = document.getElementById('loading-overlay');
         if (el) {

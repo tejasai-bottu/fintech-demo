@@ -69,12 +69,13 @@ class Dashboard {
     // ─────────────────────────────────────────────
 
     async loadAllData() {
-        const [dashboard, goals, expenses, debts, calendar] = await Promise.all([
+        const [dashboard, goals, expenses, debts, calendar, assetNW] = await Promise.all([
             api.getDashboard(),
             api.getSavingsGoals(),
             api.getExpenseCategories(),
             api.getDebts(),
-            api.getCalendarEvents()
+            api.getCalendarEvents(),
+            (typeof api.getAssets === 'function' ? api.getAssets() : Promise.resolve(null)).catch(() => null),   // graceful fallback
         ]);
 
         this.data = dashboard;
@@ -82,6 +83,11 @@ class Dashboard {
         this.data.expenses = expenses;
         this.data.debts    = debts;
         this.data.calendar = calendar;
+
+        if (assetNW) {
+            this.data.financial_summary.total_investments =
+                assetNW.net_worth?.total_combined_assets ?? this.data.financial_summary.total_investments;
+        }
 
         // Recalculate with real settings data
         this._recalculate();

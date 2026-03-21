@@ -317,6 +317,36 @@ class API {
         return this.request('/api/notifications/read-all', { method: 'POST' });
     }
 
+    // ========== ASSETS ENDPOINTS ==========
+
+    async getAssets() {
+        return this.request('/api/assets/');
+    }
+
+    async createAsset(data) {
+        return this.request('/api/assets/', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async updateAsset(assetId, data) {
+        return this.request(`/api/assets/${assetId}`, {
+            method: 'PUT',
+            body: JSON.stringify(data)
+        });
+    }
+
+    async deleteAsset(assetId) {
+        return this.request(`/api/assets/${assetId}`, {
+            method: 'DELETE'
+        });
+    }
+
+    async getAssetProjection(months = 24) {
+        return this.request(`/api/assets/projection?months=${months}`);
+    }
+
     // ========== BILL SCANNER ENDPOINTS ==========
 
     async uploadReceipt(file) {

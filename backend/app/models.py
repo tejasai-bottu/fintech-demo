@@ -83,6 +83,20 @@ class NotificationSeverity(enum.Enum):
     WARNING = "warning"
     CRITICAL = "critical"
 
+class AssetType(enum.Enum):
+    CASH             = "cash"
+    BANK_BALANCE     = "bank_balance"
+    REAL_ESTATE      = "real_estate"
+    STOCKS           = "stocks"
+    MUTUAL_FUNDS     = "mutual_funds"
+    FIXED_DEPOSIT    = "fixed_deposit"
+    GOLD             = "gold"
+    CRYPTO           = "crypto"
+    VEHICLE          = "vehicle"
+    BUSINESS         = "business"
+    INSURANCE        = "insurance"
+    OTHER            = "other"
+
 class User(Base):
     __tablename__ = "users"
     
@@ -124,6 +138,7 @@ class User(Base):
     expense_transactions = relationship("ExpenseTransaction", back_populates="user", cascade="all, delete-orphan")
     notifications = relationship("Notification", back_populates="user", cascade="all, delete-orphan")
     net_worth_snapshots = relationship("NetWorthSnapshot", back_populates="user", cascade="all, delete-orphan")
+    assets = relationship("Asset", back_populates="user", cascade="all, delete-orphan")
 
 class AdditionalIncome(Base):
     __tablename__ = "additional_incomes"
@@ -414,3 +429,32 @@ class NetWorthSnapshot(Base):
     snapshot_date = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="net_worth_snapshots")
+
+class Asset(Base):
+    """
+    User-owned financial assets.
+    Net Worth = SUM(assets.current_value) + investments - SUM(debts.outstanding_principal)
+    """
+    __tablename__ = "assets"
+    __table_args__ = (
+        CheckConstraint("current_value >= 0", name="chk_asset_value_non_negative"),
+        CheckConstraint(
+            "growth_rate IS NULL OR (growth_rate >= -100 AND growth_rate <= 1000)",
+            name="chk_asset_growth_rate_range"
+        ),
+        Index("idx_assets_user", "user_id"),
+    )
+
+    id            = Column(Integer, primary_key=True, index=True)
+    user_id       = Column(Integer, ForeignKey("users.id"))
+
+    name          = Column(String, nullable=False)
+    asset_type    = Column(SQLEnum(AssetType), nullable=False)
+    current_value = Column(Float, nullable=False)
+    growth_rate   = Column(Float, nullable=True)   # Annual % e.g. 8.5 for 8.5% p.a.
+    notes         = Column(String, nullable=True)
+
+    created_at    = Column(DateTime, default=datetime.utcnow)
+    updated_at    = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    user = relationship("User", back_populates="assets")

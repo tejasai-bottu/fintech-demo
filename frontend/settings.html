@@ -54,6 +54,7 @@
                 <button onclick="settingsManager.switchTab('goals')"    id="settings-tab-goals"    class="settings-tab"><span class="tab-icon">🎯</span><span>Savings Goals</span></button>
                 <button onclick="settingsManager.switchTab('expenses')" id="settings-tab-expenses" class="settings-tab"><span class="tab-icon">📊</span><span>Expenses</span></button>
                 <button onclick="settingsManager.switchTab('overview')" id="settings-tab-overview" class="settings-tab"><span class="tab-icon">📈</span><span>Overview</span></button>
+                <button onclick="settingsManager.switchTab('assets')"   id="settings-tab-assets"   class="settings-tab"><span class="tab-icon">🏦</span><span>Assets</span></button>
             </nav>
         </aside>
 
@@ -65,6 +66,7 @@
             <div id="settings-content-goals"    class="settings-content hidden"></div>
             <div id="settings-content-expenses" class="settings-content hidden"></div>
             <div id="settings-content-overview" class="settings-content hidden"></div>
+            <div id="settings-content-assets"   class="settings-content hidden"></div>
         </div>
     </div>
 
@@ -72,6 +74,7 @@
 
 <div id="modals-container"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 <script src="js/config.js"></script>
 <script src="js/utils.js"></script>
 <script src="js/api.js"></script>
