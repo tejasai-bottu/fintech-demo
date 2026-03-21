@@ -59,6 +59,7 @@ class SavingsGoalCreate(BaseModel):
     target_date: str
     priority: str
     goal_type: str
+    goal_category: str = ""
 
 class ExpenseCategoryCreate(BaseModel):
     category_name: str
@@ -293,6 +294,7 @@ async def get_savings_goals(
                 "target_date": g.target_date.isoformat(),
                 "priority": g.priority.value,
                 "goal_type": g.goal_type.value,
+                "goal_category": g.goal_category or "",
                 "monthly_contribution_needed": round(g.monthly_contribution_needed, 2),
                 "progress_percentage": round((g.current_saved / g.target_amount) * 100, 1) if g.target_amount > 0 else 0
             } for g in goals
@@ -335,6 +337,7 @@ async def create_savings_goal(
         new_goal = SavingsGoal(
             user_id=user.id,
             goal_name=data.goal_name,
+            goal_category=data.goal_category,
             target_amount=data.target_amount,
             current_saved=data.current_saved,
             target_date=target_date,

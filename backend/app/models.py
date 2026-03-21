@@ -178,8 +178,10 @@ class SavingsGoal(Base):
     
     priority = Column(SQLEnum(Priority))
     goal_type = Column(SQLEnum(GoalType))
-    
+    goal_category = Column(String, nullable=True)
+
     monthly_contribution_needed = Column(Float)  # Auto-calculated
+
     is_achieved = Column(Boolean, default=False)
     
     created_at = Column(DateTime, default=datetime.utcnow)

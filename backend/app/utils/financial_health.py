@@ -244,7 +244,7 @@ def generate_smart_recommendations(user, debts, goals, expenses) -> List[dict]:
         })
     
     # Emergency fund check
-    emergency_goal = next((g for g in goals if "emergency" in g.goal_name.lower()), None)
+    emergency_goal = next((g for g in goals if g.goal_category == "emergency_fund" or "emergency" in g.goal_name.lower()), None)
     if not emergency_goal:
         recommendations.append({
             "type": "emergency_fund",
