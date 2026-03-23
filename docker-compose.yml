@@ -1,4 +1,16 @@
+version: "3.9"
+
 services:
+  adminer:
+    image: adminer
+    container_name: fintech-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - fintech-network
+
   db:
     image: postgres:15-alpine
     container_name: fintech-db
@@ -11,7 +23,7 @@ services:
     networks:
       - fintech-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U fintech_user -d fintech_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -54,7 +66,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       VECTOR_DATA_PATH: /app/vector_data
       FINTECH_BASE_URL: http://backend:8000
-      FINTECH_EMAIL: ${POSTGRES_USER}@example.com # Using DB user as a placeholder email
+      FINTECH_EMAIL: ${POSTGRES_USER}@example.com
       FINTECH_PASSWORD: ${POSTGRES_PASSWORD}
     depends_on:
       db:

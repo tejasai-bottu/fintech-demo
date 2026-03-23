@@ -47,7 +47,7 @@ class Dashboard {
             this.renderGoalsDonut();
             this.renderHealthGauge();
             this.renderHealthIndicators();
-            this.renderNetWorthChart();
+            this.renderAssetProjectionChart();
             this.renderDebtTable();
             this.updateToolbar();
 
@@ -85,6 +85,7 @@ class Dashboard {
         this.data.calendar = calendar;
 
         if (assetNW) {
+            this.data.assetNW = assetNW;
             this.data.financial_summary.total_investments =
                 assetNW.net_worth?.total_combined_assets ?? this.data.financial_summary.total_investments;
         }
@@ -750,78 +751,183 @@ class Dashboard {
     }
 
     // ─────────────────────────────────────────────
-    // NET WORTH TREND
+    // ASSET PROJECTION CHART
     // ─────────────────────────────────────────────
 
-    async renderNetWorthChart() {
+    async renderAssetProjectionChart() {
+        const token = localStorage.getItem('Fintrix_token');
+        const res = await fetch(`${CONFIG.API.BASE_URL}/api/assets/net-worth`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const nwData = await res.json();
+        
+        // We need a projection endpoint or calculate it here. 
+        // The user provided the code for renderAssetProjectionChart which assumes a /api/networth/summary endpoint.
+        // Let me re-read the provided code and the available endpoints.
+        // backend/app/routes/assets.py has /api/assets/projection and /api/assets/net-worth.
+        
+        const projRes = await fetch(`${CONFIG.API.BASE_URL}/api/assets/projection?months=24`, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        const projData = await projRes.json();
+        
+        // History is also needed. dashboard/ net-worth-history exists.
+        const histRes = await api.getNetWorthHistory(30);
+        const history = histRes.snapshots;
+
         const el = document.getElementById('chart-networth');
         if (!el || typeof echarts === 'undefined') return;
+        if (this.charts.networth) this.charts.networth.dispose();
 
-        if (this.charts.networth) { this.charts.networth.dispose(); }
+        // Combine history (solid) + projection (dashed) into one series
+        const histLabels = history.map(h => h.date);
+        const histValues = history.map(h => h.net_worth);
+        const projLabels = projData.projections.map(p => p.month_label);
+        const projValues = projData.projections.map(p => p.net_worth);
 
-        try {
-            const data = await api.getNetWorthHistory(30);
-            const badge = document.getElementById('nw-change-badge');
+        const allLabels = [...histLabels, ...projLabels];
+        // History series — solid line, stops at history boundary
+        const historySeries = [...histValues, ...new Array(projLabels.length).fill(null)];
+        // Projection series — dashed, starts from last history point
+        const lastHistVal = histValues[histValues.length - 1] ?? projValues[0];
+        const projSeries  = [...new Array(histLabels.length - 1).fill(null), lastHistVal, ...projValues];
 
-            if (badge && data.change !== undefined) {
-                const sign = data.change >= 0 ? '+' : '';
-                badge.textContent = `${sign}${this._fmt(data.change)}`;
-                badge.style.color = data.change >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
-            }
+        const isUp = projValues[projValues.length - 1] >= lastHistVal;
 
-            const dates = data.snapshots.map(s => s.date);
-            const values = data.snapshots.map(s => s.net_worth);
-
-            this.charts.networth = echarts.init(el);
-            this.charts.networth.setOption({
-                animation: true,
-                grid: { top: 8, right: 8, bottom: 24, left: 4, containLabel: true },
-                tooltip: {
-                    trigger: 'axis',
-                    formatter: (params) => `${params[0].name}<br/>Net Worth: <strong>${this._fmt(params[0].value)}</strong>`,
-                    backgroundColor: '#1f2937',
-                    textStyle: { color: '#f9fafb', fontSize: 11 }
+        this.charts.networth = echarts.init(el);
+        this.charts.networth.setOption({
+            animation: true,
+            backgroundColor: 'transparent',
+            grid: { top: 40, right: 20, bottom: 60, left: 10, containLabel: true },
+            legend: {
+                bottom: 8,
+                data: ['History', '24-Month Projection', 'Total Assets', 'Total Debt'],
+                textStyle: { color: '#64748b', fontSize: 10 },
+                icon: 'roundRect',
+                itemWidth: 14, itemHeight: 3
+            },
+            tooltip: {
+                trigger: 'axis',
+                backgroundColor: '#0f1428',
+                borderColor: 'rgba(255,255,255,0.1)',
+                borderWidth: 1,
+                padding: 12,
+                textStyle: { color: '#f1f5f9', fontSize: 11 },
+                axisPointer: { type: 'cross', crossStyle: { color: 'rgba(255,255,255,0.15)' } },
+                formatter: params => {
+                    const valid = params.filter(x => x.value != null);
+                    if (!valid.length) return '';
+                    let html = `<div style="font-size:11px;color:#64748b;margin-bottom:6px;">${valid[0].axisValue}</div>`;
+                    valid.forEach(p => {
+                        const dot = `<span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${p.color};margin-right:6px;"></span>`;
+                        html += `<div style="display:flex;justify-content:space-between;gap:16px;margin-bottom:2px;">
+                            <span>${dot}${p.seriesName}</span>
+                            <span style="font-family:'IBM Plex Mono',monospace;font-weight:600;">₹${Math.abs(p.value).toLocaleString('en-IN')}</span>
+                        </div>`;
+                    });
+                    return html;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: allLabels,
+                axisLabel: { fontSize: 9, color: '#64748b', rotate: 30, interval: 3 },
+                axisLine: { lineStyle: { color: 'rgba(255,255,255,0.06)' } },
+                axisTick: { show: false },
+                splitLine: { show: false }
+            },
+            yAxis: {
+                type: 'value',
+                axisLabel: {
+                    fontSize: 9, color: '#64748b',
+                    formatter: v => v >= 10000000 ? `₹${(v/10000000).toFixed(1)}Cr`
+                                  : v >= 100000  ? `₹${(v/100000).toFixed(0)}L`
+                                  : v >= 1000    ? `₹${(v/1000).toFixed(0)}K`
+                                  : `₹${v}`
                 },
-                xAxis: {
-                    type: 'category',
-                    data: dates,
-                    axisLabel: { fontSize: 9, color: '#9ca3af' },
-                    axisLine: { show: false },
-                    axisTick: { show: false }
-                },
-                yAxis: {
-                    type: 'value',
-                    axisLabel: {
-                        fontSize: 9,
-                        color: '#9ca3af',
-                        formatter: v => v >= 100000 ? `₹${(v/100000).toFixed(0)}L` : `₹${(v/1000).toFixed(0)}K`
-                    },
-                    splitLine: { lineStyle: { color: '#f3f4f6' } }
-                },
-                series: [{
+                axisLine: { show: false },
+                splitLine: { lineStyle: { color: 'rgba(255,255,255,0.04)', type: 'dashed' } }
+            },
+            series: [
+                {
+                    name: 'History',
                     type: 'line',
-                    data: values,
-                    smooth: true,
-                    symbol: 'none',
-                    lineStyle: {
-                      color: data.trend === 'up' ? '#34d399' : '#f87171',
-                      width: 2.5,
-                      shadowBlur: 12,
-                      shadowColor: data.trend === 'up' ? 'rgba(52,211,153,0.4)' : 'rgba(248,113,113,0.4)'
-                    },
+                    data: historySeries,
+                    smooth: 0.4,
+                    symbol: 'circle',
+                    symbolSize: v => v != null ? 4 : 0,
+                    connectNulls: false,
+                    lineStyle: { color: '#34d399', width: 3, shadowBlur: 10, shadowColor: 'rgba(52,211,153,0.4)' },
+                    itemStyle: { color: '#34d399', borderColor: '#0f1428', borderWidth: 1.5 },
                     areaStyle: {
-                        color: {
-                            type: 'linear', x: 0, y: 0, x2: 0, y2: 1,
+                        color: { type: 'linear', x:0, y:0, x2:0, y2:1,
+                            colorStops: [{ offset:0, color:'rgba(52,211,153,0.18)' }, { offset:1, color:'rgba(52,211,153,0)' }]
+                        }
+                    },
+                    z: 3
+                },
+                {
+                    name: '24-Month Projection',
+                    type: 'line',
+                    data: projSeries,
+                    smooth: 0.4,
+                    symbol: 'circle',
+                    symbolSize: v => v != null ? 3 : 0,
+                    connectNulls: false,
+                    lineStyle: { color: isUp ? '#818cf8' : '#f87171', width: 2.5, type: 'dashed',
+                        shadowBlur: 8, shadowColor: isUp ? 'rgba(129,140,248,0.35)' : 'rgba(248,113,113,0.35)' },
+                    itemStyle: { color: isUp ? '#818cf8' : '#f87171' },
+                    areaStyle: {
+                        color: { type: 'linear', x:0, y:0, x2:0, y2:1,
                             colorStops: [
-                                { offset: 0, color: data.trend === 'up' ? 'rgba(52,211,153,0.25)' : 'rgba(248,113,113,0.25)' },
-                                { offset: 1, color: 'rgba(255,255,255,0)' }
+                                { offset:0, color: isUp ? 'rgba(129,140,248,0.12)' : 'rgba(248,113,113,0.12)' },
+                                { offset:1, color: 'rgba(0,0,0,0)' }
                             ]
                         }
-                    }
-                }]
-            });
-        } catch (e) {
-            el.innerHTML = '<div style="height:160px;display:flex;align-items:center;justify-content:center;color:#9ca3af;font-size:11px;">No history yet</div>';
+                    },
+                    z: 2
+                },
+                {
+                    name: 'Total Assets',
+                    type: 'line',
+                    data: [...new Array(histLabels.length - 1).fill(null),
+                           this.data?.assetNW?.net_worth?.total_combined_assets ?? projSeries[histLabels.length - 1],
+                           ...projData.projections.map(p => p.assets)],
+                    smooth: 0.4,
+                    symbol: 'none',
+                    connectNulls: false,
+                    lineStyle: { color: '#60a5fa', width: 1.5, type: 'dotted', opacity: 0.7 },
+                    z: 1
+                },
+                {
+                    name: 'Total Debt',
+                    type: 'line',
+                    data: [...new Array(histLabels.length - 1).fill(null),
+                           this.data?.assetNW?.net_worth?.total_debt ?? 0,
+                           ...projData.projections.map(p => p.debt)],
+                    smooth: 0.4,
+                    symbol: 'none',
+                    connectNulls: false,
+                    lineStyle: { color: '#f87171', width: 1.5, type: 'dotted', opacity: 0.7 },
+                    z: 1
+                }
+            ],
+            markLine: {
+                silent: true,
+                lineStyle: { color: 'rgba(255,255,255,0.15)', type: 'solid', width: 1 },
+                data: [{ xAxis: histLabels.length > 0 ? histLabels[histLabels.length - 1] : 0, label: {
+                    formatter: 'Today', color: '#64748b', fontSize: 9
+                }}]
+            }
+        });
+
+        // Update the badge to show 24m projection change
+        const badge = document.getElementById('nw-change-badge');
+        if (badge && projValues.length) {
+            const change = projValues[projValues.length - 1] - lastHistVal;
+            const sign = change >= 0 ? '+' : '';
+            badge.textContent = `${sign}${this._fmt(change)} (24m)`;
+            badge.style.color = change >= 0 ? 'var(--color-success)' : 'var(--color-danger)';
         }
     }
 

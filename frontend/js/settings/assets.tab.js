@@ -70,7 +70,6 @@ export async function loadAssetsTab(manager) {
         manager.data.projection = projData;
 
         container.innerHTML = _buildTabHTML(manager);
-        _renderNetWorthChart(manager);
     } catch (err) {
         container.innerHTML = `
             <div class="settings-block" style="border-color:rgba(248,113,113,0.2);">
@@ -115,43 +114,6 @@ function _buildTabHTML(manager) {
                 <p style="font-size:20px; font-weight:700; font-family:'IBM Plex Mono',monospace; color:${k.color};">${k.val}</p>
             </div>
         `).join('')}
-    </div>
-
-    <!-- Chart -->
-    <div style="position:relative; background:rgba(0,0,0,0.2); border-radius:12px; padding:16px; overflow:hidden;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-            <div>
-                <p style="font-size:12px; font-weight:600; color:#f1f5f9;">Net Worth Trajectory — 24 Month Projection</p>
-                <p style="font-size:11px; color:#64748b;">Current vs future based on asset growth rates & debt repayment</p>
-            </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:22px; font-weight:700; font-family:'IBM Plex Mono',monospace; color:${trendColor};">
-                    ${trendIcon} ${sign}${fmt(proj.change)}
-                </span>
-                <span style="font-size:11px; color:${trendColor}; background:${trendColor}18; padding:3px 10px; border-radius:99px; font-weight:600;">
-                    ${sign}${proj.change_pct.toFixed(1)}%
-                </span>
-            </div>
-        </div>
-        <canvas id="assets-nw-chart" style="width:100%; height:220px;"></canvas>
-        <!-- Divider marker -->
-        <div id="chart-divider" style="
-            position:absolute; top:48px; bottom:16px;
-            width:1px; background:rgba(255,255,255,0.15);
-            border-left: 1px dashed rgba(255,255,255,0.2);
-            pointer-events:none;
-        "></div>
-        <div style="display:flex; gap:16px; margin-top:10px;">
-            <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:#94a3b8;">
-                <div style="width:20px; height:2px; background:#818cf8; border-radius:99px;"></div>
-                Current Net Worth
-            </div>
-            <div style="display:flex; align-items:center; gap:6px; font-size:11px; color:#94a3b8;">
-                <div style="width:20px; height:2px; background:${trendColor}; border-radius:99px; opacity:0.7;
-                            background: repeating-linear-gradient(90deg, ${trendColor} 0, ${trendColor} 4px, transparent 4px, transparent 8px);"></div>
-                Projection
-            </div>
-        </div>
     </div>
 </div>
 
@@ -335,130 +297,6 @@ function _buildAllocationSection(manager) {
     });
 })();
 </script>`;
-}
-
-// ─── Net Worth Chart ──────────────────────────────────────────────────────────
-
-function _renderNetWorthChart(manager) {
-    const canvas = document.getElementById('assets-nw-chart');
-    if (!canvas || typeof Chart === 'undefined') return;
-
-    const proj     = manager.data.projection;
-    const currentNW = proj.current_net_worth;
-
-    // Build data: point 0 = now, then projections
-    const labels    = ['Now', ...proj.projections.map(p => p.month_label)];
-    const nwValues  = [currentNW, ...proj.projections.map(p => p.net_worth)];
-    const assetVals = [manager.data.assets.net_worth.total_combined_assets,
-                       ...proj.projections.map(p => p.assets)];
-    const debtVals  = [manager.data.assets.net_worth.total_debt,
-                       ...proj.projections.map(p => p.debt)];
-
-    // Split at index 0: "Now" is present, rest is future
-    const presentColor  = '#818cf8';
-    const futureColor   = proj.overall_trend === 'growth'  ? '#34d399'
-                        : proj.overall_trend === 'decline' ? '#f87171'
-                        : '#fbbf24';
-
-    // Gradient fill
-    const ctx = canvas.getContext('2d');
-    canvas.height = 220;
-
-    const futureGrad = ctx.createLinearGradient(0, 0, 0, 220);
-    futureGrad.addColorStop(0, futureColor + '40');
-    futureGrad.addColorStop(1, futureColor + '00');
-
-    new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label:           'Net Worth',
-                    data:            nwValues,
-                    borderColor:     nwValues.map((_, i) => i === 0 ? presentColor : futureColor),
-                    backgroundColor: futureGrad,
-                    borderWidth:     2.5,
-                    pointRadius:     nwValues.map((_, i) => i === 0 ? 5 : 2),
-                    pointBackgroundColor: nwValues.map((_, i) => i === 0 ? presentColor : futureColor),
-                    fill:            true,
-                    tension:         0.4,
-                    segment: {
-                        borderColor: (ctx) => ctx.p0DataIndex === 0 ? presentColor : futureColor,
-                        borderDash:  (ctx) => ctx.p0DataIndex === 0 ? [] : [5, 4],
-                    }
-                },
-                {
-                    label:       'Total Assets',
-                    data:        assetVals,
-                    borderColor: '#60a5fa55',
-                    borderWidth: 1.5,
-                    borderDash:  [3, 4],
-                    pointRadius: 0,
-                    fill:        false,
-                    tension:     0.4,
-                },
-                {
-                    label:       'Total Debt',
-                    data:        debtVals.map(v => -v),
-                    borderColor: '#f8717155',
-                    borderWidth: 1.5,
-                    borderDash:  [3, 4],
-                    pointRadius: 0,
-                    fill:        false,
-                    tension:     0.4,
-                },
-            ]
-        },
-        options: {
-            responsive:          false,
-            maintainAspectRatio: false,
-            interaction: { mode: 'index', intersect: false },
-            scales: {
-                x: {
-                    ticks:     { color: '#64748b', font: { size: 10 }, maxTicksLimit: 9 },
-                    grid:      { color: 'rgba(255,255,255,0.04)' },
-                    border:    { display: false },
-                },
-                y: {
-                    ticks: {
-                        color: '#64748b', font: { size: 10 },
-                        callback: v => v >= 100000 ? `₹${(v/100000).toFixed(0)}L`
-                                     : v >= 1000   ? `₹${(v/1000).toFixed(0)}K`
-                                     : `₹${v}`
-                    },
-                    grid:  { color: 'rgba(255,255,255,0.04)' },
-                    border: { display: false },
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: '#1e2535',
-                    borderColor:     'rgba(255,255,255,0.1)',
-                    borderWidth:     1,
-                    titleColor:      '#94a3b8',
-                    bodyColor:       '#f1f5f9',
-                    padding:         10,
-                    callbacks: {
-                        label: (ctx) => {
-                            const v = ctx.raw;
-                            return ` ${ctx.dataset.label}: ₹${Math.abs(v).toLocaleString('en-IN')}`;
-                        }
-                    }
-                },
-                annotation: {}
-            }
-        }
-    });
-
-    // Position the vertical divider at "Now" (index 0 = x-position left edge)
-    // We mark it with a translucent overlay instead via CSS left
-    const divider = document.getElementById('chart-divider');
-    if (divider) {
-        // Rough estimate: 1st point is at ~8% from left inside the canvas
-        divider.style.left = 'calc(7% + 16px)';
-    }
 }
 
 // ─── Filter assets ────────────────────────────────────────────────────────────
